@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞瑞老師 IELTS 單字趴 - Day 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@700;900&display=swap');
+        
+        :root {
+            --pop-pink: #FF85B3;
+            --pop-yellow: #FFD93D;
+            --pop-blue: #4D96FF;
+            --pop-green: #6BCB77;
+            --pop-purple: #B983FF;
+            --pop-orange: #FF9F45;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            background-color: #FFF5E4;
+        }
+
+        .dopamine-card {
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.2s ease;
+        }
+
+        .dopamine-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .tab-btn {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .tab-btn.active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-open .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .input-correct {
+            background-color: #D1FAE5;
+            border-color: #059669;
+            color: #065F46;
+        }
+
+        .hint-shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .modal-pop {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: scale(0);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 relative">
+
+    <div class="max-w-3xl mx-auto">
+        <header class="dopamine-card bg-[var(--pop-blue)] p-6 mb-6 rounded-3xl text-center">
+            <h1 class="text-2xl md:text-3xl font-900 text-black mb-3 uppercase tracking-tighter text-white" style="-webkit-text-stroke: 1px black;">Day 6: Tech & AI 🤖</h1>
+            <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
+                <div id="main-progress" class="bg-[var(--pop-pink)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-3 text-black font-black text-xs md:text-sm">
+                <span id="learn-prog" class="bg-white border-2 border-black py-1 rounded-xl text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📖 學習: 0/10</span>
+                <span id="quizA-prog" class="bg-white border-2 border-black py-1 rounded-xl text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 測驗A: 0/5</span>
+                <span id="quizB-prog" class="bg-white border-2 border-black py-1 rounded-xl text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 測驗B: 0/5</span>
+            </div>
+        </header>
+
+        <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
+            <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">
+                📖 學習區
+            </button>
+            <button onclick="switchTab('quizA')" id="tab-quizA" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">
+                🎯 測驗 Part A
+            </button>
+            <button onclick="switchTab('quizB')" id="tab-quizB" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">
+                🎯 測驗 Part B
+            </button>
+        </div>
+
+        <main>
+            <div id="section-learn" class="space-y-4">
+                </div>
+
+            <div id="section-quizA" class="hidden space-y-6 py-2">
+                <div class="dopamine-card bg-white p-6 rounded-3xl mb-6">
+                    <p class="font-bold text-lg mb-2">🎓 測驗 Part A (基礎科技應用)：</p>
+                    <p class="text-gray-700 text-sm md:text-base">請根據句意打入正確單字（按 Enter 送出）。卡關時點擊 💡 提示，可獲得兩階段支援！</p>
+                </div>
+                <div id="quiz-list-A" class="space-y-6">
+                    </div>
+            </div>
+
+            <div id="section-quizB" class="hidden space-y-6 py-2">
+                <div class="dopamine-card bg-white p-6 rounded-3xl mb-6">
+                    <p class="font-bold text-lg mb-2">🎓 測驗 Part B (前沿人工智慧)：</p>
+                    <p class="text-gray-700 text-sm md:text-base">挑戰後半段核心詞彙！請打入正確單字並按 Enter 送出。</p>
+                </div>
+                <div id="quiz-list-B" class="space-y-6">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+        <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
+            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">
+                🏆
+            </div>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-purple)]">Perfect Score!</h2>
+            <div class="text-5xl font-black text-[var(--pop-orange)] mb-4">100<span class="text-2xl text-black">%</span></div>
+            <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
+                瑞瑞老師，太驚人了！您已帶領學生完美通關 Day 6 的 10 題科技與 AI 雙階段測驗！數位教材設計力大成功！🚀
+            </p>
+            <button onclick="closeModal()" class="w-full bg-[var(--pop-green)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">
+                太棒了，順利收工！🌟
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = [
+            { word: "Automate", zh: "使自動化", coll: "automate the process / system", ex: "Many factories choose to automate their production lines to maximize efficiency.", exZh: "許多工廠選擇使他們的生產線自動化以最大化效率。", syn: "mechanize, computerize", ant: "manualize" },
+            { word: "Innovation", zh: "創新、革新", coll: "technological innovation / foster innovation", ex: "Continuous innovation is essential for tech companies to stay competitive.", exZh: "持續的創新對於科技公司保持競爭力至關重要。", syn: "advancement, novelty", ant: "stagnation" },
+            { word: "Virtual", zh: "虛擬的、實質上的", coll: "virtual reality / virtual assistant", ex: "During the pandemic, virtual meetings became the standard way to communicate.", exZh: "在疫情期間，虛擬會議成為了標準的溝通方式。", syn: "simulated, digital", ant: "physical, actual" },
+            { word: "Enhance", zh: "提高、增強、提升", coll: "enhance skills / enhance efficiency", ex: "Introducing AI tools can significantly enhance the accuracy of data analysis.", exZh: "引入 AI 工具能顯著提升數據分析的準確性。", syn: "improve, boost, upgrade", ant: "diminish, worsen" },
+            { word: "Algorithm", zh: "演算法", coll: "complex algorithm / search algorithm", ex: "Social media platforms use a specific algorithm to recommend personalized content.", exZh: "社群媒體平台使用特定的演算法來推薦個人化內容。", syn: "procedure, formula", ant: "N/A" },
+            { word: "Obsolete", zh: "淘汰的、過時的", coll: "become obsolete / render obsolete", ex: "With the rapid rise of smartphones, traditional film cameras quickly became obsolete.", exZh: "隨著智慧型手機的迅速崛起，傳統底片相機迅速被淘汰了。", syn: "outdated, extinct", ant: "modern, current" },
+            { word: "Revolutionize", zh: "徹底變革、產生革命性影響", coll: "revolutionize the industry / market", ex: "Artificial intelligence is expected to revolutionize the way we diagnose diseases.", exZh: "人工智慧有望徹底變革我們診斷疾病的方式。", syn: "transform, reshape", ant: "preserve" },
+            { word: "Autonomous", zh: "自主導航的、自治的", coll: "autonomous vehicles / autonomous system", ex: "Many tech giants are investing heavily in testing autonomous driving systems.", exZh: "許多科技巨頭正投入巨資測試自動駕駛系統。", syn: "independent, self-driving", ant: "dependent" },
+            { word: "Breakthrough", zh: "重大突破", coll: "scientific breakthrough / major breakthrough", ex: "Scientists have made a major breakthrough in renewable energy technology.", exZh: "科學家們在可再生能源技術上取得了重大突破。", syn: "discovery, leap", ant: "setback" },
+            { word: "Substitute", zh: "替代品、替代", coll: "a substitute for / substitute A with B", ex: "Although AI can assist teachers, it can never be a permanent substitute for human empathy.", exZh: "雖然 AI 可以協助老師，但它永遠無法成為人類同理心的永久替代品。", syn: "replacement, alternative", ant: "original" }
+        ];
+
+        const quizzesA = [
+            { id: 1, text: "The new software will help [input] the scheduling process, saving hours of manual labor.", answer: "automate", synHint: "mechanize, streamline by machine" },
+            { id: 2, text: "Continuous [input] is key to solving global issues and creating new markets.", answer: "innovation", synHint: "novelty, technological creation" },
+            { id: 3, text: "The company developed a [input] showroom where customers can view products online in 3D.", answer: "virtual", synHint: "simulated, digital, non-physical" },
+            { id: 4, text: "Regular training sessions can help [input] employees' digital literacy skills.", answer: "enhance", synHint: "boost, improve, upgrade" },
+            { id: 5, text: "The search engine uses a proprietary [input] to rank web pages based on relevance.", answer: "algorithm", synHint: "mathematical formula, step-by-step logic" }
+        ];
+
+        const quizzesB = [
+            { id: 6, text: "Newer, faster computer chips quickly make older hardware [input].", answer: "obsolete", synHint: "outdated, no longer useful" },
+            { id: 7, text: "The invention of steam engines managed to [input] the manufacturing industry.", answer: "revolutionize", synHint: "completely transform, radically alter" },
+            { id: 8, text: "Delivery companies are testing [input] drones to carry packages directly to homes.", answer: "autonomous", synHint: "self-driving, independent" },
+            { id: 9, text: "Medical researchers hope to make a [input] in finding a cure for the rare disease.", answer: "breakthrough", synHint: "major discovery, scientific leap" },
+            { id: 10, text: "There is no true [input] for real-world social interaction when it comes to child development.", answer: "substitute", synHint: "replacement, alternative, surrogate" }
+        ];
+
+        const cardColors = ['#FFD93D', '#6BCB77', '#B983FF', '#FF9F45', '#FF85B3'];
+        let learnedCount = 0;
+        let quizACorrectCount = 0;
+        let quizBCorrectCount = 0;
+
+        const hintStates = {};
+
+        window.onload = () => {
+            renderLearnSection();
+            renderQuizSection(quizzesA, 'quiz-list-A', 'A');
+            renderQuizSection(quizzesB, 'quiz-list-B', 'B');
+        };
+
+        function switchTab(tab) {
+            const lBtn = document.getElementById('tab-learn');
+            const qABtn = document.getElementById('tab-quizA');
+            const qBBtn = document.getElementById('tab-quizB');
+
+            const lSec = document.getElementById('section-learn');
+            const qASec = document.getElementById('section-quizA');
+            const qBSec = document.getElementById('section-quizB');
+
+            lBtn.classList.remove('active'); lBtn.style.backgroundColor = 'white';
+            qABtn.classList.remove('active'); qABtn.style.backgroundColor = 'white';
+            qBBtn.classList.remove('active'); qBBtn.style.backgroundColor = 'white';
+
+            lSec.classList.add('hidden');
+            qASec.classList.add('hidden');
+            qBSec.classList.add('hidden');
+
+            if (tab === 'learn') {
+                lBtn.classList.add('active'); lBtn.style.backgroundColor = 'var(--pop-yellow)';
+                lSec.classList.remove('hidden');
+            } else if (tab === 'quizA') {
+                qABtn.classList.add('active'); qABtn.style.backgroundColor = 'var(--pop-pink)';
+                qASec.classList.remove('hidden');
+            } else if (tab === 'quizB') {
+                qBBtn.classList.add('active'); qBBtn.style.backgroundColor = 'var(--pop-orange)';
+                qBSec.classList.remove('hidden');
+            }
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function renderLearnSection() {
+            const container = document.getElementById('section-learn');
+            container.innerHTML = '';
+
+            vocabulary.forEach((item, index) => {
+                const color = cardColors[index % cardColors.length];
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white rounded-3xl overflow-hidden";
+                div.innerHTML = `
+                    <div class="p-4 md:p-5 flex items-center justify-between cursor-pointer" style="background-color: ${color}20" onclick="toggleAccordion(this)">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-6 h-6 border-2 border-black accent-black rounded" onclick="event.stopPropagation(); updateProgress()">
+                            <div>
+                                <span class="text-xl md:text-2xl font-black text-black">${item.word}</span>
+                                <span class="text-gray-700 font-bold ml-2 text-sm md:text-base hidden sm:inline">/ ${item.zh}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button onclick="event.stopPropagation(); speak('${item.word}')" class="p-2 bg-white rounded-full border-2 border-black hover:bg-gray-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all">
+                                <i class="fas fa-volume-up text-black"></i>
+                            </button>
+                            <i class="fas fa-chevron-down text-black transition-transform duration-300 arrow text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="p-5 space-y-4 border-t-4 border-black bg-white">
+                            <p class="text-gray-700 font-bold sm:hidden mb-2">中文：${item.zh}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-[var(--pop-green)]20 p-3 rounded-2xl border-2 border-black" style="background-color: rgba(107, 203, 119, 0.2);">
+                                    <p class="text-xs font-black uppercase text-green-800">✅ Synonyms (同義)</p>
+                                    <p class="text-sm font-bold mt-1">${item.syn}</p>
+                                </div>
+                                <div class="bg-[var(--pop-pink)]20 p-3 rounded-2xl border-2 border-black" style="background-color: rgba(255, 133, 179, 0.2);">
+                                    <p class="text-xs font-black uppercase text-pink-800">❌ Antonyms (反義)</p>
+                                    <p class="text-sm font-bold mt-1">${item.ant}</p>
+                                </div>
+                            </div>
+                            <div class="bg-[#F3F4F6] p-4 rounded-2xl border-2 border-black relative">
+                                <button onclick="speak('${item.ex}')" class="absolute top-3 right-3 text-gray-500 hover:text-black transition-colors">
+                                    <i class="fas fa-play-circle text-3xl"></i>
+                                </button>
+                                <p class="text-xs font-black uppercase mb-1 text-[var(--pop-blue)]">搭配詞</p>
+                                <p class="font-bold text-md mb-2 text-gray-800 border-b-2 border-gray-300 pb-2 inline-block">${item.coll}</p>
+                                <p class="text-base md:text-lg text-black font-semibold pr-10 leading-snug mt-2">${item.ex}</p>
+                                <p class="text-sm text-gray-600 mt-2 font-medium">${item.exZh}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderQuizSection(quizData, containerId, part) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            quizData.forEach((q, index) => {
+                const parts = q.text.split('[input]');
+                const displayIndex = part === 'A' ? index + 1 : index + 6;
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-[#F3F4F6] p-5 rounded-3xl relative";
+                div.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="bg-black text-white w-8 h-8 flex items-center justify-center rounded-full font-bold flex-shrink-0 mt-1">${displayIndex}</span>
+                        <div class="text-lg font-medium leading-relaxed w-full text-gray-800">
+                            ${parts[0]}
+                            <div class="inline-block relative mx-1 align-middle">
+                                <input type="text" id="input-${q.id}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                                    class="border-4 border-black bg-white px-3 py-1 w-32 md:w-40 text-center font-bold text-black outline-none focus:bg-yellow-100 transition-colors rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] focus:translate-y-[2px]"
+                                    onkeypress="handleQuizInput(event, ${q.id}, '${q.answer}', '${part}')">
+                            </div>
+                            ${parts[1]}
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3 pl-11">
+                        <button id="hint-btn-${q.id}" onclick="showDynamicHint(${q.id}, '${q.answer}', '${q.synHint}')" 
+                            class="text-sm bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-4 py-2 font-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all self-start">
+                            💡 獲取語意提示
+                        </button>
+                        <p id="hint-msg-${q.id}" class="text-sm font-bold text-[var(--pop-blue)] hidden bg-white border-2 border-black px-3 py-2 rounded-lg leading-relaxed flex-1 md:ml-4"></p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleAccordion(element) {
+            element.parentElement.classList.toggle('accordion-open');
+        }
+
+        function showDynamicHint(id, answer, synonymHint) {
+            if (!hintStates[id]) hintStates[id] = 0;
+            hintStates[id]++;
+
+            const hintEl = document.getElementById(`hint-msg-${id}`);
+            const btnEl = document.getElementById(`hint-btn-${id}`);
+
+            if (hintStates[id] === 1) {
+                hintEl.innerHTML = `💡 <b>同義字線索：</b> ${synonymHint}`;
+                hintEl.classList.remove('hidden');
+                btnEl.innerHTML = "🔍 需要拼字救援";
+                btnEl.className = "text-sm bg-[var(--pop-orange)] border-2 border-black rounded-xl px-4 py-2 font-black text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] transition-all self-start";
+            } else if (hintStates[id] === 2) {
+                hintEl.innerHTML = `💡 <b>同義字：</b> ${synonymHint}<br>🔍 <b>拼字提示：</b> 首字母 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 字母。`;
+                btnEl.disabled = true;
+                btnEl.innerHTML = "已獲得最大救援";
+                btnEl.className = "text-sm bg-gray-300 border-2 border-black rounded-xl px-4 py-2 font-black text-gray-500 cursor-not-allowed shadow-none self-start";
+            }
+        }
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            learnedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            
+            document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
+            document.getElementById('quizA-prog').innerText = `🎯 測驗A: ${quizACorrectCount}/5`;
+            document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCorrectCount}/5`;
+
+            const progress = ((learnedCount + quizACorrectCount + quizBCorrectCount) / 20) * 100;
+            document.getElementById('main-progress').style.width = `${progress}%`;
+        }
+
+        function handleQuizInput(event, id, answer, part) {
+            if (event.key === 'Enter') {
+                const inputEl = document.getElementById(`input-${id}`);
+                const hintEl = document.getElementById(`hint-msg-${id}`);
+                const btnEl = document.getElementById(`hint-btn-${id}`);
+                const userAnswer = inputEl.value.trim().toLowerCase();
+                
+                if (userAnswer === answer.toLowerCase()) {
+                    inputEl.value = answer; 
+                    inputEl.disabled = true;
+                    inputEl.classList.add('input-correct');
+                    inputEl.classList.remove('focus:bg-yellow-100');
+                    inputEl.classList.add('bg-green-100');
+                    
+                    hintEl.innerHTML = "✨ 正確！";
+                    hintEl.classList.remove('hidden');
+                    hintEl.classList.remove('text-[var(--pop-blue)]');
+                    hintEl.classList.add('text-green-700', 'bg-green-100');
+                    
+                    if (btnEl) {
+                        btnEl.disabled = true;
+                        btnEl.classList.add('hidden');
+                    }
+
+                    speak(answer);
+
+                    if (!inputEl.dataset.solved) {
+                        inputEl.dataset.solved = "true";
+                        if (part === 'A') quizACorrectCount++;
+                        else quizBCorrectCount++;
+                        
+                        updateProgress();
+                        
+                        if (quizACorrectCount === 5 && quizBCorrectCount === 5 && learnedCount === 10) {
+                            setTimeout(showCompletionModal, 1200);
+                        }
+                    }
+                } else {
+                    inputEl.parentElement.classList.add('hint-shake');
+                    setTimeout(() => inputEl.parentElement.classList.remove('hint-shake'), 500);
+                    
+                    const quizItem = quizzesA.concat(quizzesB).find(q => q.id === id);
+                    if (!hintStates[id]) showDynamicHint(id, answer, quizItem.synHint);
+                }
+            }
+        }
+
+        function showCompletionModal() {
+            const modal = document.getElementById('completion-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            triggerConfetti();
+            setTimeout(() => speak("Perfect score! Amazing job, Teacher Rui Rui! Today's lesson is completely finished!"), 500);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('completion-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function triggerConfetti() {
+            const duration = 3.5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 60 };
+
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                
+                const particleCount = 60 * (timeLeft / duration);
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+            }, 250);
+        }
+    </script>
+</body>
+</html>
