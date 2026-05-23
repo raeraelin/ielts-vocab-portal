@@ -1,4 +1,4 @@
-# 瑞老師的雅思單字特訓門戶 (IELTS Vocabulary Portal)
+# 瑞老師的雅思單字樂園 (IELTS Vocabulary Portal)
 
 這是一個個人專屬的雅思單字學習 App。
 
