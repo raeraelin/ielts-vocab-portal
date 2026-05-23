@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞瑞老師 IELTS 單字與閱讀趴 - Day 10</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght=700;900&display=swap');
+        
+        :root {
+            --pop-pink: #FF85B3;
+            --pop-yellow: #FFD93D;
+            --pop-blue: #4D96FF;
+            --pop-green: #6BCB77;
+            --pop-purple: #B983FF;
+            --pop-orange: #FF9F45;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            background-color: #FFF5E4;
+        }
+
+        .dopamine-card {
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.2s ease;
+        }
+
+        .dopamine-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .tab-btn {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .tab-btn.active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-open .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-open .arrow { transform: rotate(180deg); }
+
+        .input-correct {
+            background-color: #D1FAE5;
+            border-color: #059669;
+            color: #065F46;
+        }
+
+        .hint-shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .modal-pop {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: scale(0);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .word-badge {
+            border: 2px solid #000;
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 2px;
+            border-radius: 8px;
+            font-weight: bold;
+            background-color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- 頂部導航與三軌進度 -->
+        <header class="dopamine-card bg-[var(--pop-green)] p-6 mb-6 rounded-3xl text-center">
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Day 10: Environment & Climate 🌱</h1>
+            <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
+                <div id="main-progress" class="bg-[var(--pop-pink)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-4 text-black font-black text-[10px] md:text-sm">
+                <span id="learn-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📖 學習: 0/10</span>
+                <span id="reading-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">✍️ 閱讀: 0/4</span>
+                <span id="quiz-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 填充: 0/6</span>
+            </div>
+        </header>
+
+        <!-- 分頁切換 -->
+        <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
+            <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">📖 1. 單字積累區</button>
+            <button onclick="switchTab('reading')" id="tab-reading" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">✍️ 2. 雅思閱讀實戰</button>
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">🎯 3. 核心填充挑戰</button>
+        </div>
+
+        <main>
+            <!-- 1. 單字積累區 -->
+            <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
+
+            <!-- 2. 雅思閱讀實戰（左右分欄佈局） -->
+            <div id="section-reading" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 左側：長文章 -->
+                <div class="dopamine-card bg-white p-6 rounded-3xl h-[600px] overflow-y-auto border-4 border-black">
+                    <h3 class="font-black text-xl mb-4 text-[var(--pop-purple)]">Reading Passage</h3>
+                    <p class="text-gray-800 text-base leading-relaxed space-y-4 font-semibold">
+                        The modern world faces unprecedented ecological challenges, primarily driven by human activities that <b>deplete</b> finite natural resources. As industrialization expanded, the skyrocketing level of greenhouse gas <b>emissions</b> initiated global climate instability. This shift has already triggered <b>devastating</b> weather events, such as severe droughts and unpredictable floods, leaving coastal communities extremely <b>vulnerable</b> to rising sea levels.<br><br>
+                        Moreover, human negligence continues to <b>contaminate</b> vital freshwater supplies with industrial chemicals, threatening both human populations and the <b>fragile ecosystems</b> that support biodiversity. In response, international groups are advocating for a comprehensive shift toward <b>sustainability</b> by investing heavily in <b>renewable</b> energy technologies like solar and wind power. Environmental scientists stress that proactive habitat <b>conservation</b> and aggressive political policies are mandatory to <b>mitigate</b> the long-term impacts of global warming before the damage to our planet becomes entirely irreversible.
+                    </p>
+                </div>
+                <!-- 右側：雅思真實題型（帶字庫填空） -->
+                <div class="space-y-4">
+                    <div class="dopamine-card bg-[var(--pop-purple)]20 p-5 rounded-3xl">
+                        <h4 class="font-black text-lg text-black mb-1">📝 Questions 1-4: Summary Completion</h4>
+                        <p class="text-xs text-gray-700"><b>說明：</b> 這是經典的雅思帶字庫題型。請閱讀左側文章，從下方的「單字庫」中選擇最適合的單字代號 (A-F) 填入空格中！</p>
+                        
+                        <!-- 字庫 Word Box -->
+                        <div class="bg-white border-2 border-black p-3 rounded-xl my-3 text-sm">
+                            <span class="word-badge">A. vulnerable</span>
+                            <span class="word-badge">B. deplete</span>
+                            <span class="word-badge">C. sustainability</span>
+                            <span class="word-badge">D. emissions</span>
+                            <span class="word-badge">E. mitigate</span>
+                            <span class="word-badge">F. devastating</span>
+                        </div>
+                    </div>
+
+                    <!-- 閱讀題目列表 -->
+                    <div id="reading-questions-list" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- 3. 核心填充挑戰 -->
+            <div id="section-quiz" class="hidden max-w-3xl mx-auto space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl">
+                    <p class="font-bold text-lg mb-1">🎯 獨立拼寫強度深化</p>
+                    <p class="text-gray-700 text-sm">請親自打字輸入正確單字（按 Enter 判定）。答錯會自動開啟雙階鷹架提示，並幫您做答錯晃動特效！</p>
+                </div>
+                <div id="quiz-list-pure" class="space-y-6"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 100% 滿分總結彈窗 -->
+    <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+        <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
+            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">🌱</div>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-green)]">Perfect 100%</h2>
+            <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
+                瑞瑞老師，太震撼了！您已成功解鎖 Day 10 環境科學領域的所有雅思閱讀與核心單字挑戰。您的偵探思維與雙階鷹架配合得天衣無縫！
+            </p>
+            <button onclick="closeModal()" class="w-full bg-[var(--pop-yellow)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all">
+                收工，享受多巴胺！✨
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = [
+            { word: "Renewable", zh: "可再生的", coll: "renewable energy sources", ex: "Investing in renewable energy is crucial to reduce our reliance on fossil fuels.", exZh: "投資可再生能源對於減少我們對化石燃料的依賴至關重要。", syn: "sustainable, replaceable", ant: "finite" },
+            { word: "Ecosystem", zh: "生態系統", coll: "fragile ecosystem", ex: "Pollution and deforestation can easily disrupt the area's fragile ecosystem.", exZh: "污染和砍伐森林很容易破壞該地區脆弱的生態系統。", syn: "ecological community", ant: "N/A" },
+            { word: "Emission", zh: "排放物", coll: "carbon emissions", ex: "Many countries have pledged to cut greenhouse gas emissions by 2030.", exZh: "許多國家已承諾在 2030 年前減少溫室氣體排放。", syn: "discharge, radiation", ant: "absorption" },
+            { word: "Contaminate", zh: "污染、毒害", coll: "contaminate water supplies", ex: "Industrial waste can severely contaminate local rivers and soil.", exZh: "工業廢料會嚴重污染當地的河流和土壤。", syn: "pollute, taint", ant: "purify" },
+            { word: "Conservation", zh: "保護、保存", coll: "wildlife conservation", ex: "Environmentalists emphasize the importance of habitat conservation.", exZh: "環境主義者強調棲息地保護的重要性。", syn: "protection, preservation", ant: "destruction" },
+            { word: "Devastating", zh: "毀滅性的", coll: "devastating effects", ex: "Climate change has led to devastating wildfires across the globe.", exZh: "氣候變遷已導致全球各地發生毀滅性的野火。", syn: "destructive, disastrous", ant: "beneficial" },
+            { word: "Sustainability", zh: "永續性", coll: "environmental sustainability", ex: "The project focuses on long-term economic and environmental sustainability.", exZh: "該計畫專注於長期的經濟與環境永續性。", syn: "renewability, viability", ant: "unviability" },
+            { word: "Deplete", zh: "消耗、枯竭", coll: "deplete natural resources", ex: "Overfishing continues to deplete marine populations in the ocean.", exZh: "過度捕撈繼續使海洋中的魚類數量枯竭。", syn: "exhaust, drain, consume", ant: "replenish" },
+            { word: "Mitigate", zh: "緩解、減輕", coll: "mitigate the effects", ex: "Planting more trees in urban areas can help mitigate the heat island effect.", exZh: "在城市地區種植更多樹木有助於緩解熱島效應。", syn: "alleviate, lessen, reduce", ant: "aggravate, intensify" },
+            { word: "Vulnerable", zh: "脆弱的、易受影響的", coll: "vulnerable to climate change", ex: "Coastal cities are highly vulnerable to rising sea levels.", exZh: "沿海城市極易受到海平面上升的影響。", syn: "susceptible, exposed", ant: "protected, resilient" }
+        ];
+
+        // 雅思閱讀題目（帶字庫，輸入 A-F）
+        const readingQuizzes = [
+            { id: "R1", text: "Human dependency on modern industries frequently acts to [input] the earth's restricted resources.", answer: "B", baseWord: "deplete", synHint: "文章第一句：'activities that deplete finite natural resources'" },
+            { id: "R2", text: "The unrestrained release of carbon [input] has been identified as the main catalyst for worldwide weather instability.", answer: "D", baseWord: "emissions", synHint: "文章第二句：'greenhouse gas emissions initiated global climate instability'" },
+            { id: "R3", text: "Consequently, the planet is experiencing [input] environmental crises, such as aggressive droughts.", answer: "F", baseWord: "devastating", synHint: "文章第三句：'triggered devastating weather events'" },
+            { id: "R4", text: "This leaves populations near the sea incredibly [input] to environmental destruction.", answer: "A", baseWord: "vulnerable", synHint: "文章第三句尾：'leaving coastal communities extremely vulnerable'" }
+        ];
+
+        // 獨立填充題目
+        const pureQuizzes = [
+            { id: "P1", text: "Heavy metals from the nearby chemical factory continue to [input] the local agricultural soil.", answer: "contaminate", synHint: "pollute, poison, make dirty or dangerous" },
+            { id: "P2", text: "The local government funds wildlife [input] programs to protect endangered mountain species.", answer: "conservation", synHint: "preservation, habitat protection from harm" },
+            { id: "P3", text: "The university introduced a new corporate policy centered on environmental [input].", answer: "sustainability", synHint: "long-term maintainability, eco-friendly persistence" },
+            { id: "P4", text: "Engineers designed structural reinforcement walls to [input] the destructive impact of seasonal floods.", answer: "mitigate", synHint: "alleviate, soften, reduce the severity of something" },
+            { id: "P5", text: "Solar power stands as a premier example of a [input] energy infrastructure.", answer: "renewable", synHint: "everlasting, non-finite, naturally replenished" },
+            { id: "P6", text: "Any slight temperature variation can dangerously collapse the lake's aquatic [input].", answer: "ecosystem", synHint: "ecological network, biological environment community" }
+        ];
+
+        const cardColors = ['#FFD93D', '#6BCB77', '#B983FF', '#FF9F45', '#FF85B3'];
+        let learnedCount = 0, readingCount = 0, pureQuizCount = 0;
+        const hintStates = {};
+
+        window.onload = () => {
+            renderLearn();
+            renderReadingQuizzes();
+            renderPureQuizzes();
+        };
+
+        function switchTab(tab) {
+            const tabs = ['learn', 'reading', 'quiz'];
+            const colors = { learn: 'var(--pop-yellow)', reading: 'var(--pop-pink)', quiz: 'var(--pop-orange)' };
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`tab-${t}`).style.backgroundColor = 'white';
+                document.getElementById(`section-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById(`tab-${tab}`).style.backgroundColor = colors[tab];
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+        }
+
+        // 發音引擎優化：徹底清除排程並延時發音，100% 穩定不卡死
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                setTimeout(() => {
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'en-US';
+                    u.rate = 0.88;
+                    window.speechSynthesis.speak(u);
+                }, 40);
+            }
+        }
+
+        function toggleAccordion(el) { el.parentElement.classList.toggle('accordion-open'); }
+
+        function renderLearn() {
+            const container = document.getElementById('section-learn');
+            vocabulary.forEach((item, index) => {
+                const color = cardColors[index % 5];
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white rounded-3xl overflow-hidden mb-4";
+                div.innerHTML = `
+                    <div class="p-4 md:p-5 flex items-center justify-between cursor-pointer" style="background-color: ${color}20" onclick="toggleAccordion(this)">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-6 h-6 border-2 border-black accent-black rounded cursor-pointer" onclick="event.stopPropagation(); updateProgress()">
+                            <span class="text-xl md:text-2xl font-black text-black">${item.word} <small class="text-gray-500 font-bold text-sm">/ ${item.zh}</small></span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="event.stopPropagation(); speak('${item.word}')" class="w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"><i class="fas fa-volume-up"></i></button>
+                            <i class="fas fa-chevron-down arrow mt-3 text-black"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="p-5 space-y-4 border-t-4 border-black bg-white">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-[var(--pop-green)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-green-800">✅ 同義: ${item.syn}</div>
+                                <div class="bg-[var(--pop-pink)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-red-800">❌ 反義: ${item.ant}</div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-xl border-2 border-black relative">
+                                <p class="text-xs font-black uppercase text-blue-600 mb-1">搭配 & 例句</p>
+                                <p class="font-bold text-sm text-black mb-2">${item.coll}</p>
+                                <p class="text-black font-semibold text-base leading-snug mb-1">${item.ex}</p>
+                                <p class="text-xs text-gray-500 font-medium">${item.exZh}</p>
+                                <button onclick="speak('${item.ex}')" class="absolute bottom-3 right-3 text-blue-500 hover:text-blue-700"><i class="fas fa-play-circle text-2xl"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderReadingQuizzes() {
+            const container = document.getElementById('reading-questions-list');
+            readingQuizzes.forEach((q, idx) => {
+                const parts = q.text.split('[input]');
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white p-4 rounded-2xl border-4 border-black";
+                div.innerHTML = `
+                    <p class="font-bold text-sm text-gray-800 mb-2 leading-relaxed">
+                        <span class="bg-black text-white text-xs px-2 py-0.5 rounded-md mr-1">${idx + 1}</span>
+                        ${parts[0]} <input type="text" id="input-${q.id}" placeholder="代號" class="border-b-4 border-black bg-yellow-50 w-12 text-center uppercase font-black outline-none rounded" onkeypress="checkReadingAnswer(event, '${q.id}', '${q.answer}', '${q.baseWord}')"> ${parts[1]}
+                    </p>
+                    <div class="flex justify-between items-center mt-2 pl-6">
+                        <button id="hint-btn-${q.id}" onclick="showReadingHint('${q.id}', '${q.synHint}')" class="text-[10px] bg-white border border-black rounded px-2 py-0.5 font-bold shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">💡 尋找定位原文</button>
+                        <p id="hint-msg-${q.id}" class="text-[10px] font-bold text-purple-600 hidden bg-purple-50 border border-black px-2 py-0.5 rounded"></p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderPureQuizzes() {
+            const container = document.getElementById('quiz-list-pure');
+            pureQuizzes.forEach((q, idx) => {
+                const parts = q.text.split('[input]');
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white p-5 rounded-3xl relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+                div.innerHTML = `
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${idx + 5}</span>
+                        <p class="text-base font-semibold leading-relaxed text-gray-800">${parts[0]}<input type="text" id="input-${q.id}" class="border-b-4 border-black bg-white px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-50 transition-colors rounded" onkeypress="checkPureAnswer(event, '${q.id}', '${q.answer}')">${parts[1]}</p>
+                    </div>
+                    <div class="flex justify-between items-center pl-10">
+                        <button id="hint-btn-${q.id}" onclick="showPureHint('${q.id}', '${q.answer}', '${q.synHint}')" class="text-xs bg-[var(--pop-yellow)] border-2 border-black rounded-lg px-3 py-1 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all">💡 獲取語意提示</button>
+                        <p id="hint-msg-${q.id}" class="text-[11px] font-bold text-blue-600 hidden bg-white border border-black px-2 py-1 rounded"></p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function showReadingHint(id, hint) {
+            const msg = document.getElementById(`hint-msg-${id}`);
+            msg.innerHTML = hint;
+            msg.classList.remove('hidden');
+        }
+
+        function checkReadingAnswer(e, id, answer, baseWord) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-${id}`);
+                if (input.value.trim().toUpperCase() === answer) {
+                    input.disabled = true; input.classList.add('input-correct');
+                    document.getElementById(`hint-btn-${id}`).classList.add('hidden');
+                    document.getElementById(`hint-msg-${id}`).className = "text-[10px] font-bold text-green-600 bg-green-50 border border-black px-2 py-0.5 rounded";
+                    document.getElementById(`hint-msg-${id}`).innerHTML = `✨ 答對了！對應單字是：${baseWord}`;
+                    document.getElementById(`hint-msg-${id}`).classList.remove('hidden');
+                    speak(baseWord);
+                    if (!input.dataset.solved) {
+                        input.dataset.solved = "true";
+                        readingCount++; updateProgress(); checkFullCompletion();
+                    }
+                } else {
+                    shakeElement(input.parentElement);
+                }
+            }
+        }
+
+        // 雙階動態鷹架提示（填充題專用）
+        function showPureHint(id, answer, synHint) {
+            if (!hintStates[id]) hintStates[id] = 0;
+            hintStates[id]++;
+            const msg = document.getElementById(`hint-msg-${id}`);
+            const btn = document.getElementById(`hint-btn-${id}`);
+            if (hintStates[id] === 1) {
+                msg.innerHTML = `💡 <b>同義字線索：</b> ${synHint}`;
+                msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援";
+                btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+            } else {
+                msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
+                btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
+            }
+        }
+
+        function checkPureAnswer(e, id, answer) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-${id}`);
+                const btn = document.getElementById(`hint-btn-${id}`);
+                const msg = document.getElementById(`hint-msg-${id}`);
+                if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+                    input.value = answer; input.disabled = true; input.classList.add('input-correct');
+                    if (btn) btn.classList.add('hidden');
+                    if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; }
+                    speak(answer);
+                    if (!input.dataset.solved) {
+                        input.dataset.solved = "true";
+                        pureQuizCount++; updateProgress(); checkFullCompletion();
+                    }
+                } else {
+                    shakeElement(input.parentElement.parentElement);
+                    // 答錯自動幫忙點擊第一階提示
+                    if (!hintStates[id]) {
+                        const qItem = pureQuizzes.find(q => q.id === id);
+                        showPureHint(id, answer, qItem.synHint);
+                    }
+                }
+            }
+        }
+
+        function shakeElement(el) {
+            el.classList.add('hint-shake');
+            setTimeout(() => el.classList.remove('hint-shake'), 500);
+        }
+
+        function updateProgress() {
+            const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
+            learnedCount = Array.from(boxes).filter(b => b.checked).length;
+            document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
+            document.getElementById('reading-prog').innerText = `✍️ 閱讀: ${readingCount}/4`;
+            document.getElementById('quiz-prog').innerText = `🎯 填充: ${pureQuizCount}/6`;
+            
+            const totalProgress = ((learnedCount + readingCount + pureQuizCount) / 20) * 100;
+            document.getElementById('main-progress').style.width = `${totalProgress}%`;
+        }
+
+        function checkFullCompletion() {
+            if (learnedCount === 10 && readingCount === 4 && pureQuizCount === 6) {
+                setTimeout(() => {
+                    document.getElementById('completion-modal').classList.remove('hidden');
+                    document.getElementById('completion-modal').classList.add('flex');
+                    confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 }, colors: ['#FF85B3', '#FFD93D', '#4D96FF', '#6BCB77'] });
+                    speak("Perfect score! Spectacular job, Teacher Rui Rui! You have successfully mastered day ten!");
+                }, 1200);
+            }
+        }
+
+        function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>

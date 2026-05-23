@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞瑞老師 IELTS 單字與閱讀趴 - Day 11</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@700;900&display=swap');
+        
+        :root {
+            --pop-pink: #FF85B3;
+            --pop-yellow: #FFD93D;
+            --pop-blue: #4D96FF;
+            --pop-green: #6BCB77;
+            --pop-purple: #B983FF;
+            --pop-orange: #FF9F45;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            background-color: #FFF5E4;
+        }
+
+        .dopamine-card {
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.2s ease;
+        }
+
+        .dopamine-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .tab-btn {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .tab-btn.active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-open .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-open .arrow { transform: rotate(180deg); }
+
+        .input-correct {
+            background-color: #D1FAE5;
+            border-color: #059669;
+            color: #065F46;
+        }
+
+        .hint-shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .modal-pop {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: scale(0);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .word-badge {
+            border: 2px solid #000;
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 4px;
+            border-radius: 8px;
+            font-weight: 900;
+            background-color: #fff;
+            box-shadow: 2px 2px 0px #000;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- 頂部導航與三軌進度 -->
+        <header class="dopamine-card bg-[var(--pop-blue)] p-6 mb-6 rounded-3xl text-center">
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Day 11: Tech & AI Education 💻</h1>
+            <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
+                <div id="main-progress" class="bg-[var(--pop-yellow)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-4 text-black font-black text-[10px] md:text-sm">
+                <span id="learn-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📖 學習: 0/10</span>
+                <span id="quizA-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 測驗A: 0/5</span>
+                <span id="quizB-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 測驗B: 0/5</span>
+            </div>
+        </header>
+
+        <!-- 分頁切換 -->
+        <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
+            <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">📖 學習區</button>
+            <button onclick="switchTab('quizA')" id="tab-quizA" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">✍️ 測驗 Part A (閱讀)</button>
+            <button onclick="switchTab('quizB')" id="tab-quizB" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">🎯 測驗 Part B (單字)</button>
+        </div>
+
+        <main>
+            <!-- 學習區 -->
+            <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
+
+            <!-- 測驗 Part A: 雅思閱讀實戰 -->
+            <div id="section-quizA" class="hidden space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl border-4 border-black mb-4">
+                    <h3 class="font-black text-xl mb-3 text-[var(--pop-purple)]">📖 Reading Passage: The Digital Classroom</h3>
+                    <p class="text-gray-800 text-base leading-relaxed font-semibold bg-gray-50 p-4 rounded-xl border-2 border-black">
+                        The integration of <b>cutting-edge</b> technology in education has fundamentally transformed how students learn. Teachers now use <b>intuitive</b> digital platforms to <b>simulate</b> complex real-world problems safely within the classroom. While some critics fear that AI will <b>automate</b> teaching entirely, making human educators <b>obsolete</b>, the reality is that these tools serve to enhance, rather than replace, genuine human interaction and mentorship.
+                    </p>
+                </div>
+
+                <div class="dopamine-card bg-[var(--pop-pink)] p-5 rounded-3xl">
+                    <h4 class="font-black text-lg text-black mb-2">📝 Summary Completion (帶字庫填空)</h4>
+                    <p class="text-xs text-black font-bold mb-3">請根據上方短文，將正確單字打字輸入下方空格（按 Enter 送出）。若卡住，會啟動雙階鷹架！</p>
+                    <div class="bg-white border-2 border-black p-3 rounded-xl mb-4 text-center">
+                        <span class="word-badge text-[var(--pop-blue)]">obsolete</span>
+                        <span class="word-badge text-[var(--pop-orange)]">cutting-edge</span>
+                        <span class="word-badge text-[var(--pop-purple)]">simulate</span>
+                        <span class="word-badge text-[var(--pop-green)]">automate</span>
+                        <span class="word-badge text-pink-600">intuitive</span>
+                    </div>
+                    <div id="quiz-list-A" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- 測驗 Part B: 獨立句型填充 -->
+            <div id="section-quizB" class="hidden max-w-3xl mx-auto space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl">
+                    <p class="font-bold text-lg mb-1">🎯 Part B: 獨立語境深化</p>
+                    <p class="text-gray-700 text-sm">脫離文章的輔助，挑戰另外 5 個核心 AI 與科技詞彙。按 Enter 判定對錯！</p>
+                </div>
+                <div id="quiz-list-B" class="space-y-6"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 100% 滿分總結彈窗 -->
+    <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+        <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
+            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">🎓</div>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-blue)]">Mission Accomplished!</h2>
+            <div class="text-5xl font-black text-[var(--pop-orange)] mb-4">100<span class="text-2xl text-black">%</span></div>
+            <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
+                太精采了，瑞老師！您不僅背下了單字，還完美破解了雅思閱讀的邏輯。您的數位教學技能與英語實力都在飛速進化！
+            </p>
+            <button onclick="closeModal()" class="w-full bg-[var(--pop-green)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all">
+                完美收工！✨
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = [
+            { word: "Innovative", zh: "創新的", coll: "highly innovative approach", ex: "The new school curriculum is highly innovative, focusing on project-based learning.", exZh: "新的學校課綱非常創新，專注於專案式學習。", syn: "groundbreaking, inventive", ant: "traditional, unoriginal" },
+            { word: "Algorithm", zh: "演算法", coll: "complex algorithm", ex: "Social media platforms use a complex algorithm to determine what content you see.", exZh: "社群媒體平台使用複雜的演算法來決定您看到的內容。", syn: "procedure, set of rules", ant: "N/A" },
+            { word: "Automate", zh: "自動化", coll: "automate routine tasks", ex: "There is a fear that machines might automate many tasks currently done by humans.", exZh: "人們擔心機器可能會將目前由人類完成的許多任務自動化。", syn: "mechanize, computerize", ant: "do manually" },
+            { word: "Obsolete", zh: "過時的、淘汰的", coll: "become obsolete", ex: "Traditional chalkboards have become largely obsolete in digital classrooms.", exZh: "傳統黑板在數位教室中已大致變得過時。", syn: "outdated, archaic", ant: "modern, up-to-date" },
+            { word: "Cutting-edge", zh: "尖端的、最先進的", coll: "cutting-edge technology", ex: "Schools are adopting cutting-edge technology to keep up with modern educational demands.", exZh: "學校正採用尖端科技以跟上現代教育需求。", syn: "state-of-the-art, advanced", ant: "outdated" },
+            { word: "Intuitive", zh: "直覺的", coll: "highly intuitive interface", ex: "These new educational apps are so intuitive that even young children can use them effortlessly.", exZh: "這些新的教育應用程式非常直覺，甚至年幼的孩童也能毫不費力地使用。", syn: "instinctive, user-friendly", ant: "complicated, counterintuitive" },
+            { word: "Virtual", zh: "虛擬的", coll: "virtual environment", ex: "Online courses offer a virtual environment for students to collaborate across the globe.", exZh: "線上課程提供了一個虛擬環境，讓學生能跨越全球進行協作。", syn: "simulated, digital", ant: "physical, actual" },
+            { word: "Simulate", zh: "模擬", coll: "simulate real-world scenarios", ex: "Virtual reality can safely simulate dangerous scientific experiments in the classroom.", exZh: "虛擬實境可以在教室中安全地模擬危險的科學實驗。", syn: "replicate, imitate", ant: "N/A" },
+            { word: "Integration", zh: "整合", coll: "successful integration", ex: "The successful integration of AI tools into the syllabus requires careful planning.", exZh: "將 AI 工具成功整合進教學大綱需要仔細的規劃。", syn: "incorporation, combination", ant: "separation" },
+            { word: "Proficient", zh: "精通的、熟練的", coll: "proficient in English", ex: "To pass the certification, educators must be proficient in utilizing various digital tools.", exZh: "為了通過認證，教育工作者必須精通各種數位工具的使用。", syn: "skilled, capable", ant: "incompetent, unskilled" }
+        ];
+
+        // Part A: 閱讀測驗題
+        const quizzesA = [
+            { id: "A1", text: "Schools are actively adopting [input] technology to keep up with modern demands.", answer: "cutting-edge", synHint: "state-of-the-art, highly advanced" },
+            { id: "A2", text: "These new educational apps are so [input] that children can use them without instructions.", answer: "intuitive", synHint: "easy to understand instinctively, user-friendly" },
+            { id: "A3", text: "Software can safely [input] dangerous scientific experiments in the classroom.", answer: "simulate", synHint: "imitate, replicate a real-world process" },
+            { id: "A4", text: "There is a fear that machines might [input] many tasks currently done by teachers.", answer: "automate", synHint: "make a process operate by machines" },
+            { id: "A5", text: "Traditional chalkboards have become largely [input] in modern digital classrooms.", answer: "obsolete", synHint: "no longer produced or used, out of date" }
+        ];
+
+        // Part B: 獨立測驗題
+        const quizzesB = [
+            { id: "B1", text: "The special education curriculum is highly [input], focusing on adaptive learning.", answer: "innovative", synHint: "featuring new methods; advanced and original" },
+            { id: "B2", text: "The system uses a complex [input] to analyze student performance data.", answer: "algorithm", synHint: "a process or set of rules followed in calculations" },
+            { id: "B3", text: "Distance learning offers a [input] environment for students studying from home.", answer: "virtual", synHint: "not physically existing as such but made by software" },
+            { id: "B4", text: "The successful [input] of Chromebooks into daily lessons requires planning.", answer: "integration", synHint: "the action or process of combining things" },
+            { id: "B5", text: "By June, she aims to be [input] in bilingual teaching techniques.", answer: "proficient", deposit: "capable", synHint: "competent or skilled in doing or using something" }
+        ];
+
+        const cardColors = ['#FFD93D', '#6BCB77', '#B983FF', '#FF9F45', '#FF85B3'];
+        let learnedCount = 0, quizACount = 0, quizBCount = 0;
+        const hintStates = {};
+
+        window.onload = () => {
+            renderLearn();
+            renderQuiz(quizzesA, 'quiz-list-A', 'A');
+            renderQuiz(quizzesB, 'quiz-list-B', 'B');
+        };
+
+        function switchTab(tab) {
+            const tabs = ['learn', 'quizA', 'quizB'];
+            const colors = { learn: 'var(--pop-yellow)', quizA: 'var(--pop-pink)', quizB: 'var(--pop-green)' };
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`tab-${t}`).style.backgroundColor = 'white';
+                document.getElementById(`section-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById(`tab-${tab}`).style.backgroundColor = colors[tab];
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                setTimeout(() => {
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'en-US';
+                    u.rate = 0.88;
+                    window.speechSynthesis.speak(u);
+                }, 40);
+            }
+        }
+
+        function toggleAccordion(el) { el.parentElement.classList.toggle('accordion-open'); }
+
+        function renderLearn() {
+            const container = document.getElementById('section-learn');
+            vocabulary.forEach((item, index) => {
+                const color = cardColors[index % 5];
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white rounded-3xl overflow-hidden mb-4";
+                div.innerHTML = `
+                    <div class="p-4 md:p-5 flex items-center justify-between cursor-pointer" style="background-color: ${color}20" onclick="toggleAccordion(this)">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-6 h-6 border-2 border-black accent-black rounded cursor-pointer" onclick="event.stopPropagation(); updateProgress()">
+                            <span class="text-xl md:text-2xl font-black text-black">${item.word} <small class="text-gray-500 font-bold text-sm">/ ${item.zh}</small></span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="event.stopPropagation(); speak('${item.word}')" class="w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"><i class="fas fa-volume-up"></i></button>
+                            <i class="fas fa-chevron-down arrow mt-3 text-black"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="p-5 space-y-4 border-t-4 border-black bg-white">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-[var(--pop-green)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-green-800">✅ 同義: ${item.syn}</div>
+                                <div class="bg-[var(--pop-pink)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-red-800">❌ 反義: ${item.ant}</div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-xl border-2 border-black relative">
+                                <p class="text-xs font-black uppercase text-blue-600 mb-1">搭配 & 例句</p>
+                                <p class="font-bold text-sm text-black mb-2">${item.coll}</p>
+                                <p class="text-black font-semibold text-base leading-snug mb-1">${item.ex}</p>
+                                <p class="text-xs text-gray-500 font-medium">${item.exZh}</p>
+                                <button onclick="speak('${item.ex}')" class="absolute bottom-3 right-3 text-blue-500 hover:text-blue-700"><i class="fas fa-play-circle text-2xl"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderQuiz(data, containerId, part) {
+            const container = document.getElementById(containerId);
+            data.forEach((q, idx) => {
+                const parts = q.text.split('[input]');
+                const displayIndex = part === 'A' ? idx + 1 : idx + 6;
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white p-5 rounded-3xl mb-4 relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+                div.innerHTML = `
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
+                        <p class="text-base font-semibold leading-relaxed text-gray-800">${parts[0]}<input type="text" id="input-${q.id}" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-32 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">${parts[1]}</p>
+                    </div>
+                    <div class="flex justify-between items-center pl-10">
+                        <button id="hint-btn-${q.id}" onclick="showDynamicHint('${q.id}', '${q.answer}', '${q.synHint}')" class="text-xs bg-[var(--pop-yellow)] border-2 border-black rounded-lg px-3 py-1 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all">💡 獲取語意提示</button>
+                        <p id="hint-msg-${q.id}" class="text-[11px] font-bold text-blue-600 hidden bg-white border border-black px-2 py-1 rounded"></p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function showDynamicHint(id, answer, synHint) {
+            if (!hintStates[id]) hintStates[id] = 0;
+            hintStates[id]++;
+            const msg = document.getElementById(`hint-msg-${id}`);
+            const btn = document.getElementById(`hint-btn-${id}`);
+            if (hintStates[id] === 1) {
+                msg.innerHTML = `💡 <b>同義字線索：</b> ${synHint}`;
+                msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援";
+                btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+            } else {
+                msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
+                btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
+            }
+        }
+
+        function checkAnswer(e, id, answer, part) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-${id}`);
+                const btn = document.getElementById(`hint-btn-${id}`);
+                const msg = document.getElementById(`hint-msg-${id}`);
+                if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+                    input.value = answer; input.disabled = true; input.classList.add('input-correct');
+                    if (btn) btn.classList.add('hidden');
+                    if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; msg.classList.remove('hidden'); }
+                    speak(answer);
+                    if (!input.dataset.solved) {
+                        input.dataset.solved = "true";
+                        if (part === 'A') quizACount++; else quizBCount++;
+                        updateProgress(); checkFullCompletion();
+                    }
+                } else {
+                    input.parentElement.parentElement.classList.add('hint-shake');
+                    setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
+                    
+                    if (!hintStates[id]) {
+                        const allQuizzes = quizzesA.concat(quizzesB);
+                        const qItem = allQuizzes.find(q => q.id === id);
+                        showDynamicHint(id, answer, qItem.synHint);
+                    }
+                }
+            }
+        }
+
+        function updateProgress() {
+            const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
+            learnedCount = Array.from(boxes).filter(b => b.checked).length;
+            document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
+            document.getElementById('quizA-prog').innerText = `🎯 測驗A: ${quizACount}/5`;
+            document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
+            
+            const totalProgress = ((learnedCount + quizACount + quizBCount) / 20) * 100;
+            document.getElementById('main-progress').style.width = `${totalProgress}%`;
+        }
+
+        function checkFullCompletion() {
+            if (learnedCount === 10 && quizACount === 5 && quizBCount === 5) {
+                setTimeout(() => {
+                    document.getElementById('completion-modal').classList.remove('hidden');
+                    document.getElementById('completion-modal').classList.add('flex');
+                    confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 }, colors: ['#FF85B3', '#FFD93D', '#4D96FF', '#6BCB77'] });
+                    speak("Mission accomplished! Excellent work today, Teacher Rui Rui!");
+                }, 1200);
+            }
+        }
+
+        function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>
