@@ -1,0 +1,395 @@
+:Psychology & Human Behavior Unit:07-psychology.html
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞瑞老師 IELTS 單字與閱讀趴 - Psychology & Behavior</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght=700;900&display=swap');
+        
+        :root {
+            --pop-pink: #FF85B3;
+            --pop-yellow: #FFD93D;
+            --pop-blue: #4D96FF;
+            --pop-green: #6BCB77;
+            --pop-purple: #B983FF;
+            --pop-orange: #FF9F45;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            background-color: #FFF5E4;
+        }
+
+        .dopamine-card {
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.2s ease;
+        }
+
+        .dopamine-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .tab-btn {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .tab-btn.active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-open .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-open .arrow { transform: rotate(180deg); }
+
+        .input-correct {
+            background-color: #D1FAE5;
+            border-color: #059669;
+            color: #065F46;
+        }
+
+        .hint-shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .modal-pop {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: scale(0);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .word-badge {
+            border: 2px solid #000;
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 4px;
+            border-radius: 8px;
+            font-weight: 900;
+            background-color: #fff;
+            box-shadow: 2px 2px 0px #000;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24"> <!-- 增加上方間距避免擋到導航列 -->
+
+    <!-- ================= 全域導航列 (對接 index.html 與 07-psychology) ================= -->
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
+        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base">
+            <i class="fas fa-home"></i> 回首頁
+        </a>
+        <div class="flex items-center gap-2">
+            <label for="topic-select" class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
+            <select id="topic-select" onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
+                <option value="" disabled>-- 選擇其他主題 --</option>
+                <option value="01-environment.html">Unit 1: 環境單元</option>
+                <option value="02-tech-ai.html">Unit 2: 科技與 AI</option>
+                <option value="03-society-culture.html">Unit 3: 社會與文化變遷</option>
+                <option value="04-climate.html">Unit 4: 環境科學與氣候變遷</option>
+                <option value="05-tech-edu.html">Unit 5: 科技、AI 與數位教育</option>
+                <option value="06-wildlife.html">Unit 6: 生物與野生動物</option>
+                <option value="07-psychology.html" selected>Unit 7: 心理學與人類行為</option>
+            </select>
+        </div>
+    </nav>
+    <!-- ======================================================== -->
+
+    <div class="max-w-4xl mx-auto">
+        <!-- 頂部標題與三軌進度條 (無 Day 數字，純粹的主題與進度) -->
+        <header class="dopamine-card bg-[var(--pop-purple)] p-6 mb-6 rounded-3xl text-center">
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Psychology & Human Behavior 🧠</h1>
+            <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
+                <div id="main-progress" class="bg-[var(--pop-pink)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-4 text-black font-black text-[10px] md:text-sm">
+                <span id="learn-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📖 學習: 0/10</span>
+                <span id="quizA-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">✍️ 測驗A: 0/5</span>
+                <span id="quizB-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 測驗B: 0/5</span>
+            </div>
+        </header>
+
+        <!-- 三頁籤 -->
+        <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
+            <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">📖 學習區</button>
+            <button onclick="switchTab('quizA')" id="tab-quizA" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">✍️ 測驗 Part A (閱讀)</button>
+            <button onclick="switchTab('quizB')" id="tab-quizB" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">🎯 測驗 Part B (單字)</button>
+        </div>
+
+        <main>
+            <!-- 1. 學習區 -->
+            <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
+
+            <!-- 2. 測驗 Part A: 雅思閱讀短文與帶字庫填空 -->
+            <div id="section-quizA" class="hidden space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl border-4 border-black mb-4">
+                    <h3 class="font-black text-xl mb-3 text-[var(--pop-purple)]">📖 Reading Passage: Theories of Perception</h3>
+                    <p class="text-gray-800 text-base leading-relaxed font-semibold bg-gray-50 p-4 rounded-xl border-2 border-black">
+                        Human behavior is shaped by complex <b>cognitive</b> processes that dictate how we <b>perceive</b> our surrounding environment. When we experience an external <b>stimulus</b>, our minds immediately search for a meaningful <b>association</b> with previous memories. This mental processing happens so rapidly that we are rarely <b>conscious</b> of the underlying calculations taking place within our brain.
+                    </p>
+                </div>
+
+                <div class="dopamine-card bg-[var(--pop-pink)] p-5 rounded-3xl">
+                    <h4 class="font-black text-lg text-black mb-2">📝 Summary Completion (閱讀字庫填空)</h4>
+                    <p class="text-xs text-black font-bold mb-3">請根據上方短文，將正確的單字填入空格（按 Enter 送出判定），聽力隨機語音已待命！</p>
+                    <div class="bg-white border-2 border-black p-3 rounded-xl mb-4 text-center">
+                        <span class="word-badge text-[var(--pop-blue)]">cognitive</span>
+                        <span class="word-badge text-[var(--pop-orange)]">perceive</span>
+                        <span class="word-badge text-[var(--pop-purple)]">stimulus</span>
+                        <span class="word-badge text-[var(--pop-green)]">association</span>
+                        <span class="word-badge text-pink-600">conscious</span>
+                    </div>
+                    <div id="quiz-list-A" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- 3. 測驗 Part B: 獨立句型填充 -->
+            <div id="section-quizB" class="hidden max-w-3xl mx-auto space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl">
+                    <p class="font-bold text-lg mb-1">🎯 Part B: 獨立心理行為拼寫</p>
+                    <p class="text-gray-700 text-sm">脫離文章輔助，挑戰另外 5 個核心行為、動機與同理心詞彙。答錯將觸發雙階鷹架！</p>
+                </div>
+                <div id="quiz-list-B" class="space-y-6"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 滿分總結彈窗 -->
+    <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+        <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
+            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">🧠</div>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-purple)]">Incredible!</h2>
+            <div class="text-5xl font-black text-[var(--pop-orange)] mb-4">100<span class="text-2xl text-black">%</span></div>
+            <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
+                太精采了，瑞老師！心理學與人類行為主題完美通關。聽力口音隨機切換完全難不倒您，您的雅思全防守耳已經練成！
+            </p>
+            <button onclick="closeModal()" class="w-full bg-[var(--pop-yellow)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all">
+                完美收工，瑞老師最棒！✨
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = [
+            { word: "Cognitive", zh: "認知的", coll: "cognitive processes", ex: "The puzzle was designed to challenge the cognitive abilities of young children.", exZh: "這款拼圖旨在挑戰幼兒的認知能力。", syn: "mental, intellectual, rational", ant: "physical" },
+            { word: "Perceive", zh: "察覺、感知", coll: "perceive threats", ex: "Cats can perceive subtle sounds that are completely silent to human ears.", exZh: "貓能感知到人類耳朵完全聽不到的細微聲音。", syn: "notice, detect, distinguish", ant: "ignore, overlook" },
+            { word: "Stimulus", zh: "刺激、刺激物", coll: "external stimulus", ex: "The plant's leaves fold immediately in response to the physical stimulus of touch.", exZh: "植物的葉子在受到觸摸的物理刺激時會立刻摺疊。", syn: "trigger, incentive, spur", ant: "deterrent" },
+            { word: "Association", zh: "聯想、關聯", coll: "mental association", ex: "Many people establish a strong mental association between red and danger.", exZh: "許多人在紅色和危險之間建立了強烈的心理聯想。", syn: "connection, link, relation", ant: "separation" },
+            { word: "Conscious", zh: "有意識的、意識到的", coll: "conscious effort", ex: "She made a conscious effort to improve her reading speed before the actual exam.", exZh: "她有意識地努力在正式考試前提高自己的閱讀速度。", syn: "aware, mindful, intentional", ant: "unconscious, accidental" },
+            { word: "Motivation", zh: "動機、誘因", coll: "strong motivation", ex: "Desire to study abroad in Canada provides strong motivation for her learning.", exZh: "想去加拿大留學的渴望為她的學習提供了強大的動機。", syn: "drive, inspiration, incentive", ant: "discouragement" },
+            { word: "Behavioral", zh: "行為的", coll: "behavioral studies", ex: "Researchers conducted several behavioral studies to analyze wild rabbits.", exZh: "研究人員進行了幾項行為研究來分析野兔。", syn: "conduct-related, action-based", ant: "N/A" },
+            { word: "Subconscious", zh: "潛意識的", coll: "subconscious desires", ex: "Dreams are believed to reveal the hidden subconscious fears of our minds.", exZh: "夢被認為能揭示我們大腦中隱藏的潛意識恐懼。", syn: "underlying, latent, inner", ant: "conscious" },
+            { word: "Empathy", zh: "同理心", coll: "show empathy", ex: "A compassionate special education teacher must show empathy to students.", exZh: "一位富有同情心的特教老師必須對學生展現同理心。", syn: "compassion, understanding, sympathy", ant: "apathy, coldness" },
+            { word: "Altruism", zh: "利他主義、無私", coll: "pure altruism", ex: "Bystanders helping strangers in extreme danger is an act of pure altruism.", exZh: "旁觀者在極度危險中幫助陌生人是一種純粹的利他行為。", syn: "selflessness, generosity", ant: "selfishness" }
+        ];
+
+        // Part A: 閱讀填空題
+        const quizzesA = [
+            { id: "A1", text: "Human brains rely on sophisticated [input] pathways to parse academic inputs.", answer: "cognitive", synHint: "relating to mental processes of perception, memory, and judgment" },
+            { id: "A2", text: "Different individuals frequently [input] identical images in completely distinct ways.", answer: "perceive", synHint: "become aware of or conscious of something; come to realize or understand" },
+            { id: "A3", text: "Any sudden physical [input] will generate an automatic defense reaction from the body.", answer: "stimulus", synHint: "a thing or event that evokes a specific functional reaction in an organ or tissue" },
+            { id: "A4", text: "Constructing a logical [input] with familiar objects improves vocabulary retention.", answer: "association", synHint: "a connection or cooperative link between people or things" },
+            { id: "A5", text: "The candidate was fully [input] of the strict time limits during the practice test.", answer: "conscious", synHint: "aware of and responding to one's surroundings; awake" }
+        ];
+
+        // Part B: 獨立單字拼寫
+        const quizzesB = [
+            { id: "B1", text: "Positive feedback from parents serves as a powerful [input] for young children to learn.", answer: "motivation", synHint: "the reason or reasons one has for acting or behaving in a particular way" },
+            { id: "B2", text: "Psychologists designed specialized [input] therapy to assist hyperactive students.", answer: "behavioral", synHint: "involving or relating to behavior or conduct" },
+            { id: "B3", text: "Some fears are deeply rooted in our [input] mind, lingering from childhood memories.", answer: "subconscious", synHint: "concerning the part of the mind of which one is not fully aware but which influences actions" },
+            { id: "B4", text: "Active listening is a fundamental skill required to build deep [input] with others.", answer: "empathy", synHint: "the ability to understand and share the feelings of another" },
+            { id: "B5", text: "Charity work is often motivated by [input] rather than financial gains.", answer: "altruism", synHint: "disinterested and selfless concern for the well-being of others" }
+        ];
+
+        const cardColors = ['#FFD93D', '#6BCB77', '#B983FF', '#FF9F45', '#FF85B3'];
+        let learnedCount = 0, quizACount = 0, quizBCount = 0;
+        const hintStates = {};
+
+        window.onload = () => {
+            renderLearn();
+            renderQuiz(quizzesA, 'quiz-list-A', 'A');
+            renderQuiz(quizzesB, 'quiz-list-B', 'B');
+        };
+
+        function switchTab(tab) {
+            const tabs = ['learn', 'quizA', 'quizB'];
+            const colors = { learn: 'var(--pop-yellow)', quizA: 'var(--pop-pink)', quizB: 'var(--pop-green)' };
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`tab-${t}`).style.backgroundColor = 'white';
+                document.getElementById(`section-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById(`tab-${tab}`).style.backgroundColor = colors[tab];
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+        }
+
+        // ================= 核心升級：英美澳口音隨機輪播系統 =================
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                setTimeout(() => {
+                    const u = new SpeechSynthesisUtterance(text);
+                    // 隨機抽選三大口音：英音 (en-GB)、美音 (en-US)、澳音 (en-AU)
+                    const accents = ['en-GB', 'en-US', 'en-AU'];
+                    const chosenAccent = accents[Math.floor(Math.random() * accents.length)];
+                    u.lang = chosenAccent;
+                    u.rate = 0.88;
+                    window.speechSynthesis.speak(u);
+                }, 40);
+            }
+        }
+
+        function toggleAccordion(el) { el.parentElement.classList.toggle('accordion-open'); }
+
+        function renderLearn() {
+            const container = document.getElementById('section-learn');
+            vocabulary.forEach((item, index) => {
+                const color = cardColors[index % 5];
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white rounded-3xl overflow-hidden mb-4";
+                div.innerHTML = `
+                    <div class="p-4 md:p-5 flex items-center justify-between cursor-pointer" style="background-color: ${color}20" onclick="toggleAccordion(this)">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-6 h-6 border-2 border-black accent-black rounded cursor-pointer" onclick="event.stopPropagation(); updateProgress()">
+                            <span class="text-xl md:text-2xl font-black text-black">${item.word} <small class="text-gray-500 font-bold text-sm">/ ${item.zh}</small></span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="event.stopPropagation(); speak('${item.word}')" class="w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"><i class="fas fa-volume-up"></i></button>
+                            <i class="fas fa-chevron-down arrow mt-3 text-black"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="p-5 space-y-4 border-t-4 border-black bg-white">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-[var(--pop-green)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-green-800">✅ 同義: ${item.syn}</div>
+                                <div class="bg-[var(--pop-pink)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-red-800">❌ 反義: ${item.ant}</div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-xl border-2 border-black relative">
+                                <p class="text-xs font-black uppercase text-blue-600 mb-1">搭配 & 例句</p>
+                                <p class="font-bold text-sm text-black mb-2">${item.coll}</p>
+                                <p class="text-black font-semibold text-base leading-snug mb-1">${item.ex}</p>
+                                <p class="text-xs text-gray-500 font-medium">${item.exZh}</p>
+                                <button onclick="speak('${item.ex}')" class="absolute bottom-3 right-3 text-blue-500 hover:text-blue-700"><i class="fas fa-play-circle text-2xl"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderQuiz(data, containerId, part) {
+            const container = document.getElementById(containerId);
+            data.forEach((q, idx) => {
+                const parts = q.text.split('[input]');
+                const displayIndex = part === 'A' ? idx + 1 : idx + 6;
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white p-5 rounded-3xl mb-4 relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+                div.innerHTML = `
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
+                        <p class="text-base font-semibold leading-relaxed text-gray-800">${parts[0]}<input type="text" id="input-${q.id}" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">${parts[1]}</p>
+                    </div>
+                    <div class="flex justify-between items-center pl-10">
+                        <button id="hint-btn-${q.id}" onclick="showDynamicHint('${q.id}', '${q.answer}', '${q.synHint}')" class="text-xs bg-[var(--pop-yellow)] border-2 border-black rounded-lg px-3 py-1 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all">💡 獲取語意提示</button>
+                        <p id="hint-msg-${q.id}" class="text-[11px] font-bold text-blue-600 hidden bg-white border border-black px-2 py-1 rounded"></p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function showDynamicHint(id, answer, synHint) {
+            if (!hintStates[id]) hintStates[id] = 0;
+            hintStates[id]++;
+            const msg = document.getElementById(`hint-msg-${id}`);
+            const btn = document.getElementById(`hint-btn-${id}`);
+            if (hintStates[id] === 1) {
+                msg.innerHTML = `💡 <b>同義字線索：</b> ${synHint}`;
+                msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援";
+                btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+            } else {
+                msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
+                btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
+            }
+        }
+
+        function checkAnswer(e, id, answer, part) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-${id}`);
+                const btn = document.getElementById('hint-btn-' + id);
+                const msg = document.getElementById('hint-msg-' + id);
+                if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+                    input.value = answer; input.disabled = true; input.classList.add('input-correct');
+                    if (btn) btn.classList.add('hidden');
+                    if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; msg.classList.remove('hidden'); }
+                    speak(answer);
+                    if (!input.dataset.solved) {
+                        input.dataset.solved = "true";
+                        if (part === 'A') quizACount++; else quizBCount++;
+                        updateProgress(); checkFullCompletion();
+                    }
+                } else {
+                    input.parentElement.parentElement.classList.add('hint-shake');
+                    setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
+                    
+                    if (!hintStates[id]) {
+                        const allQuizzes = quizzesA.concat(quizzesB);
+                        const qItem = allQuizzes.find(q => q.id === id);
+                        showDynamicHint(id, answer, qItem.synHint);
+                    }
+                }
+            }
+        }
+
+        function updateProgress() {
+            const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
+            learnedCount = Array.from(boxes).filter(b => b.checked).length;
+            document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
+            document.getElementById('quizA-prog').innerText = `🎯 測驗A: ${quizACount}/5`;
+            document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
+            
+            const totalProgress = ((learnedCount + quizACount + quizBCount) / 20) * 100;
+            document.getElementById('main-progress').style.width = `${totalProgress}%`;
+        }
+
+        function checkFullCompletion() {
+            if (learnedCount === 10 && quizACount === 5 && quizBCount === 5) {
+                setTimeout(() => {
+                    document.getElementById('completion-modal').classList.remove('hidden');
+                    document.getElementById('completion-modal').classList.add('flex');
+                    confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 }, colors: ['#FF85B3', '#FFD93D', '#4D96FF', '#6BCB77'] });
+                    speak("Spectacular achievement, Teacher Rui Rui! Today's unit is fully complete!");
+                }, 1200);
+            }
+        }
+
+        function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>
