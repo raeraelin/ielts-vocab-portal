@@ -1,13 +1,26 @@
 document.write(`
 <style>
-    .nav-bar { background: white; border-bottom: 4px solid #000; padding: 12px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 999; }
-    .nav-btn { background: #FFD93D; border: 2px solid #000; border-radius: 12px; padding: 8px 16px; font-weight: 900; text-decoration: none; color: #000; box-shadow: 2px 2px 0px #000; }
-    .nav-select { border: 2px solid #000; border-radius: 12px; padding: 8px; font-weight: 900; }
+    .nav-bar-wrapper { 
+        position: fixed; top: 0; left: 0; right: 0; z-index: 9999; 
+        background-color: white; border-bottom: 4px solid #000; 
+        padding: 12px 20px; display: flex; align-items: center; 
+        justify-content: space-between; box-shadow: 0 4px 0 0 rgba(0,0,0,1);
+    }
+    .nav-home-btn { 
+        background: #FFD93D; border: 2px solid #000; border-radius: 12px; 
+        padding: 8px 16px; font-weight: 900; text-decoration: none; 
+        color: #000; box-shadow: 2px 2px 0px #000; font-family: sans-serif;
+    }
+    .nav-select { 
+        border: 2px solid #000; border-radius: 12px; padding: 8px; 
+        font-weight: 900; background: white; cursor: pointer;
+        font-family: sans-serif;
+    }
 </style>
-<nav class="nav-bar">
-    <a href="index.html" class="nav-btn"><i class="fas fa-home"></i> 回首頁</a>
+<nav class="nav-bar-wrapper">
+    <a href="index.html" class="nav-home-btn"><i class="fas fa-home"></i> 回首頁</a>
     <div>
-        <label class="font-black mr-2">切換單元：</label>
+        <label class="font-black mr-2 hidden sm:inline-block">切換單元：</label>
         <select onchange="location.href=this.value" class="nav-select">
             <option value="01-environment.html">Unit 1: 環境單元</option>
             <option value="02-tech-ai.html">Unit 2: 科技與 AI</option>
