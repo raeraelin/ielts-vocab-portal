@@ -24,7 +24,7 @@
             background-color: #FFF5E4;
         }
 
-        /* Neo-brutalism Style Style Card */
+        /* Neo-brutalism 粗黑框硬陰影風格 */
         .dopamine-card {
             border: 4px solid #000;
             box-shadow: 6px 6px 0px #000;
@@ -102,6 +102,7 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
 
+    <!-- 獨立穩定的導航列：精準鎖定 08 國際關係 -->
     <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
         <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base text-black no-underline">
             <i class="fas fa-home"></i> 回首頁
@@ -123,6 +124,7 @@
     </nav>
 
     <div class="max-w-4xl mx-auto">
+        <!-- 頂部標題與三軌進度條 -->
         <header class="dopamine-card bg-[var(--pop-orange)] p-6 mb-6 rounded-3xl text-center">
             <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">International Relations & Geopolitics 🌍</h1>
             <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
@@ -135,6 +137,7 @@
             </div>
         </header>
 
+        <!-- 三頁籤 -->
         <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
             <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">📖 學習區</button>
             <button onclick="switchTab('quizA')" id="tab-quizA" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">✍️ 測驗 Part A (閱讀)</button>
@@ -142,8 +145,10 @@
         </div>
 
         <main>
+            <!-- 1. 學習區 -->
             <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
 
+            <!-- 2. 測驗 Part A: 雅思閱讀短文 -->
             <div id="section-quizA" class="hidden space-y-6">
                 <div class="dopamine-card bg-white p-6 rounded-3xl border-4 border-black mb-4">
                     <h3 class="font-black text-xl mb-3 text-[var(--pop-orange)]">📖 Reading Passage: Global Governance</h3>
@@ -166,6 +171,7 @@
                 </div>
             </div>
 
+            <!-- 3. 測驗 Part B: 獨立句型拼寫 -->
             <div id="section-quizB" class="hidden max-w-3xl mx-auto space-y-6">
                 <div class="dopamine-card bg-white p-6 rounded-3xl">
                     <p class="font-bold text-lg mb-1">🎯 Part B: 獨立外交與國際公斷拼寫</p>
@@ -176,13 +182,14 @@
         </main>
     </div>
 
+    <!-- 滿分總結彈窗 -->
     <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
         <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
             <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">🌍</div>
             <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-orange)]">Brilliant Global Vision!</h2>
             <div class="text-5xl font-black text-[var(--pop-purple)] mb-4">100<span class="text-2xl text-black">%</span></div>
             <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
-                太震撼了，瑞老師！國際關係與地緣政治單元完美通關。多國口音盲盒完全難不倒您，您的學術視野已具備雅思 7.5 的頂級實力！
+                太震撼了，瑞老師！國際關係與地緣政治單元全數通關。多國口音盲盒與階段挑戰完全難不倒您，您的學術視野已具備雅思 7.5 的頂級實力！
             </p>
             <button onclick="closeModal()" class="w-full bg-[var(--pop-green)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white" style="-webkit-text-stroke: 0.5px black;">
                 太完美了，瑞老師萬歲！✨
@@ -224,6 +231,12 @@
         let learnedCount = 0, quizACount = 0, quizBCount = 0;
         const hintStates = {};
 
+        // 階梯式灑花增強系統專用旗標
+        let celebratedLearn = false;
+        let celebratedQuizA = false;
+        let celebratedQuizB = false;
+        let celebratedUltimate = false;
+
         window.onload = () => {
             renderLearn();
             renderQuiz(quizzesA, 'quiz-list-A', 'A');
@@ -251,14 +264,12 @@
                     const u = new SpeechSynthesisUtterance(text);
                     const voices = window.speechSynthesis.getVoices();
                     
-                    // 建立英、美、澳三種口音的篩選池
                     const pool = voices.filter(v => 
                         v.lang.startsWith('en-GB') || 
                         v.lang.startsWith('en-US') || 
                         v.lang.startsWith('en-AU')
                     );
                     
-                    // 如果池子有對應口音，隨機挑一個；沒有就隨機選任意英文口音
                     if (pool.length > 0) {
                         const randomVoice = pool[Math.floor(Math.random() * pool.length)];
                         u.voice = randomVoice;
@@ -372,10 +383,8 @@
                         input.dataset.solved = "true";
                         if (part === 'A') quizACount++; else quizBCount++;
                         updateProgress(); 
-                        checkFullCompletion();
                     }
                 } else {
-                    // 答錯時僅觸發紅框與抖動特效，不自動開啟鷹架
                     input.classList.add('input-error');
                     input.parentElement.parentElement.classList.add('hint-shake');
                     setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
@@ -383,26 +392,97 @@
             }
         }
 
+        // ================= 核心功能：雙重階梯式增強系統 =================
         function updateProgress() {
             const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
             learnedCount = Array.from(boxes).filter(b => b.checked).length;
             document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
             document.getElementById('quizA-prog').innerText = `✍️ 測驗A: ${quizACount}/5`;
             document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
+            
             const totalProgress = ((learnedCount + quizACount + quizBCount) / 20) * 100;
             document.getElementById('main-progress').style.width = `${totalProgress}%`;
             document.getElementById('progress-text').innerText = Math.round(totalProgress) + '%';
+            
+            // 階段 1：學習區 10/10 勾選完畢
+            if (learnedCount === 10 && !celebratedLearn) {
+                celebratedLearn = true;
+                triggerSubCelebration('learn');
+            }
+
+            // 階段 2：測驗 A 5/5 全對
+            if (quizACount === 5 && !celebratedQuizA) {
+                celebratedQuizA = true;
+                triggerSubCelebration('quizA');
+            }
+
+            // 階段 3：測驗 B 5/5 全對
+            if (quizBCount === 5 && !celebratedQuizB) {
+                celebratedQuizB = true;
+                triggerSubCelebration('quizB');
+            }
+
+            // 終極大通關：三項指標均達到完美 100%
+            if (learnedCount === 10 && quizACount === 5 && quizBCount === 5 && !celebratedUltimate) {
+                celebratedUltimate = true;
+                setTimeout(showUltimateCelebration, 1500); // 稍微延遲以防與階段小灑花重疊
+            }
         }
 
-        function checkFullCompletion() {
-            if (learnedCount === 10 && quizACount === 5 && quizBCount === 5) {
-                setTimeout(() => {
-                    document.getElementById('completion-modal').classList.remove('hidden');
-                    document.getElementById('completion-modal').classList.add('flex');
-                    confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 }, colors: ['#FF85B3', '#FFD93D', '#4D96FF', '#6BCB77'] });
-                    speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of geopolitics and international relations is absolutely flawless!");
-                }, 1200);
+        // 分頁小灑花
+        function triggerSubCelebration(type) {
+            setTimeout(() => {
+                if (type === 'learn') {
+                    // 綠色 + 黃色 🍀
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    speak("Brilliant reading, Teacher Rui Rui!");
+                } else if (type === 'quizA') {
+                    // 粉色 + 藍色 🌸
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    speak("Superb comprehension!");
+                } else if (type === 'quizB') {
+                    // 紫色 + 橘色 ⚡
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    speak("Masterly spelling!");
+                }
+            }, 300);
+        }
+
+        // 終極通關大慶典
+        function showUltimateCelebration() {
+            document.getElementById('completion-modal').classList.remove('hidden');
+            document.getElementById('completion-modal').classList.add('flex');
+            
+            const duration = 3.5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
             }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                const particleCount = 65 * (timeLeft / duration);
+                confetti({
+                    ...defaults, particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF']
+                });
+                confetti({
+                    ...defaults, particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF']
+                });
+            }, 250);
+
+            speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of geopolitics and international relations is absolutely flawless!");
         }
 
         // 預熱發音引擎
