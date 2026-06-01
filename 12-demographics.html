@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞瑞老師 IELTS 單字與閱讀趴 - Demographics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@700;900&display=swap');
+        
+        :root {
+            --pop-pink: #FF85B3;
+            --pop-yellow: #FFD93D;
+            --pop-blue: #4D96FF;
+            --pop-green: #6BCB77;
+            --pop-purple: #B983FF;
+            --pop-orange: #FF9F45;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            background-color: #FFF5E4;
+        }
+
+        /* Neo-brutalism 粗黑框硬陰影風格 */
+        .dopamine-card {
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.2s ease;
+        }
+
+        .dopamine-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .tab-btn {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .tab-btn.active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-open .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-open .arrow { transform: rotate(180deg); }
+
+        .input-correct {
+            background-color: #D1FAE5;
+            border-color: #059669;
+            color: #065F46;
+        }
+
+        .input-correct:disabled {
+            opacity: 1 !important;
+            color: #065F46 !important;
+        }
+
+        .input-error {
+            border-color: #DC2626 !important;
+            background-color: #FEE2E2;
+        }
+
+        .hint-shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .modal-pop {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: scale(0);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .word-badge {
+            border: 2px solid #000;
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 4px;
+            border-radius: 8px;
+            font-weight: 900;
+            background-color: #fff;
+            box-shadow: 2px 2px 0px #000;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
+
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
+        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base text-black no-underline">
+            <i class="fas fa-home"></i> 回首頁
+        </a>
+        <div class="flex items-center gap-2">
+            <label class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
+            <select onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
+                <option value="" disabled>-- 選擇其他主題 --</option>
+                <option value="01-environment.html">Unit 1: 環境單元</option>
+                <option value="02-tech-ai.html">Unit 2: 科技與 AI</option>
+                <option value="03-society-culture.html">Unit 3: 社會與文化變遷</option>
+                <option value="04-climate.html">Unit 4: 環境科學與氣候變遷</option>
+                <option value="05-tech-edu.html">Unit 5: 科技、AI 與數位教育</option>
+                <option value="06-wildlife.html">Unit 6: 生物與野生動物</option>
+                <option value="07-psychology.html">Unit 7: 心理學與人類行為</option>
+                <option value="08-international-relations.html">Unit 8: 國際關係與地緣政治</option>
+                <option value="09-climate.html">Unit 9: 經濟全球化與國際貿易</option>
+                <option value="10-urban-planning.html">Unit 10: 城市化與都市規劃</option>
+                <option value="11-mass-media.html">Unit 11: 大眾傳播與現代媒體</option>
+                <option value="12-demographics.html" selected>Unit 12: 人口結構與社會變遷</option>
+            </select>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto">
+        <header class="dopamine-card bg-[var(--pop-pink)] p-6 mb-6 rounded-3xl text-center">
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Demographics & Social Shifts 👥</h1>
+            <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
+                <div id="main-progress" class="bg-[var(--pop-green)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-4 text-black font-black text-[10px] md:text-sm">
+                <span id="learn-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📖 學習: 0/10</span>
+                <span id="quizA-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">✍️ 測驗A: 0/5</span>
+                <span id="quizB-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 測驗B: 0/5</span>
+            </div>
+        </header>
+
+        <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
+            <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">📖 學習區</button>
+            <button onclick="switchTab('quizA')" id="tab-quizA" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">✍️ 測驗 Part A (閱讀)</button>
+            <button onclick="switchTab('quizB')" id="tab-quizB" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">🎯 測驗 Part B (單字)</button>
+        </div>
+
+        <main>
+            <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
+
+            <div id="section-quizA" class="hidden space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl border-4 border-black mb-4">
+                    <h3 class="font-black text-xl mb-3 text-[var(--pop-pink)]">📖 Reading Passage: The Silver Tsunami</h3>
+                    <p class="text-gray-800 text-base leading-relaxed font-semibold bg-gray-50 p-4 rounded-xl border-2 border-black">
+                        Governments must closely analyze shifting national <b>demographics</b> to prepare for future challenges. In many regions, critically low <b>fertility</b> rates have led to natural negative growth. Conversely, advancements in medicine have extended human <b>longevity</b> significantly. Sociologists warn that this rapidly <b>aging</b> population will place burdens on welfare systems. To overcome economic inertia, promoting upward social <b>mobility</b> is essential.
+                    </p>
+                </div>
+
+                <div class="dopamine-card bg-[var(--pop-pink)] p-5 rounded-3xl">
+                    <h4 class="font-black text-lg text-black mb-2">📝 Summary Completion (閱讀字庫填空)</h4>
+                    <p class="text-xs text-black font-bold mb-3">請根據上方短文，將正確的單字填入空格（按 Enter 送出判定），每次點擊發音皆為隨機口音！</p>
+                    <div class="bg-white border-2 border-black p-3 rounded-xl mb-4 text-center">
+                        <span class="word-badge text-[var(--pop-blue)]">demographics</span>
+                        <span class="word-badge text-[var(--pop-orange)]">fertility</span>
+                        <span class="word-badge text-[var(--pop-purple)]">longevity</span>
+                        <span class="word-badge text-[var(--pop-green)]">aging</span>
+                        <span class="word-badge text-pink-600">mobility</span>
+                    </div>
+                    <div id="quiz-list-A" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <div id="section-quizB" class="hidden max-w-3xl mx-auto space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl">
+                    <p class="font-bold text-lg mb-1">🎯 Part B: 獨立社會流動與結構不平等拼寫</p>
+                    <p class="text-gray-700 text-sm">挑戰另外 5 個關於城鄉遷移、勞動力萎縮與社會經濟背景的核心學術詞彙。答錯請手動點擊 HINT 按鈕觸發雙階鷹架！</p>
+                </div>
+                <div id="quiz-list-B" class="space-y-6"></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+        <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
+            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">👥</div>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-pink)]">Brilliant Academic Insight!</h2>
+            <div class="text-5xl font-black text-[var(--pop-green)] mb-4">100<span class="text-2xl text-black">%</span></div>
+            <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
+                太卓越了，瑞老師！人口結構與社會變遷單元全數通關。無干擾拼寫介面也阻擋不了您的前進步調，您的學術視野已具備雅思 7.5 的頂級實力！
+            </p>
+            <div class="flex gap-2">
+                <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white">
+                    留在本頁 ✨
+                </button>
+                <a href="index.html" class="flex-1 bg-[var(--pop-yellow)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-black text-center no-underline flex items-center justify-center">
+                    返回大廳 🎒
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = [
+            { word: "Demographics", zh: "人口統計數據、人口結構", coll: "shifting demographics", ex: "The shifting demographics forced the government to reconsider policy.", exZh: "轉變中的人口結構迫使政府重新考慮政策。", syn: "population statistics", ant: "N/A" },
+            { word: "Fertility", zh: "生育力、生育率", coll: "declining fertility rates", ex: "Many nations are facing shortages due to declining fertility rates.", exZh: "由於生育率下降，許多國家正臨人口短缺。", syn: "reproductiveness, fruitfulness", ant: "infertility, sterility" },
+            { word: "Longevity", zh: "長壽、壽命", coll: "increased longevity", ex: "Medical achievements have contributed greatly to human longevity.", exZh: "醫療成就對人類的長壽做出了巨大貢獻。", syn: "life expectancy, long life", ant: "brevity" },
+            { word: "Aging", zh: "高齡化的", coll: "aging population", ex: "An aging population poses significant challenges to public healthcare.", exZh: "高齡化人口對公共醫療保健提出了巨大挑戰。", syn: "greying, maturing", ant: "youthful" },
+            { word: "Mobility", zh: "流動性、移動性", coll: "social mobility", ex: "Education is a primary driver for improving upward social mobility.", exZh: "教育是提高向上社會流動性的主要驅動力。", syn: "maneuverability, flexibility", ant: "immobility" },
+            { word: "Migration", zh: "遷移、移民", coll: "rural-to-urban migration", ex: "Economic imbalances trigger rapid rural-to-urban migration.", exZh: "經濟失衡引發了快速的鄉村至城市人口遷移。", syn: "movement, relocation", ant: "stationariness" },
+            { word: "Proportion", zh: "比例、部分", coll: "high proportion of", ex: "A large proportion of the budget is spent on funding pensions.", exZh: "預算中的很大一部分被花在資助養老金上。", syn: "percentage, share", ant: "whole" },
+            { word: "Shrink", zh: "委縮、縮小", coll: "shrinking labor force", ex: "The country's total consumer market will inevitably shrink over time.", exZh: "隨著時間推移，該國的總體消費市場勢必會萎縮。", syn: "diminish, decrease", ant: "expand, grow" },
+            { word: "Sustain", zh: "維持、供養", coll: "sustain the welfare system", ex: "It is hard for few taxpayers to sustain massive welfare systems.", exZh: "少數納稅人很難維持龐大的福利制度。", syn: "maintain, preserve", ant: "collapse" },
+            { word: "Socio-economic", zh: "社會經濟的", coll: "socio-economic background", ex: "Students from different socio-economic backgrounds deserve fairness.", exZh: "來自不同社會經濟背景的學生理應獲得公平對待。", syn: "social-financial", ant: "N/A" }
+        ];
+
+        const quizzesA = [
+            { id: "A1", text: "Marketers analyze changing local [input] to target elderly consumers effectively.", answer: "demographics", synHint: "statistical data relating to the population and particular groups within it" },
+            { id: "A2", text: "The country implemented cash incentives to boost the national [input] rate.", answer: "fertility", synHint: "the productiveness of a population, specifically the birth rate" },
+            { id: "A3", text: "Healthy lifestyles and balanced diets have extended human [input] across developed zones.", answer: "longevity", synHint: "long life or long existence" },
+            { id: "A4", text: "The prime minister organized a special summit to manage the economic pressure of an [input] workforce.", answer: "aging", synHint: "growing old or showing signs of increased age" },
+            { id: "A5", text: "High income inequality can prevent citizens from achieving upward occupational [input].", answer: "mobility", synHint: "the ability to move freely or easily through social classes" }
+        ];
+
+        const quizzesB = [
+            { id: "B1", text: "Climatic variations triggered a massive internal [input] toward temperate zones.", answer: "migration", synHint: "seasonal movement of animals or geographic movement of people from one region to another" },
+            { id: "B2", text: "A significant [input] of young graduates preferred working overseas for higher salaries.", answer: "proportion", synHint: "a part, share, or number considered in relation to a whole" },
+            { id: "B3", text: "Due to continuous emigration, several remote rural villages began to [input] drastically.", answer: "shrink", synHint: "become smaller in size, amount, or value" },
+            { id: "B4", text: "Heavy tax revenues are fundamentally required to [input] national infrastructure.", answer: "sustain", synHint: "strengthen or support physically or mentally; carry the weight of" },
+            { id: "B5", text: "The research monitored how a family's [input] status affected child cognitive development.", answer: "socio-economic", synHint: "involving a combination of social and economic factors" }
+        ];
+
+        const cardColors = ['#FF85B3', '#6BCB77', '#B983FF', '#4D96FF', '#FF9F45'];
+        let learnedCount = 0, quizACount = 0, quizBCount = 0;
+        const hintStates = {};
+
+        let celebratedLearn = false;
+        let celebratedQuizA = false;
+        let celebratedQuizB = false;
+        let celebratedUltimate = false;
+
+        window.onload = () => {
+            renderLearn();
+            renderQuiz(quizzesA, 'quiz-list-A', 'A');
+            renderQuiz(quizzesB, 'quiz-list-B', 'B');
+        };
+
+        function switchTab(tab) {
+            const tabs = ['learn', 'quizA', 'quizB'];
+            const colors = { learn: 'var(--pop-yellow)', quizA: 'var(--pop-pink)', quizB: 'var(--pop-green)' };
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`tab-${t}`).style.backgroundColor = 'white';
+                document.getElementById(`section-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById(`tab-${tab}`).style.backgroundColor = colors[tab];
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                setTimeout(() => {
+                    const u = new SpeechSynthesisUtterance(text);
+                    const voices = window.speechSynthesis.getVoices();
+                    const pool = voices.filter(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US') || v.lang.startsWith('en-AU'));
+                    if (pool.length > 0) {
+                        const randomVoice = pool[Math.floor(Math.random() * pool.length)];
+                        u.voice = randomVoice; u.lang = randomVoice.lang;
+                    } else { u.lang = 'en-US'; }
+                    u.rate = 0.88; window.speechSynthesis.speak(u);
+                }, 40);
+            }
+        }
+
+        function toggleAccordion(el) { el.parentElement.classList.toggle('accordion-open'); }
+
+        function renderLearn() {
+            const container = document.getElementById('section-learn');
+            vocabulary.forEach((item, index) => {
+                const color = cardColors[index % 5];
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white rounded-3xl overflow-hidden mb-4";
+                div.innerHTML = `
+                    <div class="p-4 md:p-5 flex items-center justify-between cursor-pointer" style="background-color: ${color}20" onclick="toggleAccordion(this)">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-6 h-6 border-2 border-black accent-black rounded cursor-pointer" onclick="event.stopPropagation(); updateProgress()">
+                            <span class="text-xl md:text-2xl font-black text-black">${item.word} <small class="text-gray-500 font-bold text-sm">/ ${item.zh}</small></span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="event.stopPropagation(); speak('${item.word}')" class="w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"><i class="fas fa-volume-up"></i></button>
+                            <i class="fas fa-chevron-down arrow mt-3 text-black"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="p-5 space-y-4 border-t-4 border-black bg-white">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-[var(--pop-green)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-green-800">✅ 同義: ${item.syn}</div>
+                                <div class="bg-[var(--pop-pink)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-red-800">❌ 反義: ${item.ant}</div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-xl border-2 border-black relative">
+                                <p class="text-xs font-black uppercase text-blue-600 mb-1">搭配 & 例句</p>
+                                <p class="font-bold text-sm text-black mb-2">${item.coll}</p>
+                                <p class="text-black font-semibold text-base leading-snug mb-1">${item.ex}</p>
+                                <p class="text-xs text-gray-500 font-medium">${item.exZh}</p>
+                                <button onclick="speak('${item.ex}')" class="absolute bottom-3 right-3 text-blue-500 hover:text-blue-700"><i class="fas fa-play-circle text-2xl"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderQuiz(data, containerId, part) {
+            const container = document.getElementById(containerId);
+            data.forEach((q, idx) => {
+                const parts = q.text.split('[input]');
+                const displayIndex = part === 'A' ? idx + 1 : idx + 6;
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white p-5 rounded-3xl mb-4 relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+                div.innerHTML = `
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
+                        <p class="text-base font-semibold leading-relaxed text-gray-800">
+                            ${parts[0]}
+                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded text-black" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
+                            ${parts[1]}
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center pl-10">
+                        <button id="hint-btn-${q.id}" onclick="showDynamicHint('${q.id}', '${q.answer}', '${q.synHint}')" class="text-xs bg-[var(--pop-yellow)] border-2 border-black rounded-lg px-3 py-1 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all">💡 獲取語意提示</button>
+                        <p id="hint-msg-${q.id}" class="text-[11px] font-bold text-blue-600 hidden bg-white border border-black px-2 py-1 rounded"></p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function showDynamicHint(id, answer, synHint) {
+            if (!hintStates[id]) hintStates[id] = 0;
+            hintStates[id]++;
+            const msg = document.getElementById(`hint-msg-${id}`);
+            const btn = document.getElementById(`hint-btn-${id}`);
+            if (hintStates[id] === 1) {
+                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`; msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援"; btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+            } else {
+                msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
+                btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
+            }
+        }
+
+        function checkAnswer(e, id, answer, part) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-${id}`);
+                const btn = document.getElementById('hint-btn-' + id);
+                const msg = document.getElementById('hint-msg-' + id);
+                if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+                    input.value = answer; input.disabled = true; input.classList.remove('input-error'); input.classList.add('input-correct');
+                    if (btn) btn.classList.add('hidden');
+                    if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; msg.classList.remove('hidden'); }
+                    speak(answer);
+                    if (!input.dataset.solved) {
+                        input.dataset.solved = "true";
+                        if (part === 'A') quizACount++; else quizBCount++;
+                        updateProgress();
+                    }
+                } else {
+                    input.classList.add('input-error'); input.parentElement.parentElement.classList.add('hint-shake');
+                    setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
+                }
+            }
+        }
+
+        function updateProgress() {
+            const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
+            learnedCount = Array.from(boxes).filter(b => b.checked).length;
+            document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
+            document.getElementById('quizA-prog').innerText = `✍️ 測驗A: ${quizACount}/5`;
+            document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
+            
+            const totalProgress = Math.round(((learnedCount + quizACount + quizBCount) / 20) * 100);
+            document.getElementById('main-progress').style.width = `${totalProgress}%`;
+            
+            if (learnedCount === 10 && !celebratedLearn) { celebratedLearn = true; triggerSubCelebration('learn'); }
+            if (quizACount === 5 && !celebratedQuizA) { celebratedQuizA = true; triggerSubCelebration('quizA'); }
+            if (quizBCount === 5 && !celebratedQuizB) { celebratedQuizB = true; triggerSubCelebration('quizB'); }
+            
+            if (totalProgress === 100 && !celebratedUltimate) { celebratedUltimate = true; setTimeout(showUltimateCelebration, 2000); }
+        }
+
+        function triggerSubCelebration(type) {
+            setTimeout(() => {
+                if (type === 'learn') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    speak("Brilliant reading, Teacher Rui Rui!");
+                } else if (type === 'quizA') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    speak("Superb comprehension!");
+                } else if (type === 'quizB') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    speak("Masterly spelling!");
+                }
+            }, 300);
+        }
+
+        function showUltimateCelebration() {
+            document.getElementById('completion-modal').classList.remove('hidden');
+            document.getElementById('completion-modal').classList.add('flex');
+            const duration = 3.5 * 1000; const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) { return clearInterval(interval); }
+                const particleCount = 65 * (timeLeft / duration);
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+            }, 250);
+            speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of demographics and social shifts is absolutely flawless!");
+        }
+
+        if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); }
+        function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>
+```
+
+---
+
+## 🛠️ 大廳（index.html）擴建卡片代碼
+
+為了在大廳中順暢跳轉至本單元，請瑞老師在您的 **`index.html`** 中找到 `` 卡片的下方，直接貼上這段精心設計的粉紅色人口結構九宮格卡片代碼：
+
+```html
+<a href="12-demographics.html" class="lobby-card bg-[var(--pop-pink)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
+    <div>
+        <div class="flex justify-between items-start">
+            <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 12</span>
+            <span class="text-3xl">👥</span>
+        </div>
+        <h3 class="text-xl font-900 mt-4">人口結構與社會變遷</h3>
+        <p class="text-xs font-bold opacity-80 mt-1">Demographics & Social Shifts</p>
+    </div>
+    <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
+        <span class="text-xs font-black">挑戰 10 核心字彙</span>
+        <i class="fas fa-arrow-right"></i>
+    </div>
+</a>
