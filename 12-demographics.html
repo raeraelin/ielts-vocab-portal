@@ -65,11 +65,6 @@
             color: #065F46;
         }
 
-        .input-correct:disabled {
-            opacity: 1 !important;
-            color: #065F46 !important;
-        }
-
         .input-error {
             border-color: #DC2626 !important;
             background-color: #FEE2E2;
@@ -107,32 +102,8 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
 
-    <!-- 獨立穩定的導航列：精準鎖定 12 人口結構 -->
-    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
-        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base text-black no-underline">
-            <i class="fas fa-home"></i> 回首頁
-        </a>
-        <div class="flex items-center gap-2">
-            <label class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
-            <select onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
-                <option value="" disabled>-- 選擇其他主題 --</option>
-                <option value="01-environment.html">Unit 1: 環境單元</option>
-                <option value="02-tech-ai.html">Unit 2: 科技與 AI</option>
-                <option value="03-society-culture.html">Unit 3: 社會與文化變遷</option>
-                <option value="04-climate.html">Unit 4: 環境科學與氣候變遷</option>
-                <option value="05-tech-edu.html">Unit 5: 科技、AI 與數位教育</option>
-                <option value="06-wildlife.html">Unit 6: 生物與野生動物</option>
-                <option value="07-psychology.html">Unit 7: 心理學與人類行為</option>
-                <option value="08-international-relations.html">Unit 8: 國際關係與地緣政治</option>
-                <option value="09-climate.html">Unit 9: 經濟全球化與國際貿易</option>
-                <option value="10-urban-planning.html">Unit 10: 城市化與都市規劃</option>
-                <option value="11-mass-media.html">Unit 11: 大眾傳播與現代媒體</option>
-                <option value="12-demographics.html" selected>Unit 12: 人口結構與社會變遷</option>
-                <option value="13-health.html">Unit 13: 健康、醫療與生活型態</option>
-                <option value="14-arts-culture.html">Unit 14: 藝術、文化與歷史</option>
-            </select>
-        </div>
-    </nav>
+    <!-- 💡 統一入口：自動呼叫 14 單元的 master.js -->
+    <script src="master.js"></script>
 
     <div class="max-w-4xl mx-auto">
         <!-- 頂部標題與三軌進度條 -->
@@ -193,11 +164,11 @@
         </main>
     </div>
 
-    <!-- 滿分總結彈窗 -->
+    <!-- 滿分總結彈窗 (包含返回大廳按鈕) -->
     <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
         <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
             <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">👥</div>
-            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-pink)]">Brilliant Academic Insight!</h2>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-pink)]">Brilliant Insight!</h2>
             <div class="text-5xl font-black text-[var(--pop-green)] mb-4">100<span class="text-2xl text-black">%</span></div>
             <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
                 太卓越了，瑞老師！人口結構與社會變遷單元全數通關。無干擾拼寫介面也阻擋不了您的前進步調，您的學術視野已具備雅思 7.5 的頂級實力！
@@ -216,13 +187,13 @@
     <script>
         const vocabulary = [
             { word: "Demographics", zh: "人口統計數據、人口結構", coll: "shifting demographics", ex: "The shifting demographics forced the government to reconsider policy.", exZh: "轉變中的人口結構迫使政府重新考慮政策。", syn: "population statistics", ant: "N/A" },
-            { word: "Fertility", zh: "生育力、生育率", coll: "declining fertility rates", ex: "Many nations are facing shortages due to declining fertility rates.", exZh: "由於生育率下降，許多國家正臨人口短缺。", syn: "reproductiveness, fruitfulness", ant: "infertility, sterility" },
+            { word: "Fertility", zh: "生育力、生育率", coll: "declining fertility rates", ex: "Many nations are facing shortages due to declining fertility rates.", exZh: "由於生育率下降，許多國家正面臨人口短缺。", syn: "reproductiveness, fruitfulness", ant: "infertility, sterility" },
             { word: "Longevity", zh: "長壽、壽命", coll: "increased longevity", ex: "Medical achievements have contributed greatly to human longevity.", exZh: "醫療成就對人類的長壽做出了巨大貢獻。", syn: "life expectancy, long life", ant: "brevity" },
             { word: "Aging", zh: "高齡化的", coll: "aging population", ex: "An aging population poses significant challenges to public healthcare.", exZh: "高齡化人口對公共醫療保健提出了巨大挑戰。", syn: "greying, maturing", ant: "youthful" },
             { word: "Mobility", zh: "流動性、移動性", coll: "social mobility", ex: "Education is a primary driver for improving upward social mobility.", exZh: "教育是提高向上社會流動性的主要驅動力。", syn: "maneuverability, flexibility", ant: "immobility" },
             { word: "Migration", zh: "遷移、移民", coll: "rural-to-urban migration", ex: "Economic imbalances trigger rapid rural-to-urban migration.", exZh: "經濟失衡引發了快速的鄉村至城市人口遷移。", syn: "movement, relocation", ant: "stationariness" },
             { word: "Proportion", zh: "比例、部分", coll: "high proportion of", ex: "A large proportion of the budget is spent on funding pensions.", exZh: "預算中的很大一部分被花在資助養老金上。", syn: "percentage, share", ant: "whole" },
-            { word: "Shrink", zh: "委縮、縮小", coll: "shrinking labor force", ex: "The country's total consumer market will inevitably shrink over time.", exZh: "隨著時間推移，該國的總體消費市場勢必會萎縮。", syn: "diminish, decrease", ant: "expand, grow" },
+            { word: "Shrink", zh: "萎縮、縮小", coll: "shrinking labor force", ex: "The country's total consumer market will inevitably shrink over time.", exZh: "隨著時間推移，該國的總體消費市場勢必會萎縮。", syn: "diminish, decrease", ant: "expand, grow" },
             { word: "Sustain", zh: "維持、供養", coll: "sustain the welfare system", ex: "It is hard for few taxpayers to sustain massive welfare systems.", exZh: "少數納稅人很難維持龐大的福利制度。", syn: "maintain, preserve", ant: "collapse" },
             { word: "Socio-economic", zh: "社會經濟的", coll: "socio-economic background", ex: "Students from different socio-economic backgrounds deserve fairness.", exZh: "來自不同社會經濟背景的學生理應獲得公平對待。", syn: "social-financial", ant: "N/A" }
         ];
@@ -396,7 +367,6 @@
             
             const totalProgress = Math.round(((learnedCount + quizACount + quizBCount) / 20) * 100);
             document.getElementById('main-progress').style.width = `${totalProgress}%`;
-            document.getElementById('progress-text').innerText = totalProgress + '%';
             
             if (learnedCount === 10 && !celebratedLearn) { celebratedLearn = true; triggerSubCelebration('learn'); }
             if (quizACount === 5 && !celebratedQuizA) { celebratedQuizA = true; triggerSubCelebration('quizA'); }
