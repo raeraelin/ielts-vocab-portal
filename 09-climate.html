@@ -65,6 +65,11 @@
             color: #065F46;
         }
 
+        .input-correct:disabled {
+            opacity: 1 !important;
+            color: #065F46 !important;
+        }
+
         .input-error {
             border-color: #DC2626 !important;
             background-color: #FEE2E2;
@@ -102,30 +107,13 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
 
-    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
-        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base text-black no-underline">
-            <i class="fas fa-home"></i> 回首頁
-        </a>
-        <div class="flex items-center gap-2">
-            <label class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
-            <select onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
-                <option value="" disabled>-- 選擇其他主題 --</option>
-                <option value="01-environment.html">Unit 1: 環境單元</option>
-                <option value="02-tech-ai.html">Unit 2: 科技與 AI</option>
-                <option value="03-society-culture.html">Unit 3: 社會與文化變遷</option>
-                <option value="04-climate.html">Unit 4: 環境科學與氣候變遷</option>
-                <option value="05-tech-edu.html">Unit 5: 科技、AI 與數位教育</option>
-                <option value="06-wildlife.html">Unit 6: 生物與野生動物</option>
-                <option value="07-psychology.html">Unit 7: 心理學與人類行為</option>
-                <option value="08-international-relations.html">Unit 8: 國際關係與地緣政治</option>
-                <option value="09-climate.html" selected>Unit 9: 經濟全球化與國際貿易</option>
-            </select>
-        </div>
-    </nav>
+    <!-- 💡 統一入口：自動呼叫 14 單元的 master.js -->
+    <script src="master.js"></script>
 
     <div class="max-w-4xl mx-auto">
+        <!-- 頂部標題與三軌進度條 -->
         <header class="dopamine-card bg-[var(--pop-pink)] p-6 mb-6 rounded-3xl text-center">
-            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Globalization & International Trade 📈</h1>
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Globalization & Trade 📈</h1>
             <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
                 <div id="main-progress" class="bg-[var(--pop-green)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
             </div>
@@ -136,6 +124,7 @@
             </div>
         </header>
 
+        <!-- 三頁籤 -->
         <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
             <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">📖 學習區</button>
             <button onclick="switchTab('quizA')" id="tab-quizA" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">✍️ 測驗 Part A (閱讀)</button>
@@ -143,8 +132,10 @@
         </div>
 
         <main>
+            <!-- 1. 學習區 -->
             <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
 
+            <!-- 2. 測驗 Part A: 雅思閱讀短文 -->
             <div id="section-quizA" class="hidden space-y-6">
                 <div class="dopamine-card bg-white p-6 rounded-3xl border-4 border-black mb-4">
                     <h3 class="font-black text-xl mb-3 text-[var(--pop-pink)]">📖 Reading Passage: The Impact of Globalization</h3>
@@ -167,6 +158,7 @@
                 </div>
             </div>
 
+            <!-- 3. 測驗 Part B: 獨立句型拼寫 -->
             <div id="section-quizB" class="hidden max-w-3xl mx-auto space-y-6">
                 <div class="dopamine-card bg-white p-6 rounded-3xl">
                     <p class="font-bold text-lg mb-1">🎯 Part B: 獨立市場壟斷與監管套利拼寫</p>
@@ -177,6 +169,7 @@
         </main>
     </div>
 
+    <!-- 滿分總結彈窗 -->
     <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
         <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
             <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">📈</div>
@@ -185,9 +178,14 @@
             <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
                 太完美了，瑞老師！全球貿易與經濟一體化單元全數通關。防弊輸入與隨機口音盲盒都被您完美克服，您的雅思字彙儲備已展現大師級風範！
             </p>
-            <button onclick="closeModal()" class="w-full bg-[var(--pop-pink)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white" style="-webkit-text-stroke: 0.5px black;">
-                太棒了，迎接精采的一天！✨
-            </button>
+            <div class="flex gap-2">
+                <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white">
+                    留在本頁 ✨
+                </button>
+                <a href="index.html" class="flex-1 bg-[var(--pop-yellow)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-black text-center no-underline flex items-center justify-center">
+                    返回大廳 🎒
+                </a>
+            </div>
         </div>
     </div>
 
@@ -196,8 +194,8 @@
             { word: "Subsidy", zh: "補貼、津貼", coll: "government subsidy", ex: "The government provided a substantial subsidy to renewable energy firms.", exZh: "政府向再生能源公司提供了可觀的補貼。", syn: "grant, allowance", ant: "tax, penalty" },
             { word: "Tariffs", zh: "關稅", coll: "impose import tariffs", ex: "Imposing high tariffs on foreign goods may raise costs for consumers.", exZh: "對外國商品徵收高額關稅可能會增加消費者的成本。", syn: "taxes, customs", ant: "free trade" },
             { word: "Fluctuation", zh: "波動、起伏", coll: "currency fluctuation", ex: "Businesses engaged in international trade must cope with continuous currency fluctuation.", exZh: "從事國際貿易的企業必須應對持續的匯率波動。", syn: "variation, instability", ant: "stability, constancy" },
-            { word: "Integration", zh: "一體化、融合", coll: "economic integration", ex: "Regional economic integration allows smaller nations to trade more freely.", exZh: "區域經濟一體化使小國能夠更自由地進行貿易。", syn: "unification, merging", ant: "separation, segregation" },
-            { word: "Exploitation", zh: "開發、剝削", coll: "labor exploitation", ex: "Globalization can sometimes lead to the exploitation of low-wage workers.", exZh: "全球化有時可能會導致低薪勞工遭受剝削。", syn: "abuse, utilization", ant: "protection" },
+            { word: "Integration", zh: "一體化、融合", coll: "economic integration", ex: "Regional economic integration allows smaller nations to trade more freely.", exZh: "區域經濟一體化使小國能夠與大型超級大國更自由地進行貿易。", syn: "unification, merging", ant: "separation, segregation" },
+            { word: "Exploitation", zh: "開發、剝削", coll: "labor exploitation", ex: "Critics argue that globalization can lead to the exploitation of low-wage workers.", exZh: "批評者指出，全球化可能會導致低薪勞工遭受剝削。", syn: "abuse, utilization", ant: "protection" },
             { word: "Monopoly", zh: "壟斷、獨佔", coll: "secure a monopoly", ex: "The tech giant managed to secure a near-total monopoly over the system market.", exZh: "這家科技巨頭成功在系統市場中獲得了近乎完全的壟斷地位。", syn: "dominance, cartel", ant: "competition" },
             { word: "Sustain", zh: "維持、供養", coll: "sustain economic growth", ex: "Developing countries face the challenge of how to sustain domestic industries.", exZh: "開發中國家面臨著如何維持國內產業生存的挑戰。", syn: "maintain, support", ant: "abandon, ruin" },
             { word: "Disparity", zh: "差異、不平等", coll: "economic disparity", ex: "Globalization has unfortunately widened the economic disparity between nations.", exZh: "不幸的是，全球化拉大了國家之間的經濟差距。", syn: "imbalance, gap", ant: "equality, parity" },
@@ -249,6 +247,7 @@
             document.getElementById(`section-${tab}`).classList.remove('hidden');
         }
 
+        // 發音引擎排程：隨機英、美、澳口音
         function speak(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -311,8 +310,6 @@
                 const displayIndex = part === 'A' ? idx + 1 : idx + 6;
                 const div = document.createElement('div');
                 div.className = "dopamine-card bg-white p-5 rounded-3xl mb-4 relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
-                
-                // 關閉自動完成與拼字檢查防作弊
                 div.innerHTML = `
                     <div class="flex items-start gap-3 mb-3">
                         <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
@@ -337,8 +334,10 @@
             const msg = document.getElementById(`hint-msg-${id}`);
             const btn = document.getElementById(`hint-btn-${id}`);
             if (hintStates[id] === 1) {
-                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`; msg.classList.remove('hidden');
-                btn.innerHTML = "🔍 拼字救援"; btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`;
+                msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援";
+                btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
             } else {
                 msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
                 btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
@@ -363,6 +362,11 @@
                 } else {
                     input.classList.add('input-error'); input.parentElement.parentElement.classList.add('hint-shake');
                     setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
+                    if (!hintStates[id]) {
+                        const allQuizzes = quizzesA.concat(quizzesB);
+                        const qItem = allQuizzes.find(q => q.id === id);
+                        showDynamicHint(id, answer, qItem.synHint);
+                    }
                 }
             }
         }
@@ -381,7 +385,7 @@
             if (quizACount === 5 && !celebratedQuizA) { celebratedQuizA = true; triggerSubCelebration('quizA'); }
             if (quizBCount === 5 && !celebratedQuizB) { celebratedQuizB = true; triggerSubCelebration('quizB'); }
             
-            if (totalProgress === 100 && !celebratedUltimate) { celebratedUltimate = true; setTimeout(showUltimateCelebration, 2000); }
+            if (totalProgress === 100 && !celebratedUltimate) { celebratedUltimate = true; setTimeout(showUltimateCelebration, 1200); }
         }
 
         function triggerSubCelebration(type) {
@@ -389,7 +393,7 @@
                 if (type === 'learn') {
                     confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
                     confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
-                    speak("Brilliant reading, Teacher Rui Rui!");
+                    speak("Brilliant reading!");
                 } else if (type === 'quizA') {
                     confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
                     confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
@@ -418,7 +422,6 @@
             speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of global trade and international economics is absolutely flawless!");
         }
 
-        // 預熱發音引擎
         if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); }
         function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
     </script>
