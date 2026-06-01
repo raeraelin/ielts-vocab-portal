@@ -3,216 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>瑞瑞老師 IELTS 單字與閱讀大廳 🎒</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>瑞瑞老師的雅思單字特訓 - IELTS Vocab Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@700;900&display=swap');
-        
+        /* 亮彩多巴胺 2.0 核心定義 */
         :root {
-            --pop-pink: #FF85B3;
-            --pop-yellow: #FFD93D;
-            --pop-blue: #4D96FF;
-            --pop-green: #6BCB77;
-            --pop-purple: #B983FF;
-            --pop-orange: #FF9F45;
+            --m-yellow: #FFD93D;
+            --m-pink: #FF85B3;
+            --m-blue: #4D96FF;  
+            --m-green: #6BCB77; 
+            --m-purple: #B983FF; 
+            --m-orange: #FF9F45; 
+            --m-bg: #FFF5E4;    
+            --black: #000000;
         }
+
+        * { box-sizing: border-box; }
 
         body {
-            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
-            background-color: #FFF5E4; /* 經典奶油色底 */
+            background-color: var(--m-bg);
+            background-image: radial-gradient(#e0d7c6 1px, transparent 1px);
+            background-size: 20px 20px;
+            margin: 0;
+            padding: 50px 20px;
+            font-family: 'Comfortaa', 'Noto Sans TC', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        /* Neo-brutalism 粗黑框與硬陰影卡片 */
-        .lobby-card {
-            border: 4px solid #000;
-            box-shadow: 6px 6px 0px #000;
+        /* 標題橫幅設計 */
+        .header {
+            width: 100%;
+            max-width: 1000px;
+            background-color: var(--m-green); 
+            border: 4px solid var(--black);
+            border-radius: 30px;
+            padding: 35px 20px;
+            text-align: center;
+            box-shadow: 10px 10px 0px var(--black);
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            font-weight: 900;
+            margin: 0;
+            color: white;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            -webkit-text-stroke: 1.5px var(--black);
+            text-shadow: 4px 4px 0px var(--black);
+        }
+
+        .header p {
+            margin: 12px 0 0 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--black);
+            background: white;
+            border: 2px solid var(--black);
+            border-radius: 12px;
+            box-shadow: 3px 3px 0px var(--black);
+            display: inline-block;
+            padding: 4px 18px;
+        }
+
+        /* 網格佈局 */
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 28px;
+        }
+
+        /* 卡片按鈕設計 */
+        .card {
+            text-decoration: none;
+            color: var(--black);
+            border: 4px solid var(--black);
+            border-radius: 25px;
+            padding: 35px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            min-height: 180px;
         }
 
-        .lobby-card:hover {
+        /* 不同顏色的卡片與其陰影 */
+        .card-yellow { background-color: var(--m-yellow); box-shadow: 6px 6px 0px var(--black); }
+        .card-pink { background-color: var(--m-pink); box-shadow: 6px 6px 0px var(--black); }
+        .card-blue { background-color: var(--m-blue); box-shadow: 6px 6px 0px var(--black); }
+        .card-green { background-color: var(--m-green); box-shadow: 6px 6px 0px var(--black); }
+        .card-purple { background-color: var(--m-purple); box-shadow: 6px 6px 0px var(--black); }
+        .card-orange { background-color: var(--m-orange); box-shadow: 6px 6px 0px var(--black); }
+
+        /* 滑鼠懸停效果 */
+        .card:hover {
             transform: translate(-4px, -4px);
-            box-shadow: 10px 10px 0px #000;
+            box-shadow: 10px 10px 0px var(--black);
         }
 
-        .lobby-card:active {
-            transform: translate(2px, 2px);
-            box-shadow: 3px 3px 0px #000;
+        /* 點擊效果 */
+        .card:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px var(--black);
+        }
+
+        /* 頂部小關卡標籤 */
+        .card .topic-badge {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: white;
+            border: 3px solid var(--black);
+            padding: 2px 10px;
+            font-weight: 900;
+            font-size: 11px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 0px var(--black);
+        }
+
+        .card i { font-size: 38px; margin-bottom: 12px; }
+
+        .card .title-cn { font-size: 20px; font-weight: 900; margin-bottom: 10px; line-height: 1.3; }
+
+        .card .title-en {
+            font-size: 13px;
+            font-weight: 700;
+            background: white;
+            border: 2px solid var(--black);
+            border-radius: 10px;
+            padding: 3px 10px;
+            display: inline-block;
+        }
+
+        footer { 
+            margin-top: 60px; 
+            font-size: 14px; 
+            font-weight: 700;
+            color: var(--black); 
+            text-align: center; 
+            background: white;
+            border: 3px solid var(--black);
+            padding: 8px 25px;
+            border-radius: 15px;
+            box-shadow: 4px 4px 0px var(--black);
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8">
+<body>
 
-    <div class="max-w-5xl mx-auto">
-        <!-- 頂部精美迎賓牌 -->
-        <header class="lobby-card bg-[var(--pop-yellow)] p-6 md:p-8 mb-8 rounded-3xl text-center relative overflow-hidden">
-            <!-- 裝飾小氣球 -->
-            <span class="absolute -top-4 -left-4 text-6xl opacity-20">🎈</span>
-            <span class="absolute -bottom-4 -right-4 text-6xl opacity-20">✨</span>
-            
-            <h1 class="text-3xl md:text-4xl font-900 text-black mb-3 tracking-tighter uppercase" style="-webkit-text-stroke: 1px black;">
-                瑞瑞老師 IELTS 單字與閱讀大廳 🎒
-            </h1>
-            <p class="text-black font-black text-sm md:text-base leading-relaxed">
-                歡迎來到多巴胺學術派對！這裡有最科學的「雙階鷹架」與「多國隨機口音」挑戰。<br class="hidden md:inline">
-                準備好磨練您的雅思聽力與高分詞彙了嗎？挑選一個單元開始吧！
-            </p>
-        </header>
+    <div class="header">
+        <h1>IELTS Vocab Portal 📚</h1>
+        <p>✨ 瑞瑞老師的雅思單字講堂 ✨</p>
+    </div>
 
-        <!-- 8大單元九宮格（RWD 自適應排版，完美適應手機與平板） -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Unit 1 -->
-            <a href="01-environment.html" class="lobby-card bg-[var(--pop-green)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 01</span>
-                        <span class="text-3xl">🌍</span>
-                    </div>
-                    <h3 class="text-xl font-900 mt-4">環境與生態學</h3>
-                    <p class="text-xs font-bold opacity-80 mt-1">Environment & Ecology</p>
-                </div>
-                <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                    <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+    <div class="container">
+        <!-- Unit 1 -->
+        <a href="01-environment.html" class="card card-green">
+            <span class="topic-badge">UNIT 01</span>
+            <i class="fa-solid fa-leaf"></i>
+            <span class="title-cn">環境單元</span>
+            <span class="title-en">Environment</span>
+        </a>
 
-            <!-- Unit 2 -->
-            <a href="02-tech-ai.html" class="lobby-card bg-[var(--pop-blue)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 02</span>
-                        <span class="text-3xl">🤖</span>
-                    </div>
-                    <h3 class="text-xl font-900 mt-4">科技與人工智慧</h3>
-                    <p class="text-xs font-bold opacity-80 mt-1">Technology & AI</p>
-                </div>
-                <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                    <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+        <!-- Unit 2 -->
+        <a href="02-tech-ai.html" class="card card-blue">
+            <span class="topic-badge">UNIT 02</span>
+            <i class="fa-solid fa-robot"></i>
+            <span class="title-cn">科技與 AI</span>
+            <span class="title-en">Technology & AI</span>
+        </a>
 
-            <!-- Unit 3 -->
-            <a href="03-society-culture.html" class="lobby-card bg-[var(--pop-pink)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 03</span>
-                        <span class="text-3xl">👥</span>
-                    </div>
-                    <h3 class="text-xl font-900 mt-4">社會與文化變遷</h3>
-                    <p class="text-xs font-bold opacity-80 mt-1">Society & Culture</p>
-                </div>
-                <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                    <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+        <!-- Unit 3 -->
+        <a href="03-society-culture.html" class="card card-pink">
+            <span class="topic-badge">UNIT 03</span>
+            <i class="fa-solid fa-people-arrows"></i>
+            <span class="title-cn">社會與文化變遷</span>
+            <span class="title-en">Society & Culture</span>
+        </a>
 
-            <!-- Unit 4 -->
-            <a href="04-climate.html" class="lobby-card bg-[var(--pop-orange)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 04</span>
-                        <span class="text-3xl">⚡</span>
-                    </div>
-                    <h3 class="text-xl font-900 mt-4">環境科學與氣候變遷</h3>
-                    <p class="text-xs font-bold opacity-80 mt-1">Climate Change</p>
-                </div>
-                <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                    <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+        <!-- Unit 4 -->
+        <a href="04-climate.html" class="card card-yellow">
+            <span class="topic-badge">UNIT 04</span>
+            <i class="fa-solid fa-temperature-arrow-up"></i>
+            <span class="title-cn">環境科學與氣候變遷</span>
+            <span class="title-en">Climate Change</span>
+        </a>
 
-            <!-- Unit 5 -->
-            <a href="05-tech-edu.html" class="lobby-card bg-[var(--pop-blue)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 05</span>
-                        <span class="text-3xl">💻</span>
-                    </div>
-                    <h3 class="text-xl font-900 mt-4">科技、AI 與數位教育</h3>
-                    <p class="text-xs font-bold opacity-80 mt-1">Tech & Digital Education</p>
-                </div>
-                <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                    <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+        <!-- Unit 5 -->
+        <a href="05-tech-edu.html" class="card card-blue">
+            <span class="topic-badge">UNIT 05</span>
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span class="title-cn">科技、AI 與教育</span>
+            <span class="title-en">Tech & Education</span>
+        </a>
 
-            <!-- Unit 6 -->
-            <a href="06-wildlife.html" class="lobby-card bg-[var(--pop-green)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 06</span>
-                        <span class="text-3xl">🦁</span>
-                    </div>
-                    <h3 class="text-xl font-900 mt-4">生物學與野生動物</h3>
-                    <p class="text-xs font-bold opacity-80 mt-1">Wildlife & Biology</p>
-                </div>
-                <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                    <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+        <!-- Unit 6 -->
+        <a href="06-wildlife.html" class="card card-green">
+            <span class="topic-badge">UNIT 06</span>
+            <i class="fa-solid fa-hippo"></i>
+            <span class="title-cn">生物與野生動物</span>
+            <span class="title-en">Wildlife & Habitats</span>
+        </a>
 
-            <!-- Unit 7 -->
-            <a href="07-psychology.html" class="lobby-card bg-[var(--pop-purple)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-                <div>
-                    <div class="flex justify-between items-start">
-                        <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 07</span>
-                        <span class="text-3xl">🧠</span>
-                    </div>
-                    <h3 class="text-xl font-900 mt-4">心理學與人類行為</h3>
-                    <p class="text-xs font-bold opacity-80 mt-1">Psychology & Behavior</p>
-                </div>
-                <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                    <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+        <!-- Unit 7 -->
+        <a href="07-psychology.html" class="card card-purple">
+            <span class="topic-badge">UNIT 07</span>
+            <i class="fa-solid fa-brain"></i>
+            <span class="title-cn">心理學與人類行為</span>
+            <span class="title-en">Psychology & Behavior</span>
+        </a>
 
-            <!-- Unit 8 (全新完美對接！) -->
-        <a href="08-international-relations.html" class="lobby-card bg-[var(--pop-orange)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-            <div>
-                <div class="flex justify-between items-start">
-                    <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 08</span>
-                    <span class="text-3xl">🇺🇳</span>
-                </div>
-                <h3 class="text-xl font-900 mt-4">國際關係與地緣政治</h3>
-                <p class="text-xs font-bold opacity-80 mt-1">International Relations</p>
-            </div>
-            <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
+        <!-- Unit 8 -->
+        <a href="08-international-relations.html" class="card card-orange">
+            <span class="topic-badge">UNIT 08</span>
+            <i class="fa-solid fa-globe"></i>
+            <span class="title-cn">國際關係與地緣政治</span>
+            <span class="title-en">International Relations</span>
         </a>
 
         <!-- Unit 9 -->
-        <a href="09-climate.html" class="lobby-card bg-[var(--pop-pink)] p-6 rounded-3xl flex flex-col justify-between h-48 text-black no-underline">
-            <div>
-                <div class="flex justify-between items-start">
-                    <span class="bg-black text-white text-xs px-3 py-1 rounded-full font-black">UNIT 09</span>
-                    <span class="text-3xl">📈</span>
-                </div>
-                <h3 class="text-xl font-900 mt-4">經濟全球化與國際貿易</h3>
-                <p class="text-xs font-bold opacity-80 mt-1">Globalization & Trade</p>
-            </div>
-            <div class="flex items-center justify-between mt-4 border-t-2 border-black pt-2">
-                <span class="text-xs font-black">挑戰 10 核心字彙</span>
-                <i class="fas fa-arrow-right"></i>
-            </div>
+        <a href="09-climate.html" class="card card-pink">
+            <span class="topic-badge">UNIT 09</span>
+            <i class="fa-solid fa-chart-line"></i>
+            <span class="title-cn">經濟全球化與國際貿易</span>
+            <span class="title-en">Globalization & Trade</span>
+        </a>
+
+        <!-- Unit 10 -->
+        <a href="10-urban-planning.html" class="card card-blue">
+            <span class="topic-badge">UNIT 10</span>
+            <i class="fa-solid fa-city"></i>
+            <span class="title-cn">城市化與都市規劃</span>
+            <span class="title-en">Urban Planning</span>
+        </a>
+
+        <!-- Unit 11 -->
+        <a href="11-mass-media.html" class="card card-purple">
+            <span class="topic-badge">UNIT 11</span>
+            <i class="fa-solid fa-microphone-lines"></i>
+            <span class="title-cn">大眾傳播與現代媒體</span>
+            <span class="title-en">Mass Media</span>
+        </a>
+
+        <!-- Unit 12 -->
+        <a href="12-demographics.html" class="card card-yellow">
+            <span class="topic-badge">UNIT 12</span>
+            <i class="fa-solid fa-users"></i>
+            <span class="title-cn">人口結構與社會變遷</span>
+            <span class="title-en">Demographics</span>
+        </a>
+
+        <!-- Unit 13 -->
+        <a href="13-health.html" class="card card-green">
+            <span class="topic-badge">UNIT 13</span>
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span class="title-cn">健康、醫療與生活型態</span>
+            <span class="title-en">Health & Lifestyle</span>
+        </a>
+
+        <!-- Unit 14 -->
+        <a href="14-arts-culture.html" class="card card-orange">
+            <span class="topic-badge">UNIT 14</span>
+            <i class="fa-solid fa-building-columns"></i>
+            <span class="title-cn">藝術、文化與歷史</span>
+            <span class="title-en">Arts & Culture</span>
         </a>
 
     </div>
 
-    <!-- 頁尾宣告 -->
-        <footer class="mt-12 text-center text-gray-500 text-xs font-bold">
-            <p>© 瑞瑞老師 IELTS 雅思單字大防線. All Rights Reserved.</p>
-        </footer>
-    </div>
+    <footer>
+        &copy; 2026 瑞瑞老師的雅思教學空間 🌿 All Rights Reserved
+    </footer>
 
 </body>
 </html>
