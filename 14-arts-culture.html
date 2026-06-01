@@ -65,6 +65,11 @@
             color: #065F46;
         }
 
+        .input-correct:disabled {
+            opacity: 1 !important;
+            color: #065F46 !important;
+        }
+
         .input-error {
             border-color: #DC2626 !important;
             background-color: #FEE2E2;
@@ -102,23 +107,8 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
 
-    <!-- 獨立穩定的導航列：精準鎖定 14 藝術與文化 -->
-    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
-        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base text-black no-underline">
-            <i class="fas fa-home"></i> 回首頁
-        </a>
-        <div class="flex items-center gap-2">
-            <label class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
-            <select onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
-                <option value="" disabled>-- 選擇其他主題 --</option>
-                <option value="10-urban-planning.html">Unit 10: 城市化與都市規劃</option>
-                <option value="11-mass-media.html">Unit 11: 大眾傳播與現代媒體</option>
-                <option value="12-demographics.html">Unit 12: 人口結構與社會變遷</option>
-                <option value="13-health.html">Unit 13: 健康、醫療與生活型態</option>
-                <option value="14-arts-culture.html" selected>Unit 14: 藝術、文化與歷史</option>
-            </select>
-        </div>
-    </nav>
+    <!-- 💡 統一入口：自動呼叫 14 單元的 master.js -->
+    <script src="master.js"></script>
 
     <div class="max-w-4xl mx-auto">
         <!-- 頂部標題與三軌進度條 -->
@@ -186,14 +176,14 @@
             <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-blue)]">Cultural Masterpiece!</h2>
             <div class="text-5xl font-black text-[var(--pop-orange)] mb-4">100<span class="text-2xl text-black">%</span></div>
             <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
-                太精采了，瑞老師！藝術、文化與歷史單元全數通關。您的文化底蘊與雅思字彙實力已臻至完美境界，準備迎接高分的洗禮吧！
+                太精采了，瑞老師！全部 14 個單元的旅程在此刻完美收官。您的文化底蘊與雅思字彙實力已臻至完美境界，準備迎接高分的洗禮吧！
             </p>
             <div class="flex gap-2">
                 <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white">
                     留在本頁 ✨
                 </button>
                 <a href="index.html" class="flex-1 bg-[var(--pop-yellow)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-black text-center no-underline flex items-center justify-center">
-                    返回大廳 🎒
+                    榮耀返航 🎒
                 </a>
             </div>
         </div>
@@ -331,12 +321,14 @@
                 const displayIndex = part === 'A' ? idx + 1 : idx + 6;
                 const div = document.createElement('div');
                 div.className = "dopamine-card bg-white p-5 rounded-3xl mb-4 relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+                
+                // 💡 強制關閉自動填寫與拼字檢查，防止作弊與紅線干擾
                 div.innerHTML = `
                     <div class="flex items-start gap-3 mb-3">
                         <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
                         <p class="text-base font-semibold leading-relaxed text-gray-800">
                             ${parts[0]}
-                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded text-black" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
+                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
                             ${parts[1]}
                         </p>
                     </div>
@@ -355,8 +347,10 @@
             const msg = document.getElementById(`hint-msg-${id}`);
             const btn = document.getElementById(`hint-btn-${id}`);
             if (hintStates[id] === 1) {
-                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`; msg.classList.remove('hidden');
-                btn.innerHTML = "🔍 拼字救援"; btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`;
+                msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援";
+                btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
             } else {
                 msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
                 btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
@@ -368,18 +362,28 @@
                 const input = document.getElementById(`input-${id}`);
                 const btn = document.getElementById('hint-btn-' + id);
                 const msg = document.getElementById('hint-msg-' + id);
+                
                 if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
-                    input.value = answer; input.disabled = true; input.classList.remove('input-error'); input.classList.add('input-correct');
+                    input.value = answer; 
+                    input.disabled = true; 
+                    input.classList.remove('input-error');
+                    input.classList.add('input-correct');
+                    
                     if (btn) btn.classList.add('hidden');
-                    if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; msg.classList.remove('hidden'); }
-                    speak(answer);
+                    if (msg) { 
+                        msg.innerHTML = "✨ Correct!"; 
+                        msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; 
+                        msg.classList.remove('hidden'); 
+                    }
+                    speak(answer); // 自動觸發多國隨機口音
                     if (!input.dataset.solved) {
                         input.dataset.solved = "true";
                         if (part === 'A') quizACount++; else quizBCount++;
-                        updateProgress();
+                        updateProgress(); 
                     }
                 } else {
-                    input.classList.add('input-error'); input.parentElement.parentElement.classList.add('hint-shake');
+                    input.classList.add('input-error');
+                    input.parentElement.parentElement.classList.add('hint-shake');
                     setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
                 }
             }
@@ -392,6 +396,7 @@
             document.getElementById('quizA-prog').innerText = `✍️ 測驗A: ${quizACount}/5`;
             document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
             
+            // 使用絕對數值計算進度
             const totalProgress = Math.round(((learnedCount + quizACount + quizBCount) / 20) * 100);
             document.getElementById('main-progress').style.width = `${totalProgress}%`;
             
@@ -399,7 +404,11 @@
             if (quizACount === 5 && !celebratedQuizA) { celebratedQuizA = true; triggerSubCelebration('quizA'); }
             if (quizBCount === 5 && !celebratedQuizB) { celebratedQuizB = true; triggerSubCelebration('quizB'); }
             
-            if (totalProgress === 100 && !celebratedUltimate) { celebratedUltimate = true; setTimeout(showUltimateCelebration, 1200); }
+            // 💡 總進度 100% 觸發終極大灑花！
+            if (totalProgress === 100 && !celebratedUltimate) {
+                celebratedUltimate = true;
+                setTimeout(showUltimateCelebration, 2000); 
+            }
         }
 
         function triggerSubCelebration(type) {
@@ -423,9 +432,13 @@
         function showUltimateCelebration() {
             document.getElementById('completion-modal').classList.remove('hidden');
             document.getElementById('completion-modal').classList.add('flex');
-            const duration = 3.5 * 1000; const animationEnd = Date.now() + duration;
+            
+            const duration = 3.5 * 1000;
+            const animationEnd = Date.now() + duration;
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
             function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
             const interval = setInterval(function() {
                 const timeLeft = animationEnd - Date.now();
                 if (timeLeft <= 0) { return clearInterval(interval); }
@@ -433,9 +446,11 @@
                 confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
                 confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
             }, 250);
+
             speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of arts and culture vocabulary is absolutely flawless!");
         }
 
+        // 預熱發音引擎
         if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); }
         function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
     </script>
