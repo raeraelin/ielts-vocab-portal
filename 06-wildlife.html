@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>瑞瑞老師 IELTS 單字與閱讀趴 - Day 13</title>
+    <title>瑞瑞老師 IELTS 單字與閱讀趴 - Wildlife & Ecology</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -24,6 +24,7 @@
             background-color: #FFF5E4;
         }
 
+        /* Neo-brutalism 粗黑框硬陰影風格 */
         .dopamine-card {
             border: 4px solid #000;
             box-shadow: 6px 6px 0px #000;
@@ -64,6 +65,16 @@
             color: #065F46;
         }
 
+        .input-correct:disabled {
+            opacity: 1 !important;
+            color: #065F46 !important;
+        }
+
+        .input-error {
+            border-color: #DC2626 !important;
+            background-color: #FEE2E2;
+        }
+
         .hint-shake { animation: shake 0.5s; }
         @keyframes shake {
             0% { transform: translateX(0); }
@@ -94,33 +105,17 @@
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24"> <!-- 增加了上方間距避免擋到導航列 -->
+<body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
 
-    <!-- ================= 這裡加入全新全域導航列 ================= -->
-    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
-        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base">
-            <i class="fas fa-home"></i> 回首頁
-        </a>
-        <div class="flex items-center gap-2">
-            <label for="topic-select" class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
-  <select id="topic-select" onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
-                <option value="" disabled>-- 選擇其他主題 --</option>
-                <option value="01-environment.html">Day 1: 環境單元</option>
-                <option value="02-tech-ai.html">Day 2: 科技與 AI</option>
-                <option value="03-society-culture.html">Day 3: 社會與文化變遷</option>
-                <option value="04-climate.html">Day 4: 環境科學與氣候變遷</option>
-                <option value="05-tech-edu.html">Day 5: 科技、AI 與數位教育</option>
-                <option value="06-wildlife.html" selected>Day 6: 生物與野生動物</option>
-            </select>        </div>
-    </nav>
-    <!-- ======================================================== -->
+    <!-- 💡 統一入口：自動呼叫 14 單元的 master.js -->
+    <script src="master.js"></script>
 
     <div class="max-w-4xl mx-auto">
         <!-- 頂部標題與三軌進度條 -->
         <header class="dopamine-card bg-[var(--pop-green)] p-6 mb-6 rounded-3xl text-center">
-            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Day 6: Biology & Wildlife 🌿</h1>
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Wildlife & Ecology 🦁</h1>
             <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
-                <div id="main-progress" class="bg-[var(--pop-pink)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
+                <div id="main-progress" class="bg-[var(--pop-yellow)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
             </div>
             <div class="grid grid-cols-3 gap-2 mt-4 text-black font-black text-[10px] md:text-sm">
                 <span id="learn-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📖 學習: 0/10</span>
@@ -140,34 +135,34 @@
             <!-- 1. 學習區 -->
             <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
 
-            <!-- 2. 測驗 Part A: 雅思閱讀短文與帶字庫填空 -->
+            <!-- 2. 測驗 Part A: 雅思閱讀短文 -->
             <div id="section-quizA" class="hidden space-y-6">
                 <div class="dopamine-card bg-white p-6 rounded-3xl border-4 border-black mb-4">
-                    <h3 class="font-black text-xl mb-3 text-[var(--pop-green)]">📖 Reading Passage: Urban Ecology</h3>
+                    <h3 class="font-black text-xl mb-3 text-[var(--pop-green)]">📖 Reading Passage: Saving the Wild</h3>
                     <p class="text-gray-800 text-base leading-relaxed font-semibold bg-gray-50 p-4 rounded-xl border-2 border-black">
-                        When observing local ecosystems, it is fascinating to see how different native <b>species</b> interact with their environment. Small mammals and birds often spend their mornings trying to <b>forage</b> for seeds and insects among the dense <b>vegetation</b>. A well-preserved natural <b>habitat</b> provides the essential shelter and resources they need. As long as the ecological balance is maintained, these animal populations will continue to <b>thrive</b> throughout the changing seasons.
+                        The rapid destruction of natural <b>habitat</b> has left many species highly <b>vulnerable</b> to environmental changes. Without immediate <b>conservation</b> efforts, these animals may face total <b>extinction</b> in the wild. Furthermore, illegal <b>poaching</b> continues to threaten majestic creatures across the globe, driven by high black market demands.
                     </p>
                 </div>
 
                 <div class="dopamine-card bg-[var(--pop-pink)] p-5 rounded-3xl">
                     <h4 class="font-black text-lg text-black mb-2">📝 Summary Completion (閱讀字庫填空)</h4>
-                    <p class="text-xs text-black font-bold mb-3">請根據上方短文，將正確的單字打字填入空格（按 Enter 送出判定），英式發音已準備就緒！</p>
+                    <p class="text-xs text-black font-bold mb-3">請根據上方短文，將正確的單字填入空格（按 Enter 送出判定），每次點擊發音皆為隨機口音！</p>
                     <div class="bg-white border-2 border-black p-3 rounded-xl mb-4 text-center">
-                        <span class="word-badge text-[var(--pop-blue)]">vegetation</span>
-                        <span class="word-badge text-[var(--pop-orange)]">thrive</span>
-                        <span class="word-badge text-[var(--pop-purple)]">species</span>
-                        <span class="word-badge text-[var(--pop-green)]">forage</span>
-                        <span class="word-badge text-pink-600">habitat</span>
+                        <span class="word-badge text-[var(--pop-blue)]">habitat</span>
+                        <span class="word-badge text-[var(--pop-orange)]">vulnerable</span>
+                        <span class="word-badge text-[var(--pop-purple)]">conservation</span>
+                        <span class="word-badge text-[var(--pop-green)]">extinction</span>
+                        <span class="word-badge text-pink-600">poaching</span>
                     </div>
                     <div id="quiz-list-A" class="space-y-4"></div>
                 </div>
             </div>
 
-            <!-- 3. 測驗 Part B: 獨立句型填充 -->
+            <!-- 3. 測驗 Part B: 獨立句型拼寫 -->
             <div id="section-quizB" class="hidden max-w-3xl mx-auto space-y-6">
                 <div class="dopamine-card bg-white p-6 rounded-3xl">
-                    <p class="font-bold text-lg mb-1">🎯 Part B: 獨立語境拼寫</p>
-                    <p class="text-gray-700 text-sm">脫離文章輔助，挑戰另外 5 個核心生態詞彙。答錯將觸發雙階鷹架提示！</p>
+                    <p class="font-bold text-lg mb-1">🎯 Part B: 生物多樣性與食物鏈拼寫</p>
+                    <p class="text-gray-700 text-sm">挑戰另外 5 個關於生態系統、掠食者與動物庇護所的核心學術詞彙。答錯請手動點擊 HINT 按鈕觸發雙階鷹架！</p>
                 </div>
                 <div id="quiz-list-B" class="space-y-6"></div>
             </div>
@@ -177,53 +172,61 @@
     <!-- 滿分總結彈窗 -->
     <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
         <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
-            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">🌿</div>
-            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-green)]">Perfect Score!</h2>
+            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">🦁</div>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-green)]">Nature Guardian!</h2>
             <div class="text-5xl font-black text-[var(--pop-orange)] mb-4">100<span class="text-2xl text-black">%</span></div>
             <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
-                太精采了，瑞老師！您已成功解鎖 Day 6 自然生態領域的所有字彙。您的雅思閱讀能力與單字庫正如大自然般蓬勃發展！
+                太傑出了，瑞老師！生物與野生動物單元完美通關。零干擾防作弊介面也無法阻擋您的步伐，您的雅思學術底蘊已展現大師風采！
             </p>
-            <button onclick="closeModal()" class="w-full bg-[var(--pop-yellow)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all">
-                完美收工，週末愉快！✨
-            </button>
+            <div class="flex gap-2">
+                <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white" style="-webkit-text-stroke: 0.5px black;">
+                    留在本頁 ✨
+                </button>
+                <a href="index.html" class="flex-1 bg-[var(--pop-yellow)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-black text-center no-underline flex items-center justify-center">
+                    返回大廳 🎒
+                </a>
+            </div>
         </div>
     </div>
 
     <script>
         const vocabulary = [
-            { word: "Habitat", zh: "棲息地", coll: "natural habitat", ex: "The construction project threatens to destroy the natural habitat of local wildlife.", exZh: "這項建設工程威脅到當地野生動物的自然棲息地。", syn: "environment, home, dwelling", ant: "unnatural surroundings" },
-            { word: "Species", zh: "物種", coll: "endangered species", ex: "Conservationists are working hard to protect several endangered species in the area.", exZh: "保育人士正努力保護該地區的幾種瀕危物種。", syn: "category, type, breed", ant: "N/A" },
-            { word: "Forage", zh: "覓食", coll: "forage for food", ex: "Early in the morning, birds and small mammals actively forage for insects and seeds.", exZh: "清晨時分，鳥類和小型哺乳動物會積極覓食昆蟲和種子。", syn: "search, scavenge, hunt", ant: "N/A" },
-            { word: "Vegetation", zh: "植被", coll: "dense vegetation", ex: "The hare quickly disappeared into the dense vegetation near the edge of the forest.", exZh: "野兔迅速消失在森林邊緣茂密的植被中。", syn: "plants, flora, greenery", ant: "barren land" },
-            { word: "Thrive", zh: "繁榮、茁壯成長", coll: "thrive in conditions", ex: "Many local plants thrive in cold environments, despite the harsh winter snow.", exZh: "儘管有嚴冬的風雪，許多當地植物在寒冷環境中依然茁壯成長。", syn: "flourish, prosper, grow well", ant: "decline, fail, die" },
-            { word: "Predator", zh: "掠食者", coll: "apex predator", ex: "The absence of natural predators allows the population of deer to increase rapidly.", exZh: "由於缺乏自然天敵，鹿的數量得以迅速增加。", syn: "hunter, carnivore", ant: "prey" },
-            { word: "Adaptation", zh: "適應", coll: "evolutionary adaptation", ex: "The bird's unique beak shape is an evolutionary adaptation for cracking hard nuts.", exZh: "這種鳥獨特的喙形是為了咬開堅硬堅果的演化適應。", syn: "adjustment, modification", ant: "inflexibility" },
-            { word: "Migrate", zh: "遷徙", coll: "migrate south", ex: "Millions of birds migrate south every autumn to escape the freezing temperatures.", exZh: "每年秋天，數百萬隻鳥類向南遷徙以躲避嚴寒氣溫。", syn: "relocate, travel, move", ant: "remain, stay" },
-            { word: "Sanctuary", zh: "保護區、避難所", coll: "wildlife sanctuary", ex: "The wetland was declared a wildlife sanctuary to prevent illegal hunting.", exZh: "這片濕地被宣佈為野生動物保護區，以防止非法狩獵。", syn: "reserve, refuge, haven", ant: "danger zone" },
-            { word: "Breed", zh: "繁殖", coll: "breeding ground", ex: "The warm coastal waters provide an ideal ground for these marine animals to breed.", exZh: "溫暖的沿海水域為這些海洋動物提供了理想的繁殖地。", syn: "reproduce, multiply", ant: "die out" }
+            { word: "Habitat", zh: "棲息地", coll: "natural habitat", ex: "Deforestation is destroying the natural habitat of many rare monkey species.", exZh: "森林砍伐正在摧毀許多珍稀猴類的自然棲息地。", syn: "environment, home", ant: "N/A" },
+            { word: "Vulnerable", zh: "脆弱的、易受傷害的", coll: "highly vulnerable", ex: "Young birds are highly vulnerable to attacks from airborne predators.", exZh: "幼鳥極易受到空中掠食者的攻擊。", syn: "susceptible, defenseless", ant: "invincible, protected" },
+            { word: "Conservation", zh: "保育、保護", coll: "wildlife conservation", ex: "Wildlife conservation requires massive funding and international cooperation.", exZh: "野生動物保育需要大量的資金與國際合作。", syn: "preservation, protection", ant: "destruction, neglect" },
+            { word: "Extinction", zh: "滅絕、絕種", coll: "face extinction", ex: "Without human intervention, the giant panda may eventually face extinction.", exZh: "如果沒有人類的干預，大貓熊最終可能面臨滅絕。", syn: "annihilation, wiping out", ant: "survival, continuation" },
+            { word: "Poaching", zh: "盜獵、非法狩獵", coll: "illegal poaching", ex: "Strict laws were introduced to prevent the illegal poaching of elephants for ivory.", exZh: "為了防止非法盜獵大象獲取象牙，政府引進了嚴格的法律。", syn: "illegal hunting", ant: "N/A" },
+            { word: "Ecosystem", zh: "生態系統", coll: "delicate ecosystem", ex: "The introduction of an invasive species can severely disrupt a delicate ecosystem.", exZh: "外來物種的引進可能會嚴重破壞脆弱的生態系統。", syn: "environmental system", ant: "N/A" },
+            { word: "Biodiversity", zh: "生物多樣性", coll: "rich biodiversity", ex: "Tropical rainforests are celebrated for their incredible biodiversity and unique plant life.", exZh: "熱帶雨林因其令人難以置信的生物多樣性和獨特的植物而聞名。", syn: "biological variety", ant: "monoculture" },
+            { word: "Predator", zh: "掠食者", coll: "apex predator", ex: "The apex predator plays a crucial role in controlling the population of herbivores.", exZh: "頂級掠食者在控制草食動物數量方面扮演著關鍵角色。", syn: "hunter, carnivore", ant: "prey" },
+            { word: "Sanctuary", zh: "保護區、庇護所", coll: "wildlife sanctuary", ex: "The rescued lions were safely relocated to a wildlife sanctuary in the mountains.", exZh: "獲救的獅子被安全地轉移到山區的野生動物保護區。", syn: "refuge, haven", ant: "N/A" },
+            { word: "Endangered", zh: "瀕危的", coll: "endangered species", ex: "The snow leopard is currently listed as an endangered species on the global red list.", exZh: "雪豹目前被列入全球紅色名錄的瀕危物種中。", syn: "threatened, at risk", ant: "safe, thriving" }
         ];
 
-        // Part A: 閱讀填空題
         const quizzesA = [
-            { id: "A1", text: "It is essential to understand how each distinct native [input] contributes to the ecosystem.", answer: "species", synHint: "a group of living organisms consisting of similar individuals" },
-            { id: "A2", text: "Animals actively [input] for vital resources during the early hours of the day.", answer: "forage", synHint: "search widely for food or provisions" },
-            { id: "A3", text: "The forest's thick [input] offers excellent camouflage for small creatures hiding from danger.", answer: "vegetation", synHint: "plants considered collectively, especially those found in a particular area" },
-            { id: "A4", text: "Protecting a natural [input] ensures that animals have a secure place to live.", answer: "habitat", synHint: "the natural home or environment of an animal, plant, or organism" },
-            { id: "A5", text: "When environmental conditions are favorable, the local bird populations will undoubtedly [input].", answer: "thrive", synHint: "grow or develop well or vigorously; flourish" }
+            { id: "A1", text: "Urban expansion heavily compromises the natural [input] of indigenous wildlife.", answer: "habitat", synHint: "the natural home or environment of an animal, plant, or other organism" },
+            { id: "A2", text: "Polar bears are increasingly [input] to the effects of melting sea ice.", answer: "vulnerable", synHint: "exposed to the possibility of being attacked or harmed, either physically or emotionally" },
+            { id: "A3", text: "The national park relies on volunteers for its daily [input] programs.", answer: "conservation", synHint: "preervation, protection, or restoration of the natural environment and of wildlife" },
+            { id: "A4", text: "Many marine biologists fear the total [input] of coral reefs within our lifetime.", answer: "extinction", synHint: "the state or process of a species, family, or larger group being or becoming extinct" },
+            { id: "A5", text: "Authorities deployed drones to track gangs involved in rhino horn [input].", answer: "poaching", synHint: "the illegal hunting or capturing of wild animals" }
         ];
 
-        // Part B: 獨立單字拼寫
         const quizzesB = [
-            { id: "B1", text: "The lion is considered an apex [input] at the top of the food chain.", answer: "predator", synHint: "an animal that naturally preys on others" },
-            { id: "B2", text: "The camel's hump is a remarkable biological [input] to desert environments.", answer: "adaptation", synHint: "the process of change by which an organism becomes better suited to its environment" },
-            { id: "B3", text: "Monarch butterflies [input] thousands of miles across North America each year.", answer: "migrate", synHint: "move from one region or habitat to another according to the seasons" },
-            { id: "B4", text: "The government established a marine [input] to protect the endangered sea turtles.", answer: "sanctuary", synHint: "a nature reserve or refuge where animals are protected" },
-            { id: "B5", text: "Many seabirds return to the exact same cliffs every spring to [input].", answer: "breed", synHint: "mate and then produce offspring" }
+            { id: "B1", text: "Polluting the local river will negatively impact the entire aquatic [input].", answer: "ecosystem", synHint: "a biological community of interacting organisms and their physical environment" },
+            { id: "B2", text: "Protecting genetic [input] is essential to maintain a healthy planet.", answer: "biodiversity", synHint: "the variety of plant and animal life in the world or in a particular habitat" },
+            { id: "B3", text: "The tiger is a solitary [input] that relies on stealth to hunt its meal.", answer: "predator", synHint: "an animal that naturally preys on others" },
+            { id: "B4", text: "Injured animals are rehabilitated in a government-funded [input].", answer: "sanctuary", synHint: "a nature reserve; a place of refuge or safety" },
+            { id: "B5", text: "Deforestation has resulted in thousands of plants becoming heavily [input].", answer: "endangered", synHint: "seriously at risk of extinction" }
         ];
 
-        const cardColors = ['#FFD93D', '#6BCB77', '#B983FF', '#FF9F45', '#FF85B3'];
+        const cardColors = ['#6BCB77', '#FFD93D', '#B983FF', '#4D96FF', '#FF85B3'];
         let learnedCount = 0, quizACount = 0, quizBCount = 0;
         const hintStates = {};
+
+        let celebratedLearn = false;
+        let celebratedQuizA = false;
+        let celebratedQuizB = false;
+        let celebratedUltimate = false;
 
         window.onload = () => {
             renderLearn();
@@ -244,15 +247,18 @@
             document.getElementById(`section-${tab}`).classList.remove('hidden');
         }
 
-        // 發音引擎：採用英式發音 (en-GB)
         function speak(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 setTimeout(() => {
                     const u = new SpeechSynthesisUtterance(text);
-                    u.lang = 'en-GB';
-                    u.rate = 0.88;
-                    window.speechSynthesis.speak(u);
+                    const voices = window.speechSynthesis.getVoices();
+                    const pool = voices.filter(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US') || v.lang.startsWith('en-AU'));
+                    if (pool.length > 0) {
+                        const randomVoice = pool[Math.floor(Math.random() * pool.length)];
+                        u.voice = randomVoice; u.lang = randomVoice.lang;
+                    } else { u.lang = 'en-US'; }
+                    u.rate = 0.88; window.speechSynthesis.speak(u);
                 }, 40);
             }
         }
@@ -306,7 +312,11 @@
                 div.innerHTML = `
                     <div class="flex items-start gap-3 mb-3">
                         <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
-                        <p class="text-base font-semibold leading-relaxed text-gray-800">${parts[0]}<input type="text" id="input-${q.id}" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-32 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">${parts[1]}</p>
+                        <p class="text-base font-semibold leading-relaxed text-gray-800">
+                            ${parts[0]}
+                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded text-black" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
+                            ${parts[1]}
+                        </p>
                     </div>
                     <div class="flex justify-between items-center pl-10">
                         <button id="hint-btn-${q.id}" onclick="showDynamicHint('${q.id}', '${q.answer}', '${q.synHint}')" class="text-xs bg-[var(--pop-yellow)] border-2 border-black rounded-lg px-3 py-1 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all">💡 獲取語意提示</button>
@@ -317,17 +327,14 @@
             });
         }
 
-        // 雙階動態鷹架提示
         function showDynamicHint(id, answer, synHint) {
             if (!hintStates[id]) hintStates[id] = 0;
             hintStates[id]++;
             const msg = document.getElementById(`hint-msg-${id}`);
             const btn = document.getElementById(`hint-btn-${id}`);
             if (hintStates[id] === 1) {
-                msg.innerHTML = `💡 <b>同義字線索：</b> ${synHint}`;
-                msg.classList.remove('hidden');
-                btn.innerHTML = "🔍 拼字救援";
-                btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`; msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援"; btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
             } else {
                 msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
                 btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
@@ -337,27 +344,21 @@
         function checkAnswer(e, id, answer, part) {
             if (e.key === 'Enter') {
                 const input = document.getElementById(`input-${id}`);
-                const btn = document.getElementById(`hint-btn-${id}`);
-                const msg = document.getElementById(`hint-msg-${id}`);
+                const btn = document.getElementById('hint-btn-' + id);
+                const msg = document.getElementById('hint-msg-' + id);
                 if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
-                    input.value = answer; input.disabled = true; input.classList.add('input-correct');
+                    input.value = answer; input.disabled = true; input.classList.remove('input-error'); input.classList.add('input-correct');
                     if (btn) btn.classList.add('hidden');
                     if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; msg.classList.remove('hidden'); }
                     speak(answer);
                     if (!input.dataset.solved) {
                         input.dataset.solved = "true";
                         if (part === 'A') quizACount++; else quizBCount++;
-                        updateProgress(); checkFullCompletion();
+                        updateProgress();
                     }
                 } else {
-                    input.parentElement.parentElement.classList.add('hint-shake');
+                    input.classList.add('input-error'); input.parentElement.parentElement.classList.add('hint-shake');
                     setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
-                    
-                    if (!hintStates[id]) {
-                        const allQuizzes = quizzesA.concat(quizzesB);
-                        const qItem = allQuizzes.find(q => q.id === id);
-                        showDynamicHint(id, answer, qItem.synHint);
-                    }
                 }
             }
         }
@@ -366,24 +367,54 @@
             const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
             learnedCount = Array.from(boxes).filter(b => b.checked).length;
             document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
-            document.getElementById('quizA-prog').innerText = `🎯 測驗A: ${quizACount}/5`;
+            document.getElementById('quizA-prog').innerText = `✍️ 測驗A: ${quizACount}/5`;
             document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
             
-            const totalProgress = ((learnedCount + quizACount + quizBCount) / 20) * 100;
+            const totalProgress = Math.round(((learnedCount + quizACount + quizBCount) / 20) * 100);
             document.getElementById('main-progress').style.width = `${totalProgress}%`;
+            
+            if (learnedCount === 10 && !celebratedLearn) { celebratedLearn = true; triggerSubCelebration('learn'); }
+            if (quizACount === 5 && !celebratedQuizA) { celebratedQuizA = true; triggerSubCelebration('quizA'); }
+            if (quizBCount === 5 && !celebratedQuizB) { celebratedQuizB = true; triggerSubCelebration('quizB'); }
+            
+            if (totalProgress === 100 && !celebratedUltimate) { celebratedUltimate = true; setTimeout(showUltimateCelebration, 2000); }
         }
 
-        function checkFullCompletion() {
-            if (learnedCount === 10 && quizACount === 5 && quizBCount === 5) {
-                setTimeout(() => {
-                    document.getElementById('completion-modal').classList.remove('hidden');
-                    document.getElementById('completion-modal').classList.add('flex');
-                    confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 }, colors: ['#FF85B3', '#FFD93D', '#4D96FF', '#6BCB77'] });
-                    speak("Spectacular job, Teacher Rui Rui! You have mastered day thirteen!");
-                }, 1200);
-            }
+        function triggerSubCelebration(type) {
+            setTimeout(() => {
+                if (type === 'learn') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    speak("Brilliant reading!");
+                } else if (type === 'quizA') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    speak("Superb comprehension!");
+                } else if (type === 'quizB') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    speak("Masterly spelling!");
+                }
+            }, 300);
         }
 
+        function showUltimateCelebration() {
+            document.getElementById('completion-modal').classList.remove('hidden');
+            document.getElementById('completion-modal').classList.add('flex');
+            const duration = 3.5 * 1000; const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) { return clearInterval(interval); }
+                const particleCount = 65 * (timeLeft / duration);
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+            }, 250);
+            speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of wildlife ecology and conservation is absolutely flawless!");
+        }
+
+        if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); }
         function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
     </script>
 </body>
