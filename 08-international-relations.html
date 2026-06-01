@@ -65,6 +65,11 @@
             color: #065F46;
         }
 
+        .input-correct:disabled {
+            opacity: 1 !important;
+            color: #065F46 !important;
+        }
+
         .input-error {
             border-color: #DC2626 !important;
             background-color: #FEE2E2;
@@ -102,31 +107,13 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
 
-    <!-- 獨立穩定的導航列：精準鎖定 08 國際關係 -->
-    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
-        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base text-black no-underline">
-            <i class="fas fa-home"></i> 回首頁
-        </a>
-        <div class="flex items-center gap-2">
-            <label class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
-            <select onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
-                <option value="" disabled>-- 選擇其他主題 --</option>
-                <option value="01-environment.html">Unit 1: 環境單元</option>
-                <option value="02-tech-ai.html">Unit 2: 科技與 AI</option>
-                <option value="03-society-culture.html">Unit 3: 社會與文化變遷</option>
-                <option value="04-climate.html">Unit 4: 環境科學與氣候變遷</option>
-                <option value="05-tech-edu.html">Unit 5: 科技、AI 與數位教育</option>
-                <option value="06-wildlife.html">Unit 6: 生物與野生動物</option>
-                <option value="07-psychology.html">Unit 7: 心理學與人類行為</option>
-                <option value="08-international-relations.html" selected>Unit 8: 國際關係與地緣政治</option>
-            </select>
-        </div>
-    </nav>
+    <!-- 💡 統一入口：自動呼叫 master.js -->
+    <script src="master.js"></script>
 
     <div class="max-w-4xl mx-auto">
         <!-- 頂部標題與三軌進度條 -->
         <header class="dopamine-card bg-[var(--pop-orange)] p-6 mb-6 rounded-3xl text-center">
-            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">International Relations & Geopolitics 🌍</h1>
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">International Relations 🌍</h1>
             <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
                 <div id="main-progress" class="bg-[var(--pop-pink)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
             </div>
@@ -189,11 +176,16 @@
             <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-orange)]">Brilliant Global Vision!</h2>
             <div class="text-5xl font-black text-[var(--pop-purple)] mb-4">100<span class="text-2xl text-black">%</span></div>
             <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
-                太震撼了，瑞老師！國際關係與地緣政治單元全數通關。多國口音盲盒與階段挑戰完全難不倒您，您的學術視野已具備雅思 7.5 的頂級實力！
+                太震撼了，瑞老師！國際關係與地緣政治單元完美通關。多國口音盲盒完全難不倒您，您的學術視野已具備雅思 7.5 的頂級實力！
             </p>
-            <button onclick="closeModal()" class="w-full bg-[var(--pop-green)] border-4 border-black py-3 rounded-2xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white" style="-webkit-text-stroke: 0.5px black;">
-                太完美了，瑞老師萬歲！✨
-            </button>
+            <div class="flex gap-2">
+                <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white" style="-webkit-text-stroke: 0.5px black;">
+                    留在本頁 ✨
+                </button>
+                <a href="index.html" class="flex-1 bg-[var(--pop-yellow)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-black text-center no-underline flex items-center justify-center">
+                    返回大廳 🎒
+                </a>
+            </div>
         </div>
     </div>
 
@@ -231,7 +223,6 @@
         let learnedCount = 0, quizACount = 0, quizBCount = 0;
         const hintStates = {};
 
-        // 階梯式灑花增強系統專用旗標
         let celebratedLearn = false;
         let celebratedQuizA = false;
         let celebratedQuizB = false;
@@ -256,30 +247,18 @@
             document.getElementById(`section-${tab}`).classList.remove('hidden');
         }
 
-        // ================= 核心功能：多國口音盲盒輪播發音系統 =================
         function speak(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 setTimeout(() => {
                     const u = new SpeechSynthesisUtterance(text);
                     const voices = window.speechSynthesis.getVoices();
-                    
-                    const pool = voices.filter(v => 
-                        v.lang.startsWith('en-GB') || 
-                        v.lang.startsWith('en-US') || 
-                        v.lang.startsWith('en-AU')
-                    );
-                    
+                    const pool = voices.filter(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en-US') || v.lang.startsWith('en-AU'));
                     if (pool.length > 0) {
                         const randomVoice = pool[Math.floor(Math.random() * pool.length)];
-                        u.voice = randomVoice;
-                        u.lang = randomVoice.lang;
-                    } else {
-                        u.lang = 'en-US';
-                    }
-                    
-                    u.rate = 0.88;
-                    window.speechSynthesis.speak(u);
+                        u.voice = randomVoice; u.lang = randomVoice.lang;
+                    } else { u.lang = 'en-US'; }
+                    u.rate = 0.88; window.speechSynthesis.speak(u);
                 }, 40);
             }
         }
@@ -333,7 +312,11 @@
                 div.innerHTML = `
                     <div class="flex items-start gap-3 mb-3">
                         <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
-                        <p class="text-base font-semibold leading-relaxed text-gray-800">${parts[0]}<input type="text" id="input-${q.id}" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">${parts[1]}</p>
+                        <p class="text-base font-semibold leading-relaxed text-gray-800">
+                            ${parts[0]}
+                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded text-black" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
+                            ${parts[1]}
+                        </p>
                     </div>
                     <div class="flex justify-between items-center pl-10">
                         <button id="hint-btn-${q.id}" onclick="showDynamicHint('${q.id}', '${q.answer}', '${q.synHint}')" class="text-xs bg-[var(--pop-yellow)] border-2 border-black rounded-lg px-3 py-1 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all">💡 獲取語意提示</button>
@@ -350,10 +333,8 @@
             const msg = document.getElementById(`hint-msg-${id}`);
             const btn = document.getElementById(`hint-btn-${id}`);
             if (hintStates[id] === 1) {
-                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`;
-                msg.classList.remove('hidden');
-                btn.innerHTML = "🔍 拼字救援";
-                btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`; msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援"; btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
             } else {
                 msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
                 btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
@@ -365,34 +346,23 @@
                 const input = document.getElementById(`input-${id}`);
                 const btn = document.getElementById('hint-btn-' + id);
                 const msg = document.getElementById('hint-msg-' + id);
-                
                 if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
-                    input.value = answer; 
-                    input.disabled = true; 
-                    input.classList.remove('input-error');
-                    input.classList.add('input-correct');
-                    
+                    input.value = answer; input.disabled = true; input.classList.remove('input-error'); input.classList.add('input-correct');
                     if (btn) btn.classList.add('hidden');
-                    if (msg) { 
-                        msg.innerHTML = "✨ Correct!"; 
-                        msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; 
-                        msg.classList.remove('hidden'); 
-                    }
-                    speak(answer); // 自動觸發多國隨機口音
+                    if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; msg.classList.remove('hidden'); }
+                    speak(answer);
                     if (!input.dataset.solved) {
                         input.dataset.solved = "true";
                         if (part === 'A') quizACount++; else quizBCount++;
-                        updateProgress(); 
+                        updateProgress();
                     }
                 } else {
-                    input.classList.add('input-error');
-                    input.parentElement.parentElement.classList.add('hint-shake');
+                    input.classList.add('input-error'); input.parentElement.parentElement.classList.add('hint-shake');
                     setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
                 }
             }
         }
 
-        // ================= 核心功能：雙重階梯式增強系統 =================
         function updateProgress() {
             const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
             learnedCount = Array.from(boxes).filter(b => b.checked).length;
@@ -400,50 +370,27 @@
             document.getElementById('quizA-prog').innerText = `✍️ 測驗A: ${quizACount}/5`;
             document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
             
-            const totalProgress = ((learnedCount + quizACount + quizBCount) / 20) * 100;
+            const totalProgress = Math.round(((learnedCount + quizACount + quizBCount) / 20) * 100);
             document.getElementById('main-progress').style.width = `${totalProgress}%`;
-            document.getElementById('progress-text').innerText = Math.round(totalProgress) + '%';
             
-            // 階段 1：學習區 10/10 勾選完畢
-            if (learnedCount === 10 && !celebratedLearn) {
-                celebratedLearn = true;
-                triggerSubCelebration('learn');
-            }
-
-            // 階段 2：測驗 A 5/5 全對
-            if (quizACount === 5 && !celebratedQuizA) {
-                celebratedQuizA = true;
-                triggerSubCelebration('quizA');
-            }
-
-            // 階段 3：測驗 B 5/5 全對
-            if (quizBCount === 5 && !celebratedQuizB) {
-                celebratedQuizB = true;
-                triggerSubCelebration('quizB');
-            }
-
-            // 終極大通關：三項指標均達到完美 100%
-            if (learnedCount === 10 && quizACount === 5 && quizBCount === 5 && !celebratedUltimate) {
-                celebratedUltimate = true;
-                setTimeout(showUltimateCelebration, 1500); // 稍微延遲以防與階段小灑花重疊
-            }
+            if (learnedCount === 10 && !celebratedLearn) { celebratedLearn = true; triggerSubCelebration('learn'); }
+            if (quizACount === 5 && !celebratedQuizA) { celebratedQuizA = true; triggerSubCelebration('quizA'); }
+            if (quizBCount === 5 && !celebratedQuizB) { celebratedQuizB = true; triggerSubCelebration('quizB'); }
+            
+            if (totalProgress === 100 && !celebratedUltimate) { celebratedUltimate = true; setTimeout(showUltimateCelebration, 2000); }
         }
 
-        // 分頁小灑花
         function triggerSubCelebration(type) {
             setTimeout(() => {
                 if (type === 'learn') {
-                    // 綠色 + 黃色 🍀
                     confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
                     confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
-                    speak("Brilliant reading, Teacher Rui Rui!");
+                    speak("Brilliant reading!");
                 } else if (type === 'quizA') {
-                    // 粉色 + 藍色 🌸
                     confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
                     confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
                     speak("Superb comprehension!");
                 } else if (type === 'quizB') {
-                    // 紫色 + 橘色 ⚡
                     confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
                     confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
                     speak("Masterly spelling!");
@@ -451,41 +398,22 @@
             }, 300);
         }
 
-        // 終極通關大慶典
         function showUltimateCelebration() {
             document.getElementById('completion-modal').classList.remove('hidden');
             document.getElementById('completion-modal').classList.add('flex');
-            
-            const duration = 3.5 * 1000;
-            const animationEnd = Date.now() + duration;
+            const duration = 3.5 * 1000; const animationEnd = Date.now() + duration;
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
-
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
-
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
             const interval = setInterval(function() {
                 const timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
+                if (timeLeft <= 0) { return clearInterval(interval); }
                 const particleCount = 65 * (timeLeft / duration);
-                confetti({
-                    ...defaults, particleCount,
-                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-                    colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF']
-                });
-                confetti({
-                    ...defaults, particleCount,
-                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-                    colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF']
-                });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
             }, 250);
-
             speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of geopolitics and international relations is absolutely flawless!");
         }
 
-        // 預熱發音引擎
         if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); }
         function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
     </script>
