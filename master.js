@@ -1,4 +1,5 @@
 (function() {
+    // 這是 14 個單元的完整清單
     const units = [
         { file: "01-environment.html", title: "Unit 1: 環境單元" },
         { file: "02-tech-ai.html", title: "Unit 2: 科技與 AI" },
@@ -7,17 +8,16 @@
         { file: "05-tech-edu.html", title: "Unit 5: 科技、AI 與數位教育" },
         { file: "06-wildlife.html", title: "Unit 6: 生物與野生動物" },
         { file: "07-psychology.html", title: "Unit 7: 心理學與人類行為" },
-        { file: "08-health.html", title: "Unit 8: 健康與生活方式" },
-        { file: "09-language.html", title: "Unit 9: 語言學習策略" },
-        { file: "10-globalization.html", title: "Unit 10: 全球化議題" },
-        { file: "11-art.html", title: "Unit 11: 藝術與創意" },
-        { file: "12-history.html", title: "Unit 12: 歷史與發展" },
-        { file: "13-economy.html", title: "Unit 13: 經濟思維" },
-        { file: "14-future.html", title: "Unit 14: 未來趨勢" }
+        { file: "08-international-relations.html", title: "Unit 8: 國際關係與地緣政治" },
+        { file: "09-trade-economy.html", title: "Unit 9: 經濟全球化與國際貿易" },
+        { file: "10-urban-planning.html", title: "Unit 10: 城市化與都市規劃" },
+        { file: "11-mass-media.html", title: "Unit 11: 大眾傳播與現代媒體" },
+        { file: "12-demographics.html", title: "Unit 12: 人口結構與社會變遷" },
+        { file: "13-health.html", title: "Unit 13: 健康、醫療與生活型態" },
+        { file: "14-arts-culture.html", title: "Unit 14: 藝術、文化與歷史" }
     ];
 
     const currentFile = window.location.pathname.split("/").pop();
-    
     let options = units.map(u => 
         `<option value="${u.file}" ${u.file === currentFile ? 'selected' : ''}>${u.title}</option>`
     ).join('');
@@ -34,6 +34,5 @@
             </select>
         </div>
     </nav>`;
-
     document.write(navHTML);
 })();
