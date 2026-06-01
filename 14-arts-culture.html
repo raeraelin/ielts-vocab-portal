@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞瑞老師 IELTS 單字與閱讀趴 - Arts & Culture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@700;900&display=swap');
+        
+        :root {
+            --pop-pink: #FF85B3;
+            --pop-yellow: #FFD93D;
+            --pop-blue: #4D96FF;
+            --pop-green: #6BCB77;
+            --pop-purple: #B983FF;
+            --pop-orange: #FF9F45;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            background-color: #FFF5E4;
+        }
+
+        /* Neo-brutalism 粗黑框硬陰影風格 */
+        .dopamine-card {
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.2s ease;
+        }
+
+        .dopamine-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .tab-btn {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+        }
+
+        .tab-btn.active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-open .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-open .arrow { transform: rotate(180deg); }
+
+        .input-correct {
+            background-color: #D1FAE5;
+            border-color: #059669;
+            color: #065F46;
+        }
+
+        .input-error {
+            border-color: #DC2626 !important;
+            background-color: #FEE2E2;
+        }
+
+        .hint-shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .modal-pop {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: scale(0);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .word-badge {
+            border: 2px solid #000;
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 4px;
+            border-radius: 8px;
+            font-weight: 900;
+            background-color: #fff;
+            box-shadow: 2px 2px 0px #000;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
+
+    <!-- 獨立穩定的導航列：精準鎖定 14 藝術與文化 -->
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-black p-3 shadow-[0_4px_0_0_rgba(0,0,0,1)] flex items-center justify-between px-4 md:px-8">
+        <a href="index.html" class="bg-[var(--pop-yellow)] border-2 border-black rounded-xl px-3 py-1.5 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all flex items-center gap-2 text-sm md:text-base text-black no-underline">
+            <i class="fas fa-home"></i> 回首頁
+        </a>
+        <div class="flex items-center gap-2">
+            <label class="font-black text-xs md:text-sm text-black hidden sm:inline">切換單元：</label>
+            <select onchange="location.href=this.value" class="border-2 border-black rounded-xl px-3 py-1.5 bg-white font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs md:text-sm outline-none cursor-pointer">
+                <option value="" disabled>-- 選擇其他主題 --</option>
+                <option value="10-urban-planning.html">Unit 10: 城市化與都市規劃</option>
+                <option value="11-mass-media.html">Unit 11: 大眾傳播與現代媒體</option>
+                <option value="12-demographics.html">Unit 12: 人口結構與社會變遷</option>
+                <option value="13-health.html">Unit 13: 健康、醫療與生活型態</option>
+                <option value="14-arts-culture.html" selected>Unit 14: 藝術、文化與歷史</option>
+            </select>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto">
+        <!-- 頂部標題與三軌進度條 -->
+        <header class="dopamine-card bg-[var(--pop-blue)] p-6 mb-6 rounded-3xl text-center">
+            <h1 class="text-2xl md:text-3xl font-900 text-white mb-3 uppercase tracking-tighter" style="-webkit-text-stroke: 1.5px black;">Arts, Culture & History 🏛️</h1>
+            <div class="bg-white border-4 border-black rounded-full h-6 w-full overflow-hidden flex relative">
+                <div id="main-progress" class="bg-[var(--pop-yellow)] h-full transition-all duration-500 ease-out border-r-4 border-black" style="width: 0%"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-4 text-black font-black text-[10px] md:text-sm">
+                <span id="learn-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📖 學習: 0/10</span>
+                <span id="quizA-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">✍️ 測驗A: 0/5</span>
+                <span id="quizB-prog" class="bg-white border-2 border-black py-1 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎯 測驗B: 0/5</span>
+            </div>
+        </header>
+
+        <!-- 三頁籤 -->
+        <div class="flex flex-wrap md:flex-nowrap gap-3 mb-6">
+            <button onclick="switchTab('learn')" id="tab-learn" class="tab-btn active flex-1 py-3 bg-[var(--pop-yellow)] rounded-2xl font-black text-sm md:text-base text-black">📖 學習區</button>
+            <button onclick="switchTab('quizA')" id="tab-quizA" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">✍️ 測驗 Part A (閱讀)</button>
+            <button onclick="switchTab('quizB')" id="tab-quizB" class="tab-btn flex-1 py-3 bg-white rounded-2xl font-black text-sm md:text-base text-black">🎯 測驗 Part B (單字)</button>
+        </div>
+
+        <main>
+            <!-- 1. 學習區 -->
+            <div id="section-learn" class="space-y-4 max-w-3xl mx-auto"></div>
+
+            <!-- 2. 測驗 Part A: 雅思閱讀短文 -->
+            <div id="section-quizA" class="hidden space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl border-4 border-black mb-4">
+                    <h3 class="font-black text-xl mb-3 text-[var(--pop-blue)]">📖 Reading Passage: Protecting the Past</h3>
+                    <p class="text-gray-800 text-base leading-relaxed font-semibold bg-gray-50 p-4 rounded-xl border-2 border-black">
+                        The local museum is fully dedicated to the <b>preservation</b> of our national <b>heritage</b>. Recently, the curators decided to <b>exhibit</b> a highly valuable <b>artifact</b> discovered in the desert ruins. However, due to its fragility, strict security protocols are required around the clock to prevent any acts of <b>vandalism</b> from the public.
+                    </p>
+                </div>
+
+                <div class="dopamine-card bg-[var(--pop-pink)] p-5 rounded-3xl">
+                    <h4 class="font-black text-lg text-black mb-2">📝 Summary Completion (閱讀字庫填空)</h4>
+                    <p class="text-xs text-black font-bold mb-3">請根據上方短文，將正確的單字填入空格（按 Enter 送出判定），零干擾無干擾介面已鎖定！</p>
+                    <div class="bg-white border-2 border-black p-3 rounded-xl mb-4 text-center">
+                        <span class="word-badge text-[var(--pop-blue)]">preservation</span>
+                        <span class="word-badge text-[var(--pop-orange)]">heritage</span>
+                        <span class="word-badge text-[var(--pop-purple)]">exhibit</span>
+                        <span class="word-badge text-[var(--pop-green)]">artifact</span>
+                        <span class="word-badge text-pink-600">vandalism</span>
+                    </div>
+                    <div id="quiz-list-A" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- 3. 測驗 Part B: 獨立句型拼寫 -->
+            <div id="section-quizB" class="hidden max-w-3xl mx-auto space-y-6">
+                <div class="dopamine-card bg-white p-6 rounded-3xl">
+                    <p class="font-bold text-lg mb-1">🎯 Part B: 獨立美學與當代藝術拼寫</p>
+                    <p class="text-gray-700 text-sm">挑戰另外 5 個關於當代藝術、贊助與美學價值的核心學術詞彙。答錯請手動點擊 HINT 按鈕觸發雙階鷹架！</p>
+                </div>
+                <div id="quiz-list-B" class="space-y-6"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 滿分總結彈窗 -->
+    <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
+        <div class="modal-pop dopamine-card bg-white p-8 md:p-10 rounded-3xl max-w-sm w-full text-center relative">
+            <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 text-7xl">🏛️</div>
+            <h2 class="text-3xl font-black mt-6 mb-2 text-[var(--pop-blue)]">Cultural Masterpiece!</h2>
+            <div class="text-5xl font-black text-[var(--pop-orange)] mb-4">100<span class="text-2xl text-black">%</span></div>
+            <p class="text-gray-700 font-bold mb-6 text-base leading-relaxed">
+                太精采了，瑞老師！藝術、文化與歷史單元全數通關。您的文化底蘊與雅思字彙實力已臻至完美境界，準備迎接高分的洗禮吧！
+            </p>
+            <div class="flex gap-2">
+                <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white">
+                    留在本頁 ✨
+                </button>
+                <a href="index.html" class="flex-1 bg-[var(--pop-yellow)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-black text-center no-underline flex items-center justify-center">
+                    返回大廳 🎒
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = [
+            { word: "Heritage", zh: "遺產、傳統", coll: "cultural heritage", ex: "The government has strict laws to protect the country's rich cultural heritage.", exZh: "政府制定了嚴格的法律來保護該國豐富的文化遺產。", syn: "tradition, legacy", ant: "N/A" },
+            { word: "Artifact", zh: "人工製品、歷史文物", coll: "historical artifacts", ex: "The museum recently acquired a rare artifact from the Egyptian era.", exZh: "該博物館最近獲得了一件來自埃及時代的珍貴文物。", syn: "antique, relic", ant: "N/A" },
+            { word: "Preservation", zh: "保存、維護", coll: "preservation of history", ex: "The preservation of ancient languages is vital for maintaining cultural diversity.", exZh: "古代語言的保存對於維持文化多樣性至關重要。", syn: "conservation, protection", ant: "destruction, ruin" },
+            { word: "Aesthetic", zh: "美學的、審美的", coll: "aesthetic appeal", ex: "The new library was designed with both functionality and aesthetic appeal in mind.", exZh: "新圖書館建築的設計同時兼顧了功能性與美學吸引力。", syn: "artistic, beautiful", ant: "unattractive, ugly" },
+            { word: "Contemporary", zh: "當代的、同時期的", coll: "contemporary art", ex: "The gallery features a fascinating exhibition of contemporary photography.", exZh: "該畫廊展出了一場引人入勝的當代攝影展。", syn: "modern, current", ant: "ancient, old-fashioned" },
+            { word: "Folklore", zh: "民間傳說、民俗", coll: "local folklore", ex: "Local folklore is often passed down from generation to generation through oral storytelling.", exZh: "當地的民間傳說通常透過口述故事代代相傳。", syn: "mythology, traditional wisdom", ant: "reality, fact" },
+            { word: "Patronage", zh: "贊助、資助", coll: "artistic patronage", ex: "Without the wealthy merchant's patronage, the young sculptor could not have survived.", exZh: "若沒有這位富商的贊助，這位年輕的雕塑家將無法生存。", syn: "sponsorship, funding", ant: "opposition, hindrance" },
+            { word: "Renaissance", zh: "文藝復興、復甦", coll: "cultural renaissance", ex: "The city's downtown area is currently experiencing an architectural renaissance.", exZh: "該市的市中心目前正經歷一場建築上的復興。", syn: "revival, rebirth", ant: "decline, dark age" },
+            { word: "Exhibit", zh: "展覽、展出", coll: "exhibit artwork", ex: "The national gallery will exhibit a series of unknown paintings by the famous artist.", exZh: "國家美術館將展出這位著名藝術家的一系列未知畫作。", syn: "display, show", ant: "hide, conceal" },
+            { word: "Vandalism", zh: "惡意破壞", coll: "acts of vandalism", ex: "Security guards patrol the historic site day and night to prevent acts of vandalism.", exZh: "警衛日夜巡邏這處古蹟，以防止惡意破壞的行為。", syn: "destruction, damage", ant: "preservation, protection" }
+        ];
+
+        const quizzesA = [
+            { id: "A1", text: "UNESCO funds the [input] of ancient temples to keep them safe from decay.", answer: "preservation", synHint: "the action of maintaining something in its original or existing state" },
+            { id: "A2", text: "Traditional music is an important part of our national identity and [input].", answer: "heritage", synHint: "property that is or may be inherited; valued objects and qualities passed down" },
+            { id: "A3", text: "The historical society plans to [input] photographs from the early 1900s next month.", answer: "exhibit", synHint: "publicly display a work of art or item of interest in an art gallery or museum" },
+            { id: "A4", text: "Archaeologists unearthed an ancient [input] that revealed details about early farming.", answer: "artifact", synHint: "an object made by a human being, typically one of cultural or historical interest" },
+            { id: "A5", text: "Graffiti on the city's oldest statue was condemned as an unacceptable act of [input].", answer: "vandalism", synHint: "action involving deliberate destruction of or damage to public or private property" }
+        ];
+
+        const quizzesB = [
+            { id: "B1", text: "The museum's new wing is entirely dedicated to post-modern and [input] art pieces.", answer: "contemporary", synHint: "belonging to or occurring in the present time; modern" },
+            { id: "B2", text: "During the 15th century, royal [input] was essential for musicians to make a living.", answer: "patronage", synHint: "the support given by a patron; financial sponsorship" },
+            { id: "B3", text: "The building's [input] value was praised, though its structural integrity was questioned.", answer: "aesthetic", synHint: "concerned with beauty or the appreciation of beauty" },
+            { id: "B4", text: "Stories of dragons and forest spirits are deeply rooted in the region's [input].", answer: "folklore", synHint: "the traditional beliefs, customs, and stories of a community, passed through the generations" },
+            { id: "B5", text: "After years of neglect, the poetry scene in the capital is seeing a massive [input].", answer: "renaissance", synHint: "a revival of or renewed interest in something; rebirth" }
+        ];
+
+        const cardColors = ['#4D96FF', '#FF9F45', '#B983FF', '#6BCB77', '#FF85B3'];
+        let learnedCount = 0, quizACount = 0, quizBCount = 0;
+        const hintStates = {};
+
+        let celebratedLearn = false;
+        let celebratedQuizA = false;
+        let celebratedQuizB = false;
+        let celebratedUltimate = false;
+
+        window.onload = () => {
+            renderLearn();
+            renderQuiz(quizzesA, 'quiz-list-A', 'A');
+            renderQuiz(quizzesB, 'quiz-list-B', 'B');
+        };
+
+        function switchTab(tab) {
+            const tabs = ['learn', 'quizA', 'quizB'];
+            const colors = { learn: 'var(--pop-yellow)', quizA: 'var(--pop-pink)', quizB: 'var(--pop-green)' };
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`tab-${t}`).style.backgroundColor = 'white';
+                document.getElementById(`section-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            document.getElementById(`tab-${tab}`).style.backgroundColor = colors[tab];
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+        }
+
+        // ================= 核心功能：多國口音盲盒輪播發音系統 =================
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                setTimeout(() => {
+                    const u = new SpeechSynthesisUtterance(text);
+                    const voices = window.speechSynthesis.getVoices();
+                    
+                    const pool = voices.filter(v => 
+                        v.lang.startsWith('en-GB') || 
+                        v.lang.startsWith('en-US') || 
+                        v.lang.startsWith('en-AU')
+                    );
+                    
+                    if (pool.length > 0) {
+                        const randomVoice = pool[Math.floor(Math.random() * pool.length)];
+                        u.voice = randomVoice;
+                        u.lang = randomVoice.lang;
+                    } else {
+                        u.lang = 'en-US';
+                    }
+                    
+                    u.rate = 0.88;
+                    window.speechSynthesis.speak(u);
+                }, 40);
+            }
+        }
+
+        function toggleAccordion(el) { el.parentElement.classList.toggle('accordion-open'); }
+
+        function renderLearn() {
+            const container = document.getElementById('section-learn');
+            vocabulary.forEach((item, index) => {
+                const color = cardColors[index % 5];
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white rounded-3xl overflow-hidden mb-4";
+                div.innerHTML = `
+                    <div class="p-4 md:p-5 flex items-center justify-between cursor-pointer" style="background-color: ${color}20" onclick="toggleAccordion(this)">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-6 h-6 border-2 border-black accent-black rounded cursor-pointer" onclick="event.stopPropagation(); updateProgress()">
+                            <span class="text-xl md:text-2xl font-black text-black">${item.word} <small class="text-gray-500 font-bold text-sm">/ ${item.zh}</small></span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="event.stopPropagation(); speak('${item.word}')" class="w-10 h-10 bg-white border-2 border-black rounded-full flex items-center justify-center hover:bg-gray-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"><i class="fas fa-volume-up"></i></button>
+                            <i class="fas fa-chevron-down arrow mt-3 text-black"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="p-5 space-y-4 border-t-4 border-black bg-white">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-[var(--pop-green)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-green-800">✅ 同義: ${item.syn}</div>
+                                <div class="bg-[var(--pop-pink)]10 p-2 rounded-xl border-2 border-black text-xs font-bold text-red-800">❌ 反義: ${item.ant}</div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-xl border-2 border-black relative">
+                                <p class="text-xs font-black uppercase text-blue-600 mb-1">搭配 & 例句</p>
+                                <p class="font-bold text-sm text-black mb-2">${item.coll}</p>
+                                <p class="text-black font-semibold text-base leading-snug mb-1">${item.ex}</p>
+                                <p class="text-xs text-gray-500 font-medium">${item.exZh}</p>
+                                <button onclick="speak('${item.ex}')" class="absolute bottom-3 right-3 text-blue-500 hover:text-blue-700"><i class="fas fa-play-circle text-2xl"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderQuiz(data, containerId, part) {
+            const container = document.getElementById(containerId);
+            data.forEach((q, idx) => {
+                const parts = q.text.split('[input]');
+                const displayIndex = part === 'A' ? idx + 1 : idx + 6;
+                const div = document.createElement('div');
+                div.className = "dopamine-card bg-white p-5 rounded-3xl mb-4 relative border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]";
+                div.innerHTML = `
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
+                        <p class="text-base font-semibold leading-relaxed text-gray-800">
+                            ${parts[0]}
+                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded text-black" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
+                            ${parts[1]}
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center pl-10">
+                        <button id="hint-btn-${q.id}" onclick="showDynamicHint('${q.id}', '${q.answer}', '${q.synHint}')" class="text-xs bg-[var(--pop-yellow)] border-2 border-black rounded-lg px-3 py-1 font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 transition-all">💡 獲取語意提示</button>
+                        <p id="hint-msg-${q.id}" class="text-[11px] font-bold text-blue-600 hidden bg-white border border-black px-2 py-1 rounded"></p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function showDynamicHint(id, answer, synHint) {
+            if (!hintStates[id]) hintStates[id] = 0;
+            hintStates[id]++;
+            const msg = document.getElementById(`hint-msg-${id}`);
+            const btn = document.getElementById(`hint-btn-${id}`);
+            if (hintStates[id] === 1) {
+                msg.innerHTML = `💡 <b>學術同義字線索：</b> ${synHint}`; msg.classList.remove('hidden');
+                btn.innerHTML = "🔍 拼字救援"; btn.classList.replace('bg-[var(--pop-yellow)]', 'bg-[var(--pop-orange)]');
+            } else {
+                msg.innerHTML = `💡 <b>同義字：</b> ${synHint}<br>🔍 <b>拼字提示：</b> 首字母是 <b>${answer.charAt(0).toUpperCase()}</b>，共 <b>${answer.length}</b> 個字母。`;
+                btn.disabled = true; btn.innerHTML = "已獲得最大救援"; btn.style.opacity = '0.5';
+            }
+        }
+
+        function checkAnswer(e, id, answer, part) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById(`input-${id}`);
+                const btn = document.getElementById('hint-btn-' + id);
+                const msg = document.getElementById('hint-msg-' + id);
+                if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+                    input.value = answer; input.disabled = true; input.classList.remove('input-error'); input.classList.add('input-correct');
+                    if (btn) btn.classList.add('hidden');
+                    if (msg) { msg.innerHTML = "✨ Correct!"; msg.className = "text-[11px] font-bold text-green-600 bg-green-50 border border-black px-2 py-1 rounded"; msg.classList.remove('hidden'); }
+                    speak(answer);
+                    if (!input.dataset.solved) {
+                        input.dataset.solved = "true";
+                        if (part === 'A') quizACount++; else quizBCount++;
+                        updateProgress();
+                    }
+                } else {
+                    input.classList.add('input-error'); input.parentElement.parentElement.classList.add('hint-shake');
+                    setTimeout(() => input.parentElement.parentElement.classList.remove('hint-shake'), 500);
+                }
+            }
+        }
+
+        function updateProgress() {
+            const boxes = document.querySelectorAll('#section-learn input[type="checkbox"]');
+            learnedCount = Array.from(boxes).filter(b => b.checked).length;
+            document.getElementById('learn-prog').innerText = `📖 學習: ${learnedCount}/10`;
+            document.getElementById('quizA-prog').innerText = `✍️ 測驗A: ${quizACount}/5`;
+            document.getElementById('quizB-prog').innerText = `🎯 測驗B: ${quizBCount}/5`;
+            
+            const totalProgress = Math.round(((learnedCount + quizACount + quizBCount) / 20) * 100);
+            document.getElementById('main-progress').style.width = `${totalProgress}%`;
+            
+            if (learnedCount === 10 && !celebratedLearn) { celebratedLearn = true; triggerSubCelebration('learn'); }
+            if (quizACount === 5 && !celebratedQuizA) { celebratedQuizA = true; triggerSubCelebration('quizA'); }
+            if (quizBCount === 5 && !celebratedQuizB) { celebratedQuizB = true; triggerSubCelebration('quizB'); }
+            
+            if (totalProgress === 100 && !celebratedUltimate) { celebratedUltimate = true; setTimeout(showUltimateCelebration, 1200); }
+        }
+
+        function triggerSubCelebration(type) {
+            setTimeout(() => {
+                if (type === 'learn') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#6BCB77', '#FFD93D'] });
+                    speak("Brilliant reading!");
+                } else if (type === 'quizA') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#FF85B3', '#4D96FF'] });
+                    speak("Superb comprehension!");
+                } else if (type === 'quizB') {
+                    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: ['#B983FF', '#FF9F45'] });
+                    speak("Masterly spelling!");
+                }
+            }, 300);
+        }
+
+        function showUltimateCelebration() {
+            document.getElementById('completion-modal').classList.remove('hidden');
+            document.getElementById('completion-modal').classList.add('flex');
+            const duration = 3.5 * 1000; const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) { return clearInterval(interval); }
+                const particleCount = 65 * (timeLeft / duration);
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#FF85B3', '#FFD93D', '#6BCB77', '#4D96FF'] });
+            }, 250);
+            speak("Stupendous work, Teacher Rui Rui! Your masterly grasp of arts and culture vocabulary is absolutely flawless!");
+        }
+
+        if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); }
+        function closeModal() { document.getElementById('completion-modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>
