@@ -107,7 +107,7 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 pt-20 md:pt-24">
 
-    <!-- 💡 統一入口：自動呼叫 master.js 全站導航列 -->
+    <!-- 💡 統一入口：自動呼叫 14 單元的 master.js -->
     <script src="master.js"></script>
 
     <div class="max-w-4xl mx-auto">
@@ -179,7 +179,7 @@
                 太卓越了，瑞老師！社會與文化變遷單元完美通關。無干擾拼寫與多國語音盲盒都難不倒您，您的學術實力已具備大師水準！
             </p>
             <div class="flex gap-2">
-                <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white">
+                <button onclick="closeModal()" class="flex-1 bg-[var(--pop-green)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-white" style="-webkit-text-stroke: 0.5px black;">
                     留在本頁 ✨
                 </button>
                 <a href="index.html" class="flex-1 bg-[var(--pop-yellow)] border-4 border-black py-2.5 rounded-xl font-black text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] transition-all text-black text-center no-underline flex items-center justify-center">
@@ -247,7 +247,6 @@
             document.getElementById(`section-${tab}`).classList.remove('hidden');
         }
 
-        // ================= 核心功能：多國口音盲盒輪播發音系統 =================
         function speak(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -315,7 +314,7 @@
                         <span class="bg-black text-white w-7 h-7 flex items-center justify-center rounded-full font-bold text-xs mt-0.5">${displayIndex}</span>
                         <p class="text-base font-semibold leading-relaxed text-gray-800">
                             ${parts[0]}
-                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
+                            <input type="text" id="input-${q.id}" autocomplete="off" spellcheck="false" class="border-b-4 border-black bg-yellow-50 px-2 mx-1 w-36 text-center font-black outline-none focus:bg-yellow-100 transition-colors rounded text-black" onkeypress="checkAnswer(event, '${q.id}', '${q.answer}', '${part}')">
                             ${parts[1]}
                         </p>
                     </div>
