@@ -1,0 +1,18 @@
+[
+  {
+    "sentence": "Homework is instrumental in helping children maintain a stable routine.",
+    "blanks": ["instrumental", "maintain", "routine"]
+  },
+  {
+    "sentence": "Reviewing what they have learned is crucial, as the learning process requires repetition to reinforce knowledge.",
+    "blanks": ["crucial", "repetition", "reinforce"]
+  },
+  {
+    "sentence": "An excessive amount of homework deprives children of adequate rest.",
+    "blanks": ["excessive", "deprives", "adequate"]
+  },
+  {
+    "sentence": "Forcing students to complete repetitive, mechanical writing exercises can stifle their natural creativity.",
+    "blanks": ["repetitive", "mechanical", "stifle"]
+  }
+]
