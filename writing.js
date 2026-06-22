@@ -1,4 +1,5 @@
-fetch('data.json')
+// 加上時間戳記魔法，強迫瀏覽器每次都抓最新題庫
+fetch('data.json?v=' + new Date().getTime())
   .then(response => response.json())
   .then(data => {
     const item = data[Math.floor(Math.random() * data.length)];
@@ -8,6 +9,7 @@ fetch('data.json')
       const word = blankObj.word;
       // 將提示資料藏在 HTML 屬性中
       const hintData = encodeURIComponent(JSON.stringify(blankObj));
+      // 執行挖空替換
       displaySentence = displaySentence.replace(word, `<input type="text" class="blank" data-answer="${word}" data-hints="${hintData}" style="margin: 0 5px; padding: 5px; width: 110px; text-align: center;">`);
     });
     
@@ -23,18 +25,18 @@ function checkAnswers() {
     const correctAnswer = input.dataset.answer.toLowerCase();
     const hints = JSON.parse(decodeURIComponent(input.dataset.hints));
 
-    // 清除舊的提示區塊（如果有的話）
+    // 清除舊的提示區塊
     if (input.nextElementSibling && input.nextElementSibling.classList.contains('hint-area')) {
         input.nextElementSibling.remove();
     }
 
     if (userAnswer === correctAnswer) {
-      input.style.backgroundColor = '#d4edda'; // 答對變綠
+      input.style.backgroundColor = '#d4edda'; // 答對變綠色
     } else {
       allCorrect = false;
-      input.style.backgroundColor = '#f8d7da'; // 答錯變紅
+      input.style.backgroundColor = '#f8d7da'; // 答錯變紅色
       
-      // 建立提示區塊 (包含按鈕與文字顯示區)
+      // 建立提示按鈕區塊
       const hintArea = document.createElement('div');
       hintArea.className = 'hint-area';
       hintArea.style.display = 'inline-block';
@@ -45,7 +47,7 @@ function checkAnswers() {
       hintText.style.fontSize = '0.9em';
       hintText.style.marginLeft = '8px';
 
-      // 按鈕 1：拼字提示 (首字母 + 長度)
+      // 按鈕 1：拼字提示
       const btnSpell = document.createElement('button');
       btnSpell.innerText = '拼字';
       btnSpell.style.padding = '2px 6px';
@@ -80,12 +82,12 @@ function checkAnswers() {
     }
   });
 
-  // 如果全部答對，觸發灑花與語音
+  // 如果全部答對，觸發灑花與英國腔語音
   if (allCorrect) {
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     
     const utterance = new SpeechSynthesisUtterance("Excellent, you nailed it!");
-    utterance.lang = 'en-GB'; // 雅思專用英國腔
+    utterance.lang = 'en-GB'; 
     window.speechSynthesis.speak(utterance);
   }
 }
