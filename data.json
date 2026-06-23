@@ -23,5 +23,30 @@
 "synonym": "shallow / surface-level"
 }
 ]
+},
+{
+"sentence": "The debate over whether school children should be assigned daily tasks has been ongoing for decades. Proponents argue that after-school assignments are essential for reinforcing classroom learning and developing independent study habits. Conversely, opponents claim that excessive homework can lead to student burnout. From my perspective, a moderate amount of homework is beneficial, provided it does not overwhelm a child's leisure time.",
+"blanks": [
+{
+"word": "Proponents",
+"definition": "people who publicly support an idea or policy",
+"synonym": "advocates / supporters"
+},
+{
+"word": "reinforcing",
+"definition": "making a feeling, an idea, or a habit stronger",
+"synonym": "strengthening / consolidating"
+},
+{
+"word": "Conversely",
+"definition": "in an opposite way, used to introduce a statement that contrasts with a previous one",
+"synonym": "on the contrary / in contrast"
+},
+{
+"word": "overwhelm",
+"definition": "to cause someone to feel sudden strong emotion or be unable to handle a situation",
+"synonym": "overburden / overload"
+}
+]
 }
 ]
