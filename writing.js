@@ -17,9 +17,8 @@ fetch('data.json?v=' + new Date().getTime())
     renderQuiz();
   })
   .catch(error => {
-    // 如果 data.json 格式有錯，這裡會直接顯示錯誤原因
     document.getElementById('exercise').innerHTML = `<div style="color: #dc2626; padding: 20px; border: 1px solid #dc2626; border-radius: 8px; background: #f8d7da; line-height: 1.6;">
-      <strong>⚠️ 讀取題庫失敗！</strong><br>這通常是因為 <code>data.json</code> 的格式有小錯誤（例如：多了一個逗號、少了一個引號，或是括號沒有成對）。<br><br>
+      <strong>⚠️ 讀取題庫失敗！</strong><br>這通常是因為 <code>data.json</code> 的格式有小錯誤。<br>
       技術錯誤訊息：${error.message}
     </div>`;
   });
@@ -30,29 +29,48 @@ function renderQuiz() {
   const item = essayData[currentIndex];
   
   const quoteObj = quotes[Math.floor(Math.random() * quotes.length)];
+  
+  // 頂部進度條
   let headerContent = `
-    <div style="margin-bottom: 15px; font-weight: bold; color: #0b57d0;">進度: ${currentIndex + 1} / ${essayData.length}</div>
+    <div style="margin-bottom: 20px; font-weight: bold; color: #0b57d0; font-size: 1.1em;">進度: ${currentIndex + 1} / ${essayData.length}</div>
   `;
   
+  // 中間句子與挖空
   let displaySentence = item.sentence;
   item.blanks.forEach(blankObj => {
     const hintData = encodeURIComponent(JSON.stringify(blankObj));
     const inputHTML = `<span class="blank-wrapper" style="position:relative; display:inline-block;">
       <input type="text" class="blank" data-answer="${blankObj.word.toLowerCase()}" data-hints="${hintData}" 
-      style="margin: 0 5px; padding: 5px; width: 110px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
+      style="margin: 0 5px; padding: 5px; width: 110px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-size: 1em;">
     </span>`;
     displaySentence = displaySentence.replace(blankObj.word, inputHTML);
   });
 
-  // 雙語金句：置於段落最下方，並置中對齊
+  // 底部雙語金句
   let quoteContent = `
-    <div style="margin-top: 50px; text-align: center; color: #5f6368; font-family: sans-serif;">
-      <div style="font-style: italic; margin-bottom: 6px;">"${quoteObj.en}"</div>
-      <div style="font-size: 0.9em; letter-spacing: 1px;">${quoteObj.zh}</div>
+    <div style="margin-top: 40px; margin-bottom: 20px; text-align: center; color: #5f6368; font-family: sans-serif; background-color: #f8f9fa; padding: 15px; border-radius: 8px;">
+      <div style="font-style: italic; font-weight: bold; margin-bottom: 8px; color: #333;">"${quoteObj.en}"</div>
+      <div style="font-size: 0.95em; letter-spacing: 1px;">${quoteObj.zh}</div>
     </div>
   `;
 
-  document.getElementById('exercise').innerHTML = headerContent + `<div style="line-height:2.5; font-size: 1.1em;">${displaySentence}</div>` + quoteContent;
+  // 渲染到畫面上
+  const exerciseDiv = document.getElementById('exercise');
+  exerciseDiv.innerHTML = headerContent + `<div style="line-height:2.5; font-size: 1.15em; color: #202124;">${displaySentence}</div>` + quoteContent;
+  
+  // 加上導航按鈕 (強制放在 exerciseDiv 的最底下，確保排版正確)
+  const navDiv = document.createElement('div');
+  navDiv.id = 'quiz-nav';
+  navDiv.style.marginTop = '20px';
+  navDiv.style.display = 'flex';
+  navDiv.style.gap = '15px';
+  navDiv.style.justifyContent = 'center';
+  navDiv.innerHTML = `
+      <button onclick="navigate(-1)" style="padding: 10px 25px; cursor: pointer; border-radius: 6px; border: 1px solid #ccc; background: white; color: #000000 !important; font-weight: bold; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">上一題</button>
+      <button onclick="navigate(1)" style="padding: 10px 25px; cursor: pointer; border-radius: 6px; border: 1px solid #ccc; background: white; color: #000000 !important; font-weight: bold; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">下一題</button>
+  `;
+  exerciseDiv.appendChild(navDiv);
+
   setupImmediateFeedback();
 }
 
@@ -65,18 +83,22 @@ function setupImmediateFeedback() {
       if (userAnswer === correctAnswer) {
         input.style.backgroundColor = '#d4edda';
         input.style.borderColor = '#28a745';
+        input.style.color = '#155724';
+        input.style.fontWeight = 'bold';
         const wrapper = input.parentElement;
         const existingBulb = wrapper.querySelector('.bulb-btn');
         if (existingBulb) existingBulb.remove();
         
-        // 每次打對一個字，就檢查是否整段都答對了
         checkAllCompleted(); 
       } else if (userAnswer !== "") {
         input.style.backgroundColor = '#f8d7da';
         input.style.borderColor = '#dc2626';
+        input.style.color = '#721c24';
+        input.style.fontWeight = 'normal';
       } else {
         input.style.backgroundColor = 'white';
         input.style.borderColor = '#ccc';
+        input.style.color = '#000';
       }
     });
 
@@ -98,29 +120,35 @@ function createBulb(input) {
     bulb.className = 'bulb-btn';
     bulb.innerText = '💡';
     bulb.style.cursor = 'pointer';
-    bulb.style.marginLeft = '5px';
+    bulb.style.marginLeft = '8px';
     bulb.style.position = 'absolute';
     bulb.style.top = '50%';
     bulb.style.transform = 'translateY(-50%)';
+    bulb.style.fontSize = '1.2em';
 
     const popover = document.createElement('div');
     popover.className = 'hint-popover';
-    popover.style.cssText = "display:none; position:absolute; bottom:120%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; z-index:100; width:max-content; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-size:13px; line-height:1.5;";
+    popover.style.cssText = "display:none; position:absolute; bottom:130%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:12px; border-radius:8px; z-index:100; width:max-content; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size:14px; line-height:1.5;";
 
     const resText = document.createElement('div');
-    resText.innerText = '點選提示級別';
-    resText.style.marginBottom = '8px';
+    resText.innerText = '點選下方按鈕取得提示';
+    resText.style.marginBottom = '10px';
     resText.style.color = '#dc2626';
+    resText.style.fontWeight = 'bold';
 
     const btnContainer = document.createElement('div');
     btnContainer.style.display = 'flex';
-    btnContainer.style.gap = '5px';
+    btnContainer.style.gap = '8px';
 
     ['拼字', '定義', '同義詞'].forEach(type => {
         const btn = document.createElement('button');
         btn.innerText = type;
-        btn.style.padding = '3px 8px';
+        btn.style.padding = '5px 10px';
         btn.style.cursor = 'pointer';
+        btn.style.border = '1px solid #0b57d0';
+        btn.style.backgroundColor = '#f8fafd';
+        btn.style.color = '#0b57d0';
+        btn.style.borderRadius = '4px';
         btn.onclick = () => {
             if(type === '拼字') resText.innerText = correctAnswer[0] + ' _ '.repeat(correctAnswer.length - 1);
             if(type === '定義') resText.innerText = hints.definition;
@@ -162,11 +190,9 @@ function checkAllCompleted() {
 
     if (isAllCorrect) {
         hasCompletedCurrent = true;
-        // 觸發灑花特效
         if (typeof confetti === 'function') {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
         }
-        // 播放語音稱讚
         const utterance = new SpeechSynthesisUtterance("Excellent, you nailed it!");
         utterance.lang = 'en-GB'; 
         window.speechSynthesis.speak(utterance);
@@ -179,23 +205,3 @@ window.navigate = function(direction) {
   if (currentIndex >= essayData.length) currentIndex = essayData.length - 1;
   renderQuiz();
 };
-
-const oldNav = document.getElementById('quiz-nav');
-if (oldNav) oldNav.remove();
-
-const navDiv = document.createElement('div');
-navDiv.id = 'quiz-nav';
-navDiv.style.marginTop = '30px';
-navDiv.style.display = 'flex';
-navDiv.style.gap = '10px';
-navDiv.style.justifyContent = 'center';
-// 加上 color: #333 確保字體是深灰色可見的
-navDiv.innerHTML = `
-    <button onclick="navigate(-1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white; color: #333; font-weight: bold;">上一題</button>
-    <button onclick="navigate(1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white; color: #333; font-weight: bold;">下一題</button>
-`;
-
-setTimeout(() => {
-    const container = document.getElementById('exercise').parentElement;
-    container.appendChild(navDiv);
-}, 100);
