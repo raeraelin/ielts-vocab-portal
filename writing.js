@@ -1,121 +1,129 @@
-// 1. 動態載入 CSS 樣式，用來美化懸浮提示框 (Tooltip)，不破壞排版
-const style = document.createElement('style');
-style.innerHTML = `
-  .blank-wrapper { position: relative; display: inline-block; }
-  .bulb-btn { cursor: pointer; margin-left: 6px; font-size: 1.2em; transition: transform 0.2s; vertical-align: middle; }
-  .bulb-btn:hover { transform: scale(1.2); }
-  .hint-popover {
-    display: none; position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
-    background: #ffffff; border: 1px solid #d1d5db; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-    border-radius: 8px; padding: 10px; width: 220px; z-index: 100;
-  }
-  .hint-popover::after {
-    content: ''; position: absolute; top: 100%; left: 50%; margin-left: -6px;
-    border-width: 6px; border-style: solid; border-color: #ffffff transparent transparent transparent;
-  }
-  .hint-popover button {
-    background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 4px; padding: 4px 8px;
-    font-size: 0.85em; margin: 2px; cursor: pointer; color: #374151; transition: background 0.2s;
-  }
-  .hint-popover button:hover { background: #e5e7eb; }
-  .hint-result { margin-top: 8px; font-size: 0.9em; color: #dc2626; text-align: center; font-weight: 500; line-height: 1.3;}
-`;
-document.head.appendChild(style);
+const quotes = [
+  "The limits of my language mean the limits of my world.",
+  "Every expert was once a beginner. Keep writing!",
+  "Small daily improvements over time lead to stunning results.",
+  "Your writing is your voice—let it be heard clearly.",
+  "Mistakes are proof that you are trying. Excellent effort!"
+];
 
-// 2. 加上時間戳記魔法，強迫瀏覽器每次都抓最新題庫
+let currentIndex = 0;
+let essayData = [];
+
+// 讀取資料
 fetch('data.json?v=' + new Date().getTime())
   .then(response => response.json())
   .then(data => {
-    // 隨機挑選一題 (一段作文)
-    const item = data[Math.floor(Math.random() * data.length)];
-    let displaySentence = item.sentence;
-    
-    // 將每個重點單字挖空，並包裝在相對定位的 wrapper 裡
-    item.blanks.forEach(blankObj => {
-      const word = blankObj.word;
-      const hintData = encodeURIComponent(JSON.stringify(blankObj));
-      // 改良：加入 .blank-wrapper 確保燈泡跟框框黏在一起
-      const inputHTML = `<span class="blank-wrapper"><input type="text" class="blank" data-answer="${word}" data-hints="${hintData}" style="margin: 0 5px; padding: 5px; width: 110px; text-align: center; border: 1px solid #ccc; border-radius: 4px;"></span>`;
-      displaySentence = displaySentence.replace(word, inputHTML);
-    });
-    
-    document.getElementById('exercise').innerHTML = displaySentence;
-  })
-  .catch(error => console.error('Error loading the data:', error));
-
-// 3. 檢查答案與燈泡互動邏輯
-function checkAnswers() {
-  let allCorrect = true;
-
-  document.querySelectorAll('.blank').forEach(input => {
-    const wrapper = input.parentElement;
-    const userAnswer = input.value.trim().toLowerCase();
-    const correctAnswer = input.dataset.answer.toLowerCase();
-    const hints = JSON.parse(decodeURIComponent(input.dataset.hints));
-
-    // 每次檢查前，先清掉舊的燈泡，保持畫面乾淨
-    const oldBulb = wrapper.querySelector('.bulb-btn');
-    const oldPopover = wrapper.querySelector('.hint-popover');
-    if (oldBulb) oldBulb.remove();
-    if (oldPopover) oldPopover.remove();
-
-    if (userAnswer === correctAnswer) {
-      input.style.backgroundColor = '#d4edda'; // 答對變綠
-      input.style.borderColor = '#28a745';
-    } else {
-      allCorrect = false;
-      input.style.backgroundColor = '#f8d7da'; // 答錯變紅
-      input.style.borderColor = '#dc2626';
-      
-      // 建立燈泡圖示
-      const bulb = document.createElement('span');
-      bulb.className = 'bulb-btn';
-      bulb.innerText = '💡';
-
-      // 建立懸浮提示框 (Popover)
-      const popover = document.createElement('div');
-      popover.className = 'hint-popover';
-
-      const btnContainer = document.createElement('div');
-      btnContainer.style.textAlign = 'center';
-
-      const resText = document.createElement('div');
-      resText.className = 'hint-result';
-      resText.innerText = '請選擇需要的提示級別';
-
-      // 按鈕功能設計
-      const btnSpell = document.createElement('button');
-      btnSpell.innerText = '拼字';
-      btnSpell.onclick = () => { resText.innerText = correctAnswer[0] + ' _ '.repeat(correctAnswer.length - 1); };
-
-      const btnDef = document.createElement('button');
-      btnDef.innerText = '定義';
-      btnDef.onclick = () => { resText.innerText = hints.definition; };
-
-      const btnSyn = document.createElement('button');
-      btnSyn.innerText = '同義詞';
-      btnSyn.onclick = () => { resText.innerText = hints.synonym; };
-
-      btnContainer.append(btnSpell, btnDef, btnSyn);
-      popover.append(btnContainer, resText);
-
-      // 點擊燈泡，切換顯示/隱藏提示框
-      bulb.onclick = () => {
-        popover.style.display = popover.style.display === 'none' || popover.style.display === '' ? 'block' : 'none';
-      };
-
-      wrapper.appendChild(bulb);
-      wrapper.appendChild(popover);
-    }
+    essayData = data;
+    renderQuiz();
   });
 
-  // 如果全部答對，觸發灑花與英國腔語音
-  if (allCorrect) {
-    if (typeof confetti !== 'undefined') {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    }
-    const utterance = new SpeechSynthesisUtterance("Excellent, you nailed it!");
-    utterance.lang = 'en-GB'; 
-    window.speechSynthesis.speak(utterance);
-  }
+function renderQuiz() {
+  const item = essayData[currentIndex];
+  
+  // 顯示進度與隨機金句
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+  let htmlContent = `
+    <div style="margin-bottom: 20px; font-style: italic; color: var(--on-surface-de-emphasis);">"${quote}"</div>
+    <div style="margin-bottom: 15px; font-weight: bold;">進度: ${currentIndex + 1} / ${essayData.length}</div>
+  `;
+  
+  let displaySentence = item.sentence;
+  item.blanks.forEach(blankObj => {
+    const hintData = encodeURIComponent(JSON.stringify(blankObj));
+    const inputHTML = `<span class="blank-wrapper" style="position:relative;">
+      <input type="text" class="blank" data-answer="${blankObj.word.toLowerCase()}" data-hints="${hintData}" 
+      style="margin: 0 5px; padding: 5px; width: 110px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
+    </span>`;
+    displaySentence = displaySentence.replace(blankObj.word, inputHTML);
+  });
+
+  document.getElementById('exercise').innerHTML = htmlContent + `<div style="line-height:2.5;">${displaySentence}</div>`;
+  setupImmediateFeedback();
 }
+
+function setupImmediateFeedback() {
+  document.querySelectorAll('.blank').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const userAnswer = e.target.value.trim().toLowerCase();
+      const correctAnswer = input.dataset.answer.toLowerCase();
+      
+      if (userAnswer === correctAnswer) {
+        input.style.backgroundColor = '#d4edda';
+        input.style.borderColor = '#28a745';
+        const wrapper = input.parentElement;
+        const existingBulb = wrapper.querySelector('.bulb-btn');
+        if (existingBulb) existingBulb.remove();
+      } else if (userAnswer !== "") {
+        input.style.backgroundColor = '#f8d7da';
+        input.style.borderColor = '#dc2626';
+      }
+    });
+
+    input.addEventListener('focus', () => {
+      const wrapper = input.parentElement;
+      if (!wrapper.querySelector('.bulb-btn') && input.style.backgroundColor !== 'rgb(212, 237, 218)') {
+         createBulb(input);
+      }
+    });
+  });
+}
+
+function createBulb(input) {
+    const wrapper = input.parentElement;
+    const hints = JSON.parse(decodeURIComponent(input.dataset.hints));
+    const correctAnswer = input.dataset.answer;
+
+    const bulb = document.createElement('span');
+    bulb.className = 'bulb-btn';
+    bulb.innerText = '💡';
+    bulb.style.cursor = 'pointer';
+    bulb.style.marginLeft = '5px';
+
+    const popover = document.createElement('div');
+    popover.className = 'hint-popover';
+    popover.style.cssText = "display:none; position:absolute; bottom:130%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; z-index:100; width:180px; font-size:12px;";
+
+    const resText = document.createElement('div');
+    resText.innerText = '點選提示級別';
+    resText.style.marginBottom = '5px';
+
+    ['拼字', '定義', '同義詞'].forEach(type => {
+        const btn = document.createElement('button');
+        btn.innerText = type;
+        btn.onclick = () => {
+            if(type === '拼字') resText.innerText = correctAnswer[0] + ' _ '.repeat(correctAnswer.length - 1);
+            if(type === '定義') resText.innerText = hints.definition;
+            if(type === '同義詞') resText.innerText = hints.synonym;
+        };
+        popover.appendChild(btn);
+    });
+    
+    popover.appendChild(resText);
+    wrapper.appendChild(bulb);
+    wrapper.appendChild(popover);
+
+    bulb.onclick = () => {
+        popover.style.display = popover.style.display === 'none' ? 'block' : 'none';
+    };
+}
+
+function navigate(direction) {
+  currentIndex += direction;
+  if (currentIndex < 0) currentIndex = 0;
+  if (currentIndex >= essayData.length) currentIndex = essayData.length - 1;
+  renderQuiz();
+}
+
+// 建立導航鈕 (直接加在 body 底部)
+const navDiv = document.createElement('div');
+navDiv.style.marginTop = '30px';
+navDiv.style.display = 'flex';
+navDiv.style.gap = '10px';
+navDiv.innerHTML = `
+    <button onclick="navigate(-1)" style="padding: 5px 15px;">上一題</button>
+    <button onclick="navigate(1)" style="padding: 5px 15px;">下一題</button>
+`;
+document.body.appendChild(navDiv);
+```
+
+這次修改後，導航按鈕變得非常清爽，操作起來會更有專業的「練習感」。您更新 `writing.js` 後，再測試一下看看，如果沒問題，我們這套寫作語料循環系統就正式宣告大功告成囉！
