@@ -1,16 +1,27 @@
 [
-  {
-    "sentence": "Homework is instrumental in helping children maintain a stable routine.",
-    "blanks": [
-      { "word": "instrumental", "definition": "important in causing something to happen", "synonym": "crucial / essential" },
-      { "word": "maintain", "definition": "to keep a state or process going", "synonym": "preserve / sustain" }
-    ]
-  },
-  {
-    "sentence": "Forcing students to complete repetitive, mechanical writing exercises can stifle their natural creativity.",
-    "blanks": [
-      { "word": "repetitive", "definition": "happening many times in a similar way", "synonym": "monotonous" },
-      { "word": "stifle", "definition": "to prevent something from happening or being expressed", "synonym": "suppress" }
-    ]
-  }
+{
+"sentence": "In this era of rapid technological advancement, novel inventions have profoundly transformed our daily lives. From traditional dialing to instant online messaging, smartphones have completely revolutionized the way people communicate. While some argue that these devices have reduced face-to-face interactions, others hold the opposite view. I personally believe that although modern technology connects us more efficiently, it can also lead to superficial relationships.",
+"blanks": [
+{
+"word": "profoundly",
+"definition": "deeply or extremely in a way that has a strong effect",
+"synonym": "significantly / thoroughly"
+},
+{
+"word": "revolutionized",
+"definition": "completely changed the way something is done",
+"synonym": "transformed"
+},
+{
+"word": "While",
+"definition": "used to contrast two different ideas or situations",
+"synonym": "although / whereas"
+},
+{
+"word": "superficial",
+"definition": "lacking true depth or genuine connection",
+"synonym": "shallow / surface-level"
+}
+]
+}
 ]
