@@ -1,9 +1,9 @@
 const quotes = [
-  "The limits of my language mean the limits of my world.",
-  "Every expert was once a beginner. Keep writing!",
-  "Small daily improvements over time lead to stunning results.",
-  "Your writing is your voice—let it be heard clearly.",
-  "Mistakes are proof that you are trying. Excellent effort!"
+  { en: "The limits of my language mean the limits of my world.", zh: "我語言的局限，就是我世界的局限。" },
+  { en: "Every expert was once a beginner. Keep writing!", zh: "每個專家都曾是初學者。繼續寫吧！" },
+  { en: "Small daily improvements over time lead to stunning results.", zh: "每天微小的進步，終將帶來驚人的成果。" },
+  { en: "Your writing is your voice—let it be heard clearly.", zh: "你的文字就是你的聲音——讓它被清晰地聽見。" },
+  { en: "Mistakes are proof that you are trying. Excellent effort!", zh: "錯誤是你正在努力的證明。很棒的嘗試！" }
 ];
 
 let currentIndex = 0;
@@ -17,7 +17,7 @@ fetch('data.json?v=' + new Date().getTime())
     renderQuiz();
   })
   .catch(error => {
-    // 如果 data.json 格式有錯，這裡會直接顯示錯誤原因，不再卡白畫面！
+    // 如果 data.json 格式有錯，這裡會直接顯示錯誤原因
     document.getElementById('exercise').innerHTML = `<div style="color: #dc2626; padding: 20px; border: 1px solid #dc2626; border-radius: 8px; background: #f8d7da; line-height: 1.6;">
       <strong>⚠️ 讀取題庫失敗！</strong><br>這通常是因為 <code>data.json</code> 的格式有小錯誤（例如：多了一個逗號、少了一個引號，或是括號沒有成對）。<br><br>
       技術錯誤訊息：${error.message}
@@ -29,9 +29,8 @@ function renderQuiz() {
   hasCompletedCurrent = false; 
   const item = essayData[currentIndex];
   
-  const quote = quotes[Math.floor(Math.random() * quotes.length)];
-  let htmlContent = `
-    <div style="margin-bottom: 20px; font-style: italic; color: #444746;">"${quote}"</div>
+  const quoteObj = quotes[Math.floor(Math.random() * quotes.length)];
+  let headerContent = `
     <div style="margin-bottom: 15px; font-weight: bold; color: #0b57d0;">進度: ${currentIndex + 1} / ${essayData.length}</div>
   `;
   
@@ -45,7 +44,15 @@ function renderQuiz() {
     displaySentence = displaySentence.replace(blankObj.word, inputHTML);
   });
 
-  document.getElementById('exercise').innerHTML = htmlContent + `<div style="line-height:2.5; font-size: 1.1em;">${displaySentence}</div>`;
+  // 雙語金句：置於段落最下方，並置中對齊
+  let quoteContent = `
+    <div style="margin-top: 50px; text-align: center; color: #5f6368; font-family: sans-serif;">
+      <div style="font-style: italic; margin-bottom: 6px;">"${quoteObj.en}"</div>
+      <div style="font-size: 0.9em; letter-spacing: 1px;">${quoteObj.zh}</div>
+    </div>
+  `;
+
+  document.getElementById('exercise').innerHTML = headerContent + `<div style="line-height:2.5; font-size: 1.1em;">${displaySentence}</div>` + quoteContent;
   setupImmediateFeedback();
 }
 
@@ -136,7 +143,6 @@ function createBulb(input) {
     };
 }
 
-// 點擊其他地方時關閉提示視窗
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.blank-wrapper')) {
         document.querySelectorAll('.hint-popover').forEach(p => p.style.display = 'none');
@@ -183,9 +189,10 @@ navDiv.style.marginTop = '30px';
 navDiv.style.display = 'flex';
 navDiv.style.gap = '10px';
 navDiv.style.justifyContent = 'center';
+// 加上 color: #333 確保字體是深灰色可見的
 navDiv.innerHTML = `
-    <button onclick="navigate(-1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white;">上一題</button>
-    <button onclick="navigate(1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white;">下一題</button>
+    <button onclick="navigate(-1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white; color: #333; font-weight: bold;">上一題</button>
+    <button onclick="navigate(1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white; color: #333; font-weight: bold;">下一題</button>
 `;
 
 setTimeout(() => {
