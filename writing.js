@@ -8,36 +8,44 @@ const quotes = [
 
 let currentIndex = 0;
 let essayData = [];
+let hasCompletedCurrent = false;
 
-// 讀取資料
 fetch('data.json?v=' + new Date().getTime())
   .then(response => response.json())
   .then(data => {
     essayData = data;
     renderQuiz();
+  })
+  .catch(error => {
+    // 如果 data.json 格式有錯，這裡會直接顯示錯誤原因，不再卡白畫面！
+    document.getElementById('exercise').innerHTML = `<div style="color: #dc2626; padding: 20px; border: 1px solid #dc2626; border-radius: 8px; background: #f8d7da; line-height: 1.6;">
+      <strong>⚠️ 讀取題庫失敗！</strong><br>這通常是因為 <code>data.json</code> 的格式有小錯誤（例如：多了一個逗號、少了一個引號，或是括號沒有成對）。<br><br>
+      技術錯誤訊息：${error.message}
+    </div>`;
   });
 
 function renderQuiz() {
+  if (essayData.length === 0) return;
+  hasCompletedCurrent = false; 
   const item = essayData[currentIndex];
   
-  // 顯示進度與隨機金句
   const quote = quotes[Math.floor(Math.random() * quotes.length)];
   let htmlContent = `
-    <div style="margin-bottom: 20px; font-style: italic; color: var(--on-surface-de-emphasis);">"${quote}"</div>
-    <div style="margin-bottom: 15px; font-weight: bold;">進度: ${currentIndex + 1} / ${essayData.length}</div>
+    <div style="margin-bottom: 20px; font-style: italic; color: #444746;">"${quote}"</div>
+    <div style="margin-bottom: 15px; font-weight: bold; color: #0b57d0;">進度: ${currentIndex + 1} / ${essayData.length}</div>
   `;
   
   let displaySentence = item.sentence;
   item.blanks.forEach(blankObj => {
     const hintData = encodeURIComponent(JSON.stringify(blankObj));
-    const inputHTML = `<span class="blank-wrapper" style="position:relative;">
+    const inputHTML = `<span class="blank-wrapper" style="position:relative; display:inline-block;">
       <input type="text" class="blank" data-answer="${blankObj.word.toLowerCase()}" data-hints="${hintData}" 
       style="margin: 0 5px; padding: 5px; width: 110px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
     </span>`;
     displaySentence = displaySentence.replace(blankObj.word, inputHTML);
   });
 
-  document.getElementById('exercise').innerHTML = htmlContent + `<div style="line-height:2.5;">${displaySentence}</div>`;
+  document.getElementById('exercise').innerHTML = htmlContent + `<div style="line-height:2.5; font-size: 1.1em;">${displaySentence}</div>`;
   setupImmediateFeedback();
 }
 
@@ -53,9 +61,15 @@ function setupImmediateFeedback() {
         const wrapper = input.parentElement;
         const existingBulb = wrapper.querySelector('.bulb-btn');
         if (existingBulb) existingBulb.remove();
+        
+        // 每次打對一個字，就檢查是否整段都答對了
+        checkAllCompleted(); 
       } else if (userAnswer !== "") {
         input.style.backgroundColor = '#f8d7da';
         input.style.borderColor = '#dc2626';
+      } else {
+        input.style.backgroundColor = 'white';
+        input.style.borderColor = '#ccc';
       }
     });
 
@@ -78,52 +92,103 @@ function createBulb(input) {
     bulb.innerText = '💡';
     bulb.style.cursor = 'pointer';
     bulb.style.marginLeft = '5px';
+    bulb.style.position = 'absolute';
+    bulb.style.top = '50%';
+    bulb.style.transform = 'translateY(-50%)';
 
     const popover = document.createElement('div');
     popover.className = 'hint-popover';
-    popover.style.cssText = "display:none; position:absolute; bottom:130%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; z-index:100; width:180px; font-size:12px;";
+    popover.style.cssText = "display:none; position:absolute; bottom:120%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; z-index:100; width:max-content; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-size:13px; line-height:1.5;";
 
     const resText = document.createElement('div');
     resText.innerText = '點選提示級別';
-    resText.style.marginBottom = '5px';
+    resText.style.marginBottom = '8px';
+    resText.style.color = '#dc2626';
+
+    const btnContainer = document.createElement('div');
+    btnContainer.style.display = 'flex';
+    btnContainer.style.gap = '5px';
 
     ['拼字', '定義', '同義詞'].forEach(type => {
         const btn = document.createElement('button');
         btn.innerText = type;
+        btn.style.padding = '3px 8px';
+        btn.style.cursor = 'pointer';
         btn.onclick = () => {
             if(type === '拼字') resText.innerText = correctAnswer[0] + ' _ '.repeat(correctAnswer.length - 1);
             if(type === '定義') resText.innerText = hints.definition;
             if(type === '同義詞') resText.innerText = hints.synonym;
         };
-        popover.appendChild(btn);
+        btnContainer.appendChild(btn);
     });
     
     popover.appendChild(resText);
+    popover.appendChild(btnContainer);
     wrapper.appendChild(bulb);
     wrapper.appendChild(popover);
 
-    bulb.onclick = () => {
+    bulb.onclick = (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.hint-popover').forEach(p => {
+            if (p !== popover) p.style.display = 'none';
+        });
         popover.style.display = popover.style.display === 'none' ? 'block' : 'none';
     };
 }
 
-function navigate(direction) {
+// 點擊其他地方時關閉提示視窗
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.blank-wrapper')) {
+        document.querySelectorAll('.hint-popover').forEach(p => p.style.display = 'none');
+    }
+});
+
+function checkAllCompleted() {
+    if (hasCompletedCurrent) return;
+    const allInputs = document.querySelectorAll('.blank');
+    let isAllCorrect = true;
+
+    allInputs.forEach(input => {
+        if (input.value.trim().toLowerCase() !== input.dataset.answer.toLowerCase()) {
+            isAllCorrect = false;
+        }
+    });
+
+    if (isAllCorrect) {
+        hasCompletedCurrent = true;
+        // 觸發灑花特效
+        if (typeof confetti === 'function') {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+        // 播放語音稱讚
+        const utterance = new SpeechSynthesisUtterance("Excellent, you nailed it!");
+        utterance.lang = 'en-GB'; 
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+window.navigate = function(direction) {
   currentIndex += direction;
   if (currentIndex < 0) currentIndex = 0;
   if (currentIndex >= essayData.length) currentIndex = essayData.length - 1;
   renderQuiz();
-}
+};
 
-// 建立導航鈕 (直接加在 body 底部)
+const oldNav = document.getElementById('quiz-nav');
+if (oldNav) oldNav.remove();
+
 const navDiv = document.createElement('div');
+navDiv.id = 'quiz-nav';
 navDiv.style.marginTop = '30px';
 navDiv.style.display = 'flex';
 navDiv.style.gap = '10px';
+navDiv.style.justifyContent = 'center';
 navDiv.innerHTML = `
-    <button onclick="navigate(-1)" style="padding: 5px 15px;">上一題</button>
-    <button onclick="navigate(1)" style="padding: 5px 15px;">下一題</button>
+    <button onclick="navigate(-1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white;">上一題</button>
+    <button onclick="navigate(1)" style="padding: 8px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: white;">下一題</button>
 `;
-document.body.appendChild(navDiv);
-```
 
-這次修改後，導航按鈕變得非常清爽，操作起來會更有專業的「練習感」。您更新 `writing.js` 後，再測試一下看看，如果沒問題，我們這套寫作語料循環系統就正式宣告大功告成囉！
+setTimeout(() => {
+    const container = document.getElementById('exercise').parentElement;
+    container.appendChild(navDiv);
+}, 100);
