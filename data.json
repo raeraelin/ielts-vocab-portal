@@ -25,27 +25,130 @@
 ]
 },
 {
-"sentence": "The debate over whether school children should be assigned daily tasks has been ongoing for decades. Proponents argue that after-school assignments are essential for reinforcing classroom learning and developing independent study habits. Conversely, opponents claim that excessive homework can lead to student burnout. From my perspective, a moderate amount of homework is beneficial, provided it does not overwhelm a child's leisure time.",
+"sentence": "The necessity of homework has long been a subject of debate. While some argue that after-school assignments are nonessential, others believe they play a crucial role in education. In my opinion, although excessive homework can be detrimental, a moderate amount is highly beneficial.
+
+
+
+
+
+Homework is essential for children in helping them maintain a stable routine. First, after finishing a long day at school, children return home to a comfortable environment where they can further reinforce their learning. Developing such consistency fosters good study habits. Second, reviewing what they learned is crucial, as the learning process requires repetition to reinforce knowledge.
+
+
+
+
+
+On the other hand, some argue that an excessive amount of homework deprives children of adequate rest. Nowadays, parents enroll their children in various extracurricular activities. Pursuits such as music lessons or competitive sports like soccer or swimming require significant time and dedication. Spending too much time on assignments severely disrupts their academics and personal lives. Moreover, forcing children to complete repetitive mechanical writing exercises stifles their natural creativity.
+
+
+
+
+
+Therefore, a balanced approach is preferred; homework should be assigned selectively rather than being mandatory for every subject. By considering children's schedules, assignments should be arranged thoughtfully. Depending on the learning objectives of each subject, the quantity of homework ought to align with the most effective learning methods. Let’s build an inclusive and friendly learning environment for our future generations!",
 "blanks": [
 {
-"word": "Proponents",
-"definition": "people who publicly support an idea or policy",
-"synonym": "advocates / supporters"
+"word": "crucial",
+"definition": "of great importance; vital",
+"synonym": "vital / essential"
 },
 {
-"word": "reinforcing",
-"definition": "making a feeling, an idea, or a habit stronger",
-"synonym": "strengthening / consolidating"
+"word": "detrimental",
+"definition": "tending to cause harm",
+"synonym": "harmful / damaging"
 },
 {
-"word": "Conversely",
-"definition": "in an opposite way, used to introduce a statement that contrasts with a previous one",
-"synonym": "on the contrary / in contrast"
+"word": "reinforce",
+"definition": "to strengthen or support, especially with additional material",
+"synonym": "strengthen / consolidate"
 },
 {
-"word": "overwhelm",
-"definition": "to cause someone to feel sudden strong emotion or be unable to handle a situation",
-"synonym": "overburden / overload"
+"word": "fosters",
+"definition": "to encourage or promote the development of something",
+"synonym": "cultivates / nurtures"
+},
+{
+"word": "deprives",
+"definition": "to prevent someone from having or using something",
+"synonym": "robs / strips"
+},
+{
+"word": "Moreover,",
+"definition": "as a further matter; besides (requires a comma after)",
+"synonym": "Furthermore, / In addition,"
+},
+{
+"word": "stifles",
+"definition": "to prevent something from happening or developing",
+"synonym": "suppresses / smothers"
+},
+{
+"word": "selectively",
+"definition": "in a way that involves choosing carefully",
+"synonym": "discriminately / carefully"
+},
+{
+"word": "mandatory",
+"definition": "required by rules; compulsory",
+"synonym": "compulsory / obligatory"
+},
+{
+"word": "align",
+"definition": "to coordinate or match correctly",
+"synonym": "coordinate / correspond"
+}
+]
+},
+{
+"sentence": "Living in a modern society, technology has facilitated seamless communication. First, technology effectively bridges geographical barriers; consequently, we can converse with others regardless of their physical location. Furthermore, instant messaging apps eliminate the constraints of time zones, allowing users to respond to messages immediately regardless of time differences. Thus, technological devices provide us with unparalleled opportunities to interact with anyone, anywhere.",
+"blanks": [
+{
+"word": "facilitated",
+"definition": "to make an action or process easy or easier",
+"synonym": "enabled / assisted"
+},
+{
+"word": "seamless",
+"definition": "smooth and continuous, with no apparent gaps",
+"synonym": "flawless / smooth"
+},
+{
+"word": "bridges",
+"definition": "makes a difference or division smaller",
+"synonym": "connects / overcomes"
+},
+{
+"word": "; consequently,",
+"definition": "as a result (requires a semicolon before and a comma after)",
+"synonym": "; therefore, / ; thus,"
+},
+{
+"word": "converse",
+"definition": "engage in conversation",
+"synonym": "communicate / talk"
+},
+{
+"word": "Furthermore,",
+"definition": "in addition; besides (requires a comma after)",
+"synonym": "Moreover, / Additionally,"
+},
+{
+"word": "eliminate",
+"definition": "completely remove or get rid of",
+"synonym": "remove / eradicate"
+},
+{
+"word": "constraints",
+"definition": "limitations or restrictions",
+"synonym": "limitations / restrictions"
+},
+{
+"word": "unparalleled",
+"definition": "having no equal; exceptional",
+"synonym": "unmatched / unprecedented"
+},
+{
+"word": "interact",
+"definition": "act in such a way as to have an effect on another; communicate",
+"synonym": "communicate / engage"
 }
 ]
 }
