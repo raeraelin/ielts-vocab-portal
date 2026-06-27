@@ -35,8 +35,9 @@ function renderQuiz() {
     <div style="margin-bottom: 20px; font-weight: bold; color: #0b57d0; font-size: 1.1em;">進度: ${currentIndex + 1} / ${essayData.length}</div>
   `;
   
-  // 中間句子與挖空
-  let displaySentence = item.sentence;
+  // 關鍵修改：判斷如果是陣列，就把它無縫接合起來
+  let displaySentence = Array.isArray(item.sentence) ? item.sentence.join("") : item.sentence;
+  
   item.blanks.forEach(blankObj => {
     const hintData = encodeURIComponent(JSON.stringify(blankObj));
     const inputHTML = `<span class="blank-wrapper" style="position:relative; display:inline-block;">
@@ -58,7 +59,7 @@ function renderQuiz() {
   const exerciseDiv = document.getElementById('exercise');
   exerciseDiv.innerHTML = headerContent + `<div style="line-height:2.5; font-size: 1.15em; color: #202124;">${displaySentence}</div>` + quoteContent;
   
-  // 加上導航按鈕 (強制放在 exerciseDiv 的最底下，確保排版正確)
+  // 加上導航按鈕
   const navDiv = document.createElement('div');
   navDiv.id = 'quiz-nav';
   navDiv.style.marginTop = '20px';
