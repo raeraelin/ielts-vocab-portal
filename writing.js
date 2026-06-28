@@ -30,12 +30,14 @@ function renderQuiz() {
   
   const quoteObj = quotes[Math.floor(Math.random() * quotes.length)];
   
-  // 頂部進度條
+  // 頂部進度條 (新增顯示文章標題)
   let headerContent = `
-    <div style="margin-bottom: 20px; font-weight: bold; color: #0b57d0; font-size: 1.1em;">進度: ${currentIndex + 1} / ${essayData.length}</div>
+    <div style="margin-bottom: 20px; font-weight: bold; color: #0b57d0; font-size: 1.1em;">
+      進度: ${currentIndex + 1} / ${essayData.length} ${item.title ? `<span style="color: #5f6368; font-size: 0.85em; margin-left: 10px;">(${item.title})</span>` : ''}
+    </div>
   `;
   
-  // 關鍵修改：判斷如果是陣列，就把它無縫接合起來
+  // 將陣列無縫接合起來
   let displaySentence = Array.isArray(item.sentence) ? item.sentence.join("") : item.sentence;
   
   item.blanks.forEach(blankObj => {
@@ -44,7 +46,9 @@ function renderQuiz() {
       <input type="text" class="blank" data-answer="${blankObj.word.toLowerCase()}" data-hints="${hintData}" 
       style="margin: 0 5px; padding: 5px; width: 110px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-size: 1em;">
     </span>`;
-    displaySentence = displaySentence.replace(blankObj.word, inputHTML);
+    // 使用正則表達式，確保只替換完整的單字，避免替換到其他單字的一部分
+    const regex = new RegExp(`\\b${blankObj.word}\\b`, 'i');
+    displaySentence = displaySentence.replace(regex, inputHTML);
   });
 
   // 底部雙語金句
@@ -141,7 +145,8 @@ function createBulb(input) {
     btnContainer.style.display = 'flex';
     btnContainer.style.gap = '8px';
 
-    ['拼字', '定義', '同義詞'].forEach(type => {
+    // 新增「直接給答案」按鈕
+    ['拼字', '定義', '同義詞', '直接給答案'].forEach(type => {
         const btn = document.createElement('button');
         btn.innerText = type;
         btn.style.padding = '5px 10px';
@@ -154,6 +159,12 @@ function createBulb(input) {
             if(type === '拼字') resText.innerText = correctAnswer[0] + ' _ '.repeat(correctAnswer.length - 1);
             if(type === '定義') resText.innerText = hints.definition;
             if(type === '同義詞') resText.innerText = hints.synonym;
+            if(type === '直接給答案') {
+                input.value = correctAnswer;
+                // 派發 input 事件，讓系統知道值改變了，觸發綠色正確判定
+                input.dispatchEvent(new Event('input'));
+                popover.style.display = 'none'; 
+            }
         };
         btnContainer.appendChild(btn);
     });
