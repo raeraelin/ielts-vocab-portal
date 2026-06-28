@@ -1,219 +1,181 @@
-const quotes = [
-  { en: "The limits of my language mean the limits of my world.", zh: "我語言的局限，就是我世界的局限。" },
-  { en: "Every expert was once a beginner. Keep writing!", zh: "每個專家都曾是初學者。繼續寫吧！" },
-  { en: "Small daily improvements over time lead to stunning results.", zh: "每天微小的進步，終將帶來驚人的成果。" },
-  { en: "Your writing is your voice—let it be heard clearly.", zh: "你的文字就是你的聲音——讓它被清晰地聽見。" },
-  { en: "Mistakes are proof that you are trying. Excellent effort!", zh: "錯誤是你正在努力的證明。很棒的嘗試！" }
-];
-
-let currentIndex = 0;
-let essayData = [];
-let hasCompletedCurrent = false;
-
-fetch('data.json?v=' + new Date().getTime())
-  .then(response => response.json())
-  .then(data => {
-    essayData = data;
-    renderQuiz();
-  })
-  .catch(error => {
-    document.getElementById('exercise').innerHTML = `<div style="color: #dc2626; padding: 20px; border: 1px solid #dc2626; border-radius: 8px; background: #f8d7da; line-height: 1.6;">
-      <strong>⚠️ 讀取題庫失敗！</strong><br>這通常是因為 <code>data.json</code> 的格式有小錯誤。<br>
-      技術錯誤訊息：${error.message}
-    </div>`;
-  });
-
-function renderQuiz() {
-  if (essayData.length === 0) return;
-  hasCompletedCurrent = false; 
-  const item = essayData[currentIndex];
-  
-  const quoteObj = quotes[Math.floor(Math.random() * quotes.length)];
-  
-  // 頂部進度條 (新增顯示文章標題)
-  let headerContent = `
-    <div style="margin-bottom: 20px; font-weight: bold; color: #0b57d0; font-size: 1.1em;">
-      進度: ${currentIndex + 1} / ${essayData.length} ${item.title ? `<span style="color: #5f6368; font-size: 0.85em; margin-left: 10px;">(${item.title})</span>` : ''}
-    </div>
-  `;
-  
-  // 將陣列無縫接合起來
-  let displaySentence = Array.isArray(item.sentence) ? item.sentence.join("") : item.sentence;
-  
-  item.blanks.forEach(blankObj => {
-    const hintData = encodeURIComponent(JSON.stringify(blankObj));
-    const inputHTML = `<span class="blank-wrapper" style="position:relative; display:inline-block;">
-      <input type="text" class="blank" data-answer="${blankObj.word.toLowerCase()}" data-hints="${hintData}" 
-      style="margin: 0 5px; padding: 5px; width: 110px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-size: 1em;">
-    </span>`;
-    // 使用正則表達式，確保只替換完整的單字，避免替換到其他單字的一部分
-    const regex = new RegExp(`\\b${blankObj.word}\\b`, 'i');
-    displaySentence = displaySentence.replace(regex, inputHTML);
-  });
-
-  // 底部雙語金句
-  let quoteContent = `
-    <div style="margin-top: 40px; margin-bottom: 20px; text-align: center; color: #5f6368; font-family: sans-serif; background-color: #f8f9fa; padding: 15px; border-radius: 8px;">
-      <div style="font-style: italic; font-weight: bold; margin-bottom: 8px; color: #333;">"${quoteObj.en}"</div>
-      <div style="font-size: 0.95em; letter-spacing: 1px;">${quoteObj.zh}</div>
-    </div>
-  `;
-
-  // 渲染到畫面上
-  const exerciseDiv = document.getElementById('exercise');
-  exerciseDiv.innerHTML = headerContent + `<div style="line-height:2.5; font-size: 1.15em; color: #202124;">${displaySentence}</div>` + quoteContent;
-  
-  // 加上導航按鈕
-  const navDiv = document.createElement('div');
-  navDiv.id = 'quiz-nav';
-  navDiv.style.marginTop = '20px';
-  navDiv.style.display = 'flex';
-  navDiv.style.gap = '15px';
-  navDiv.style.justifyContent = 'center';
-  navDiv.innerHTML = `
-      <button onclick="navigate(-1)" style="padding: 10px 25px; cursor: pointer; border-radius: 6px; border: 1px solid #ccc; background: white; color: #000000 !important; font-weight: bold; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">上一題</button>
-      <button onclick="navigate(1)" style="padding: 10px 25px; cursor: pointer; border-radius: 6px; border: 1px solid #ccc; background: white; color: #000000 !important; font-weight: bold; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">下一題</button>
-  `;
-  exerciseDiv.appendChild(navDiv);
-
-  setupImmediateFeedback();
-}
-
-function setupImmediateFeedback() {
-  document.querySelectorAll('.blank').forEach(input => {
-    input.addEventListener('input', (e) => {
-      const userAnswer = e.target.value.trim().toLowerCase();
-      const correctAnswer = input.dataset.answer.toLowerCase();
-      
-      if (userAnswer === correctAnswer) {
-        input.style.backgroundColor = '#d4edda';
-        input.style.borderColor = '#28a745';
-        input.style.color = '#155724';
-        input.style.fontWeight = 'bold';
-        const wrapper = input.parentElement;
-        const existingBulb = wrapper.querySelector('.bulb-btn');
-        if (existingBulb) existingBulb.remove();
-        
-        checkAllCompleted(); 
-      } else if (userAnswer !== "") {
-        input.style.backgroundColor = '#f8d7da';
-        input.style.borderColor = '#dc2626';
-        input.style.color = '#721c24';
-        input.style.fontWeight = 'normal';
-      } else {
-        input.style.backgroundColor = 'white';
-        input.style.borderColor = '#ccc';
-        input.style.color = '#000';
+[
+  {
+    "title": "U15 Essay 1 - Homework Full Essay",
+    "sentence": [
+      "<p style='margin: 0 0 26px 0;'>The necessity of homework has long been the subject of educational debate. While some contend that after-school assignments are unnecessary, others maintain that they play an integral role in academic development. In my view, although excessive homework may undermine students' well-being, a carefully calibrated amount can be highly beneficial.</p>",
+      "<p style='margin: 0 0 26px 0;'>Homework is valuable because it helps children establish a stable learning routine. After a demanding school day, students return to a familiar environment where they can consolidate what they have learned. This consistency cultivates disciplined study habits and strengthens independent learning. Moreover, revision is essential, as meaningful learning requires repeated exposure in order to embed knowledge more securely.</p>",
+      "<p style='margin: 0 0 26px 0;'>However, excessive homework can deprive children of sufficient rest and personal time. Many parents now enrol their children in a range of extracurricular activities. Commitments such as music lessons or competitive sports, including football and swimming, require considerable time, energy, and dedication. When assignments become overwhelming, they may disrupt students' academic performance and overall well-being. Furthermore, repetitive mechanical writing tasks can suppress children's creativity and reduce their motivation to learn.</p>",
+      "<p style='margin: 0;'>Therefore, a balanced approach is preferable. Homework should be assigned selectively rather than imposed uniformly across every subject. By taking students' schedules into account, teachers can design assignments more thoughtfully. The amount of homework should be aligned with each subject's learning objectives and with methods that genuinely enhance learning. In this way, schools can foster a more inclusive and supportive learning environment for future generations.</p>"
+    ],
+    "blanks": [
+      {
+        "word": "debate",
+        "definition": "a serious discussion in which different views are considered",
+        "synonym": "discussion / argument"
+      },
+      {
+        "word": "integral",
+        "definition": "necessary and important as part of a whole",
+        "synonym": "essential / fundamental"
+      },
+      {
+        "word": "undermine",
+        "definition": "to gradually make something weaker or less effective",
+        "synonym": "weaken / damage"
+      },
+      {
+        "word": "calibrated",
+        "definition": "carefully adjusted to achieve the right level or effect",
+        "synonym": "adjusted / measured"
+      },
+      {
+        "word": "establish",
+        "definition": "to create or develop something firmly over time",
+        "synonym": "set up / build"
+      },
+      {
+        "word": "consolidate",
+        "definition": "to make knowledge or progress stronger and more secure",
+        "synonym": "strengthen / reinforce"
+      },
+      {
+        "word": "cultivates",
+        "definition": "develops a skill, habit, or quality over time",
+        "synonym": "develops / nurtures"
+      },
+      {
+        "word": "embed",
+        "definition": "to fix something firmly within memory, a system, or a process",
+        "synonym": "fix / implant"
+      },
+      {
+        "word": "deprive",
+        "definition": "to prevent someone from having something necessary or valuable",
+        "synonym": "deny / rob"
+      },
+      {
+        "word": "imposed",
+        "definition": "forced on someone as a rule, duty, or burden",
+        "synonym": "forced / required"
       }
-    });
-
-    input.addEventListener('focus', () => {
-      const wrapper = input.parentElement;
-      if (!wrapper.querySelector('.bulb-btn') && input.style.backgroundColor !== 'rgb(212, 237, 218)') {
-         createBulb(input);
+    ]
+  },
+  {
+    "title": "U15 Essay 2 - Technology Introduction and Body 1",
+    "sentence": [
+      "<p style='margin: 0 0 26px 0;'>In an era of rapid technological advancement, innovative inventions have profoundly reshaped everyday life. From traditional phone calls to instant online messaging, smartphones have revolutionised the way people communicate. While some argue that these devices diminish face-to-face interaction, others take the opposite view. I believe that although modern technology connects people more efficiently, it can also contribute to superficial relationships.</p>",
+      "<p style='margin: 0;'>In contemporary society, technology facilitates seamless communication. First, it helps bridge geographical barriers, enabling people to converse regardless of physical distance. In addition, instant messaging applications reduce the constraints imposed by time zones, allowing users to respond promptly despite differences in location or schedule. As a result, digital devices offer unprecedented opportunities to interact with people almost anywhere in the world.</p>"
+    ],
+    "blanks": [
+      {
+        "word": "advancement",
+        "definition": "the process of developing or improving something",
+        "synonym": "progress / development"
+      },
+      {
+        "word": "reshaped",
+        "definition": "changed the form, nature, or development of something significantly",
+        "synonym": "transformed / changed"
+      },
+      {
+        "word": "revolutionised",
+        "definition": "changed something completely and dramatically",
+        "synonym": "transformed / modernised"
+      },
+      {
+        "word": "diminish",
+        "definition": "to make something smaller, weaker, or less important",
+        "synonym": "reduce / weaken"
+      },
+      {
+        "word": "superficial",
+        "definition": "lacking real depth, seriousness, or emotional meaning",
+        "synonym": "shallow / surface-level"
+      },
+      {
+        "word": "facilitates",
+        "definition": "makes an action or process easier",
+        "synonym": "enables / supports"
+      },
+      {
+        "word": "bridge",
+        "definition": "to connect two sides or reduce a gap between them",
+        "synonym": "connect / span"
+      },
+      {
+        "word": "constraints",
+        "definition": "limits or restrictions that control what people can do",
+        "synonym": "limitations / restrictions"
+      },
+      {
+        "word": "promptly",
+        "definition": "quickly and without delay",
+        "synonym": "immediately / quickly"
+      },
+      {
+        "word": "unprecedented",
+        "definition": "never having happened or existed before",
+        "synonym": "exceptional / unmatched"
       }
-    });
-  });
-}
-
-function createBulb(input) {
-    const wrapper = input.parentElement;
-    const hints = JSON.parse(decodeURIComponent(input.dataset.hints));
-    const correctAnswer = input.dataset.answer;
-
-    const bulb = document.createElement('span');
-    bulb.className = 'bulb-btn';
-    bulb.innerText = '💡';
-    bulb.style.cursor = 'pointer';
-    bulb.style.marginLeft = '8px';
-    bulb.style.position = 'absolute';
-    bulb.style.top = '50%';
-    bulb.style.transform = 'translateY(-50%)';
-    bulb.style.fontSize = '1.2em';
-
-    const popover = document.createElement('div');
-    popover.className = 'hint-popover';
-    popover.style.cssText = "display:none; position:absolute; bottom:130%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:12px; border-radius:8px; z-index:100; width:max-content; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size:14px; line-height:1.5;";
-
-    const resText = document.createElement('div');
-    resText.innerText = '點選下方按鈕取得提示';
-    resText.style.marginBottom = '10px';
-    resText.style.color = '#dc2626';
-    resText.style.fontWeight = 'bold';
-
-    const btnContainer = document.createElement('div');
-    btnContainer.style.display = 'flex';
-    btnContainer.style.gap = '8px';
-
-    // 新增「直接給答案」按鈕
-    ['拼字', '定義', '同義詞', '直接給答案'].forEach(type => {
-        const btn = document.createElement('button');
-        btn.innerText = type;
-        btn.style.padding = '5px 10px';
-        btn.style.cursor = 'pointer';
-        btn.style.border = '1px solid #0b57d0';
-        btn.style.backgroundColor = '#f8fafd';
-        btn.style.color = '#0b57d0';
-        btn.style.borderRadius = '4px';
-        btn.onclick = () => {
-            if(type === '拼字') resText.innerText = correctAnswer[0] + ' _ '.repeat(correctAnswer.length - 1);
-            if(type === '定義') resText.innerText = hints.definition;
-            if(type === '同義詞') resText.innerText = hints.synonym;
-            if(type === '直接給答案') {
-                input.value = correctAnswer;
-                // 派發 input 事件，讓系統知道值改變了，觸發綠色正確判定
-                input.dispatchEvent(new Event('input'));
-                popover.style.display = 'none'; 
-            }
-        };
-        btnContainer.appendChild(btn);
-    });
-    
-    popover.appendChild(resText);
-    popover.appendChild(btnContainer);
-    wrapper.appendChild(bulb);
-    wrapper.appendChild(popover);
-
-    bulb.onclick = (e) => {
-        e.stopPropagation();
-        document.querySelectorAll('.hint-popover').forEach(p => {
-            if (p !== popover) p.style.display = 'none';
-        });
-        popover.style.display = popover.style.display === 'none' ? 'block' : 'none';
-    };
-}
-
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.blank-wrapper')) {
-        document.querySelectorAll('.hint-popover').forEach(p => p.style.display = 'none');
-    }
-});
-
-function checkAllCompleted() {
-    if (hasCompletedCurrent) return;
-    const allInputs = document.querySelectorAll('.blank');
-    let isAllCorrect = true;
-
-    allInputs.forEach(input => {
-        if (input.value.trim().toLowerCase() !== input.dataset.answer.toLowerCase()) {
-            isAllCorrect = false;
-        }
-    });
-
-    if (isAllCorrect) {
-        hasCompletedCurrent = true;
-        if (typeof confetti === 'function') {
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
-        }
-        const utterance = new SpeechSynthesisUtterance("Excellent, you nailed it!");
-        utterance.lang = 'en-GB'; 
-        window.speechSynthesis.speak(utterance);
-    }
-}
-
-window.navigate = function(direction) {
-  currentIndex += direction;
-  if (currentIndex < 0) currentIndex = 0;
-  if (currentIndex >= essayData.length) currentIndex = essayData.length - 1;
-  renderQuiz();
-};
+    ]
+  },
+  {
+    "title": "U15 Essay 2 - Technology Body 2 and Conclusion",
+    "sentence": [
+      "<p style='margin: 0 0 26px 0;'>Nevertheless, technology may weaken the depth of interpersonal relationships. When people communicate online instead of in person, their interactions often lack emotional richness. Genuine understanding depends heavily on non-verbal cues, facial expressions, and tone of voice. However, digital communication frequently fails to convey these subtle nuances. Instead, social media platforms often promote immediate but shallow forms of feedback, such as emojis and likes. Consequently, excessive reliance on digital connectivity can lead to superficial exchanges and, ultimately, more fragile social bonds.</p>",
+      "<p style='margin: 0;'>In conclusion, although technology brings unprecedented convenience and transformative benefits, it may also exert a negative influence on interpersonal relationships. Therefore, it is essential to strike a balance. While benefiting from digital connectivity, people should make a conscious effort to preserve genuine face-to-face communication.</p>"
+    ],
+    "blanks": [
+      {
+        "word": "weaken",
+        "definition": "to make something less strong or effective",
+        "synonym": "undermine / damage"
+      },
+      {
+        "word": "interpersonal",
+        "definition": "connected with relationships or communication between people",
+        "synonym": "social / relational"
+      },
+      {
+        "word": "richness",
+        "definition": "depth, variety, and quality that make something meaningful",
+        "synonym": "depth / fullness"
+      },
+      {
+        "word": "Genuine",
+        "definition": "real, sincere, and not artificial",
+        "synonym": "authentic / sincere"
+      },
+      {
+        "word": "convey",
+        "definition": "to communicate an idea, feeling, or meaning",
+        "synonym": "communicate / express"
+      },
+      {
+        "word": "nuances",
+        "definition": "small differences in meaning, feeling, or expression",
+        "synonym": "subtleties / fine details"
+      },
+      {
+        "word": "reliance",
+        "definition": "dependence on someone or something",
+        "synonym": "dependence / trust"
+      },
+      {
+        "word": "fragile",
+        "definition": "easily damaged, weakened, or broken",
+        "synonym": "weak / delicate"
+      },
+      {
+        "word": "transformative",
+        "definition": "causing a major change or improvement",
+        "synonym": "revolutionary / life-changing"
+      },
+      {
+        "word": "preserve",
+        "definition": "to keep something in good condition or protect it from loss",
+        "synonym": "maintain / protect"
+      }
+    ]
+  }
+]
